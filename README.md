@@ -265,9 +265,9 @@ src/
 
 Create a `docs/screenshots` folder and add the real screenshots using the exact filenames below. Then uncomment the image lines.
 
-<!--
+
 ### Home Page
-![CrowdSpark home page](docs/screenshots/home-page.png)
+![CrowdSpark home page](docs/screenshots/login page.png)
 
 ### Explore Campaigns
 ![CrowdSpark campaign explorer](docs/screenshots/explore-campaigns.png)
@@ -286,7 +286,7 @@ Create a `docs/screenshots` folder and add the real screenshots using the exact 
 
 ### Mobile View
 ![CrowdSpark mobile responsive view](docs/screenshots/mobile-view.png)
--->
+
 
 Recommended screenshot size: `1440 × 900` for desktop and `390 × 844` for mobile.
 
