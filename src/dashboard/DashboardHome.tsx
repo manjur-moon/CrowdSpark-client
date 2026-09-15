@@ -28,7 +28,7 @@ import {
 import { api } from "../lib/api";
 import { useAuth } from "../lib/AuthContext";
 
-const CHART_COLORS = ["#059669", "#0f766e", "#2563eb", "#d97706", "#dc2626", "#7c3aed", "#475569"];
+const CHART_COLORS = ["#12624f", "#197a63", "#2f9478", "#82cbb6", "#6f7f4b", "#d97706", "#64748b"];
 
 interface SupporterDashboardData {
   totalContributions: number;
@@ -202,7 +202,7 @@ function CreatorCharts({ data }: { data: CreatorDashboardData }) {
                 type="monotone"
                 dataKey="credits"
                 name="Credits"
-                stroke="#2563eb"
+                stroke="#2f9478"
                 strokeWidth={3}
               />
             </LineChart>

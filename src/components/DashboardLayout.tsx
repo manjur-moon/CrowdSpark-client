@@ -24,6 +24,7 @@ import { useAuth } from "../lib/AuthContext";
 import type { Role } from "../types";
 import { Logo } from "./Logo";
 import { NotificationBell } from "./NotificationBell";
+import { ThemeToggle } from "./ThemeToggle";
 
 const nav: Record<Role, Array<[string, string, LucideIcon]>> = {
   supporter: [
@@ -70,48 +71,55 @@ export function DashboardLayout() {
         : "Platform administrator";
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-[#f5f5f5] text-[#242424] dark:bg-[#111111] dark:text-[#f5f5f5]">
       {open ? (
         <button
           type="button"
           aria-label="Close dashboard menu overlay"
-          className="fixed inset-0 z-40 bg-slate-950/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/45 backdrop-blur-[1px] lg:hidden"
           onClick={() => setOpen(false)}
         />
       ) : null}
+
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-slate-950 p-5 text-white transition lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-[#e1dfdd] bg-white p-4 text-[#242424] shadow-xl shadow-black/5 transition-transform dark:border-[#383838] dark:bg-[#181818] dark:text-[#f5f5f5] dark:shadow-black/30 lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="flex items-center justify-between">
-          <Logo light />
+        <div className="flex h-12 items-center justify-between px-1">
+          <Logo />
           <button
             type="button"
-            className="lg:hidden"
+            className="theme-toggle lg:hidden"
             aria-label="Close dashboard menu"
             onClick={() => setOpen(false)}
           >
-            <X />
+            <X className="size-5" />
           </button>
         </div>
-        <div className="mt-8 rounded-2xl bg-white/10 p-4">
+
+        <div className="mt-5 rounded-lg border border-[#e1dfdd] bg-[#fafafa] p-3.5 dark:border-[#383838] dark:bg-[#202020]">
           <div className="flex items-center gap-3">
             {sessionUser?.image ? (
-              <img src={sessionUser.image} alt="" className="size-11 rounded-xl object-cover" />
+              <img src={sessionUser.image} alt="" className="size-10 rounded-md object-cover" />
             ) : (
-              <span className="flex size-11 items-center justify-center rounded-xl bg-white/10">
-                <UserRound className="size-5" />
+              <span className="flex size-10 items-center justify-center rounded-md bg-[#ebebeb] text-[#616161] dark:bg-[#303030] dark:text-[#d6d6d6]">
+                <UserRound className="size-[18px]" />
               </span>
             )}
             <div className="min-w-0">
-              <p className="truncate font-bold">{profile.name}</p>
-              <p className="mt-1 text-xs capitalize text-slate-400">{profile.role}</p>
+              <p className="truncate text-sm font-semibold">{profile.name}</p>
+              <p className="mt-0.5 text-xs capitalize text-[#707070] dark:text-[#adadad]">
+                {profile.role}
+              </p>
             </div>
           </div>
-          <p className="mt-4 text-sm font-bold text-emerald-300">{balanceLabel}</p>
+          <p className="mt-3 border-t border-[#e1dfdd] pt-3 text-xs font-semibold text-brand-700 dark:border-[#383838] dark:text-brand-300">
+            {balanceLabel}
+          </p>
         </div>
+
         <nav
           aria-label={`${profile.role} dashboard navigation`}
-          className="mt-7 flex-1 space-y-1 overflow-y-auto"
+          className="mt-5 flex-1 space-y-1 overflow-y-auto pr-1"
         >
           {nav[profile.role].map(([label, to, Icon]) => (
             <NavLink
@@ -120,54 +128,69 @@ export function DashboardLayout() {
               to={to}
               onClick={() => setOpen(false)}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold ${isActive ? "bg-emerald-600 text-white" : "text-slate-300 hover:bg-white/10"}`
+                `group flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-semibold transition-colors ${
+                  isActive
+                    ? "bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300"
+                    : "text-[#616161] hover:bg-[#f5f5f5] hover:text-[#242424] dark:text-[#d6d6d6] dark:hover:bg-[#292929] dark:hover:text-white"
+                }`
               }
             >
-              <Icon className="size-5" />
+              <Icon className="size-[18px] shrink-0" strokeWidth={1.9} />
               {label}
             </NavLink>
           ))}
         </nav>
-        <p className="mt-5 border-t border-white/10 pt-4 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} CrowdSpark
-        </p>
+
+        <div className="mt-4 border-t border-[#e1dfdd] pt-3 dark:border-[#383838]">
+          <p className="px-3 text-[11px] text-[#8a8886] dark:text-[#8f8f8f]">
+            © {new Date().getFullYear()} CrowdSpark
+          </p>
+        </div>
       </aside>
 
       <div className="flex min-h-screen flex-col lg:pl-72">
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-7">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#e1dfdd] bg-white/95 px-4 backdrop-blur-xl dark:border-[#383838] dark:bg-[#1b1b1b]/95 sm:px-7">
           <button
             type="button"
-            className="flex size-10 items-center justify-center rounded-xl border border-slate-200 lg:hidden"
+            className="theme-toggle lg:hidden"
             aria-label="Open dashboard menu"
             onClick={() => setOpen(true)}
           >
-            <Menu />
+            <Menu className="size-5" />
           </button>
+
           <div className="hidden sm:block">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-              {profile.role} dashboard
+            <p className="text-xs font-semibold capitalize text-[#707070] dark:text-[#adadad]">
+              {profile.role} workspace
             </p>
-            <p className="text-sm font-bold text-slate-800">{balanceLabel}</p>
+            <p className="mt-0.5 text-sm font-semibold text-[#242424] dark:text-[#f5f5f5]">
+              {balanceLabel}
+            </p>
           </div>
-          <div className="ml-auto flex items-center gap-3">
+
+          <div className="ml-auto flex items-center gap-2">
+            <ThemeToggle />
             <NotificationBell />
+            <span className="mx-1 hidden h-5 w-px bg-[#e1dfdd] dark:bg-[#383838] sm:block" />
             <button
-              className="btn-secondary px-3"
+              className="inline-flex h-9 items-center gap-2 rounded-md px-2.5 text-sm font-semibold text-[#616161] transition hover:bg-[#f5f5f5] hover:text-[#242424] dark:text-[#d6d6d6] dark:hover:bg-[#292929] dark:hover:text-white"
               onClick={async () => {
                 await signOut();
                 navigate("/");
               }}
             >
-              <LogOut className="size-4" />
-              <span className="hidden sm:inline">Logout</span>
+              <LogOut className="size-[17px]" />
+              <span className="hidden sm:inline">Sign out</span>
             </button>
           </div>
         </header>
-        <div className="flex-1 p-4 sm:p-7">
+
+        <main className="flex-1 p-4 sm:p-7">
           <Outlet />
-        </div>
-        <footer className="border-t border-slate-200 bg-white px-4 py-5 text-center text-xs text-slate-500 sm:px-7">
-          CrowdSpark role-based crowdfunding dashboard · Secure credits, campaigns and notifications
+        </main>
+
+        <footer className="border-t border-[#e1dfdd] bg-white px-4 py-4 text-center text-xs text-[#707070] dark:border-[#383838] dark:bg-[#1b1b1b] dark:text-[#adadad] sm:px-7">
+          CrowdSpark · Secure crowdfunding operations and transparent impact
         </footer>
       </div>
     </div>

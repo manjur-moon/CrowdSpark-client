@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { DashboardLayout } from "./components/DashboardLayout";
+import { ThemeToggle } from "./components/ThemeToggle";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PublicLayout } from "./components/PublicLayout";
 import { dashboardPath, useAuth } from "./lib/AuthContext";
@@ -33,11 +34,23 @@ const TermsPage = lazy(() =>
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
 
+function AuthThemeAccess() {
+  const { pathname } = useLocation();
+  const authPaths = ["/login", "/register", "/onboarding", "/forgot-password", "/reset-password"];
+  if (!authPaths.includes(pathname)) return null;
+
+  return (
+    <div className="fixed right-4 top-4 z-[70] sm:right-6 sm:top-6">
+      <ThemeToggle />
+    </div>
+  );
+}
+
 function PageLoader() {
   return (
     <div className="flex min-h-64 items-center justify-center">
       <div
-        className="size-10 animate-spin rounded-full border-4 border-slate-200 border-t-emerald-600"
+        className="size-10 animate-spin rounded-full border-4 border-[#d2d0ce] border-t-brand-600 dark:border-[#383838] dark:border-t-brand-400"
         aria-label="Loading page"
       />
     </div>
@@ -52,6 +65,7 @@ function DashboardRedirect() {
 export default function App() {
   return (
     <Suspense fallback={<PageLoader />}>
+      <AuthThemeAccess />
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />

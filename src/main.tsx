@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import App from "./App";
 import "./index.css";
 import { AuthProvider } from "./lib/AuthContext";
+import { ThemeProvider, useTheme } from "./lib/ThemeContext";
 import { AppErrorBoundary } from "./components/errors/AppErrorBoundary";
 import { RouteScrollManager } from "./components/navigation/RouteScrollManager";
 
@@ -16,18 +17,25 @@ const queryClient = new QueryClient({
   }
 });
 
+function AppToaster() {
+  const { resolvedTheme } = useTheme();
+  return <Toaster richColors position="top-right" theme={resolvedTheme} />;
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AppErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <RouteScrollManager />
-          <AuthProvider>
-            <App />
-            <Toaster richColors position="top-right" />
-          </AuthProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <RouteScrollManager />
+            <AuthProvider>
+              <App />
+              <AppToaster />
+            </AuthProvider>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </ThemeProvider>
     </AppErrorBoundary>
   </React.StrictMode>
 );

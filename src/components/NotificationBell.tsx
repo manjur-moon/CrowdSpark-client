@@ -29,53 +29,57 @@ export function NotificationBell() {
       qc.invalidateQueries({ queryKey: ["notification-recent"] });
     }
   });
+
   return (
     <div className="relative">
       <button
-        className="relative flex size-10 items-center justify-center rounded-xl border border-slate-200 bg-white"
+        className="theme-toggle relative"
         aria-label="Notifications"
         onClick={() => setOpen(!open)}
       >
-        <Bell className="size-5" />
+        <Bell className="size-[18px]" />
         {(count.data ?? 0) > 0 ? (
-          <span className="absolute -right-1 -top-1 rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
+          <span className="absolute -right-1.5 -top-1.5 min-w-4 rounded-full bg-[#d13438] px-1 py-0.5 text-center text-[9px] font-bold leading-none text-white">
             {Math.min(99, count.data ?? 0)}
           </span>
         ) : null}
       </button>
+
       {open ? (
-        <div className="absolute right-0 top-12 z-50 w-[min(90vw,380px)] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
-          <div className="border-b p-4">
-            <h3 className="font-bold">Notifications</h3>
+        <div className="absolute right-0 top-11 z-50 w-[min(90vw,380px)] overflow-hidden rounded-lg border border-[#e1dfdd] bg-white shadow-xl shadow-black/10 dark:border-[#383838] dark:bg-[#1b1b1b] dark:shadow-black/30">
+          <div className="border-b border-[#e1dfdd] px-4 py-3.5 dark:border-[#383838]">
+            <h3 className="text-sm font-semibold text-[#242424] dark:text-[#f5f5f5]">Notifications</h3>
           </div>
           <div className="max-h-96 overflow-y-auto">
             {items.isLoading ? (
-              <p className="p-6 text-center text-sm">Loading...</p>
+              <p className="p-6 text-center text-sm text-[#616161] dark:text-[#bdbdbd]">Loading...</p>
             ) : items.data?.length ? (
               items.data.map((item) => (
                 <button
                   key={item.id}
-                  className={`block w-full border-b p-4 text-left ${item.isRead ? "bg-white" : "bg-emerald-50"}`}
+                  className={`block w-full border-b border-[#edebe9] p-4 text-left transition hover:bg-[#f5f5f5] dark:border-[#303030] dark:hover:bg-[#292929] ${
+                    item.isRead ? "bg-white dark:bg-[#1b1b1b]" : "bg-brand-50 dark:bg-brand-950"
+                  }`}
                   onClick={() => {
                     if (!item.isRead) read.mutate(item.id);
                     setOpen(false);
                     navigate(item.actionUrl || "/dashboard/notifications");
                   }}
                 >
-                  <p className="text-sm font-bold">{item.title}</p>
-                  <p className="mt-1 text-xs leading-5 text-slate-600">{item.message}</p>
+                  <p className="text-sm font-semibold text-[#242424] dark:text-[#f5f5f5]">{item.title}</p>
+                  <p className="mt-1 text-xs leading-5 text-[#616161] dark:text-[#bdbdbd]">{item.message}</p>
                 </button>
               ))
             ) : (
-              <p className="p-8 text-center text-sm text-slate-500">No notifications</p>
+              <p className="p-8 text-center text-sm text-[#707070] dark:text-[#adadad]">No notifications</p>
             )}
           </div>
           <Link
             to="/dashboard/notifications"
             onClick={() => setOpen(false)}
-            className="block p-3 text-center text-sm font-bold text-emerald-700"
+            className="block border-t border-[#e1dfdd] p-3 text-center text-sm font-semibold text-brand-700 transition hover:bg-[#f5f5f5] dark:border-[#383838] dark:text-brand-300 dark:hover:bg-[#292929]"
           >
-            View all
+            View all notifications
           </Link>
         </div>
       ) : null}

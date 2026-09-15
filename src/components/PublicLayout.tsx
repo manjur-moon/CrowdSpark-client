@@ -19,7 +19,7 @@ export function PublicLayout() {
   }, [location.hash, location.pathname]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="app-surface min-h-screen transition-colors duration-150">
       <Navbar />
       <Outlet />
       <Footer />
