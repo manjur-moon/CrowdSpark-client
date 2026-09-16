@@ -1,78 +1,50 @@
-import {
-  Bell,
-  Code2,
-  LogOut,
-  Menu,
-  // UserRound,
-  X
-} from "lucide-react";
+import { Bell, Code2, LogOut, Menu, UserRound, X } from "lucide-react";
 
 import { useState } from "react";
 
-import {
-  Link,
-  NavLink,
-  useLocation,
-  useNavigate
-} from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 
-import {
-  dashboardPath,
-  useAuth
-} from "../lib/AuthContext";
+import { dashboardPath, useAuth } from "../lib/AuthContext";
 
 import { Logo } from "./Logo";
-import { ThemeToggle } from "./ThemeToggle";
 
+import { ThemeToggle } from "./ThemeToggle";
 
 const publicLinks = [
   {
     label: "Explore",
     to: "/campaigns"
   },
+
   {
     label: "About",
     to: "/about"
   },
+
   {
     label: "Contact",
     to: "/contact"
   }
 ];
 
-
 export function Navbar() {
-
   const [open, setOpen] = useState(false);
 
-  const {
-    current,
-    sessionUser,
-    signOut
-  } = useAuth();
-
+  const { current, sessionUser, signOut } = useAuth();
 
   const navigate = useNavigate();
 
   const location = useLocation();
 
+  const isHome = location.pathname === "/";
 
-  const isHome =
-    location.pathname === "/";
-
-
-  const githubUrl =
-    import.meta.env.VITE_GITHUB_URL ||
-    "https://github.com";
-
+  const githubUrl = import.meta.env.VITE_GITHUB_URL || "https://github.com";
 
   const closeMenu = () => {
     setOpen(false);
   };
 
-
   const logout = async () => {
-
     await signOut();
 
     closeMenu();
@@ -80,451 +52,507 @@ export function Navbar() {
     navigate("/");
   };
 
-
-
-  const desktopLinkClass = ({
-    isActive
-  }: {
-    isActive: boolean;
-  }) => {
-
+  const desktopLinkClass = ({ isActive }: { isActive: boolean }) => {
     if (isHome) {
-
       return `
-        inline-flex
-        items-center
-        justify-center
 
-        rounded-full
-
-        border
-        border-white/10
-
-        bg-[#143229]/80
-
-        px-5
-        py-2.5
-
-        text-sm
-        font-semibold
-
-        text-white
-
-        backdrop-blur-xl
-
-        transition
-
-        hover:bg-[#1b4538]
-
-        ${
-          isActive
-            ? "bg-[#1b4538]"
-            : ""
-        }
-      `;
-    }
-
-
-    return `
       inline-flex
+
       items-center
+
       justify-center
 
       rounded-full
 
+      border
+
+      border-white/10
+
+      bg-[#143229]/80
+
       px-5
+
       py-2.5
 
       text-sm
+
       font-semibold
+
+      text-white
+
+      backdrop-blur-xl
 
       transition
 
-      ${
-        isActive
-          ? `
-            bg-[#143229]
+      hover:bg-[#1b4538]
 
-            text-white
-          `
-          : `
-            text-[#26343a]
+      ${isActive ? "bg-[#1b4538]" : ""}
 
-            hover:bg-black/5
+      `;
+    }
 
-            dark:text-[#d6d6d6]
+    return `
 
-            dark:hover:bg-white/5
-          `
-      }
+    inline-flex
+
+    items-center
+
+    justify-center
+
+
+    rounded-full
+
+
+    px-5
+
+    py-2.5
+
+
+    text-sm
+
+    font-semibold
+
+
+    transition
+
+
+
+    ${
+      isActive
+        ? `
+
+      bg-[#20352d]
+
+      text-white
+
+
+      dark:bg-[#d6e3dd]
+
+      dark:text-[#10261f]
+
+
+      `
+        : `
+
+      text-[#45545b]
+
+
+      hover:bg-white/40
+
+
+      hover:text-[#172126]
+
+
+      dark:text-[#d6d6d6]
+
+
+      dark:hover:bg-white/5
+
+
+      dark:hover:text-white
+
+
+      `
+    }
+
+
     `;
   };
 
-
-
   return (
-
     <header
-
       className={
-
         isHome
-
           ? `
-            absolute
 
-            left-0
-            right-0
-            top-0
+        absolute
 
-            z-50
+        left-0
 
-            w-full
+        right-0
 
-            border-b
-            border-white/15
-
-            bg-transparent
-          `
+        top-0
 
 
+        z-50
+
+
+        w-full
+
+
+        border-b
+
+        border-white/15
+
+
+        bg-transparent
+
+
+        `
           : `
-            sticky
 
-            top-0
+        sticky
 
-            z-50
-
-            w-full
+        top-0
 
 
-            border-b
-
-            border-[var(--editorial-border)]
+        z-50
 
 
-            bg-[var(--editorial-bg)]/90
+        w-full
 
 
-            backdrop-blur-xl
+        border-b
 
 
-            dark:bg-[var(--editorial-bg)]/90
-          `
+        border-[#b8c5ca]
+
+
+        bg-[#d1d8dc]/90
+
+
+        backdrop-blur-xl
+
+
+        dark:border-[#2d3935]
+
+
+        dark:bg-[#111716]/90
+
+
+        `
       }
-
     >
-
-
       <div
-
         className="
-          container-app
 
-          relative
+        container-app
 
-          flex
+        relative
 
-          h-[94px]
+        flex
 
-          items-center
+        h-[94px]
 
-          justify-between
+        items-center
 
-          gap-4
+        justify-between
+
+        gap-4
+
         "
-
       >
-
+        {/* LEFT NAV */}
 
         <nav
-
           aria-label="Primary navigation"
 
           className="
-            hidden
 
-            items-center
+          hidden
 
-            gap-2
+          items-center
 
-            lg:flex
+          gap-2
+
+          lg:flex
+
           "
-
         >
-
-
           <NavLink
-
             to="/campaigns"
 
             className={desktopLinkClass}
-
           >
             Explore
-
           </NavLink>
 
-
-
           <Link
-
             to="/#how-it-works"
 
-
             className={
-
               isHome
-
                 ? `
-                  rounded-full
 
-                  border
-                  border-white/10
+              rounded-full
 
-                  bg-[#143229]/80
+              border
 
-                  px-5
-                  py-2.5
-
-                  text-sm
-                  font-semibold
-
-                  text-white
-
-                  backdrop-blur-xl
-
-                  transition
-
-                  hover:bg-[#1b4538]
-                `
+              border-white/10
 
 
+              bg-[#143229]/80
+
+
+              px-5
+
+              py-2.5
+
+
+              text-sm
+
+              font-semibold
+
+
+              text-white
+
+
+              backdrop-blur-xl
+
+
+              transition
+
+
+              hover:bg-[#1b4538]
+
+
+              `
                 : `
 
-                  inline-flex
-
-                  items-center
-
-                  justify-center
+              rounded-full
 
 
-                  rounded-full
+              px-5
 
 
-                  px-5
-
-                  py-2.5
+              py-2.5
 
 
-                  text-sm
-
-                  font-semibold
+              text-sm
 
 
-                  text-[#26343a]
+              font-semibold
 
 
-                  transition
+              text-[#45545b]
 
 
-                  hover:bg-black/5
+              transition
 
-                  dark:text-[#d6d6d6]
 
-                  dark:hover:bg-white/5
+              hover:bg-white/40
 
-                `
+
+              dark:text-[#d6d6d6]
+
+
+              dark:hover:bg-white/5
+
+
+              `
             }
-
           >
-
             How it works
-
           </Link>
-
-
         </nav>
-		        {/* Center brand */}
+
+        {/* LOGO */}
+
         <div
           className="
-            lg:absolute
-            lg:left-1/2
-            lg:-translate-x-1/2
+
+          lg:absolute
+
+          lg:left-1/2
+
+          lg:-translate-x-1/2
+
           "
         >
           <Logo light={isHome} />
         </div>
-
-
-        {/* Right navigation */}
+        {/* RIGHT NAV */}
 
         <div
           className="
-            hidden
-            items-center
-            gap-2
-            lg:flex
+
+          hidden
+
+          items-center
+
+          gap-2
+
+          lg:flex
+
           "
         >
-
           <NavLink
             to="/about"
+
             className={desktopLinkClass}
           >
             About
           </NavLink>
 
-
-
           {!sessionUser ? (
-
             <>
-
               <NavLink
-
                 to="/login"
 
                 className={
-
                   isHome
-
                     ? `
-                      rounded-full
 
-                      border
-                      border-white/10
+                  rounded-full
 
-                      bg-[#143229]/80
+                  border
 
-                      px-5
-                      py-2.5
-
-                      text-sm
-                      font-semibold
-
-                      text-white
-
-                      backdrop-blur-xl
-
-                      transition
-
-                      hover:bg-[#1b4538]
-                    `
+                  border-white/10
 
 
+                  bg-[#143229]/80
+
+
+                  px-5
+
+                  py-2.5
+
+
+                  text-sm
+
+
+                  font-semibold
+
+
+                  text-white
+
+
+                  backdrop-blur-xl
+
+
+                  transition
+
+
+                  hover:bg-[#1b4538]
+
+
+                  `
                     : `
-                      rounded-full
 
-                      border
-
-                      border-[var(--editorial-border)]
-
-                      bg-transparent
+                  rounded-full
 
 
-                      px-5
+                  border
 
-                      py-2.5
-
-
-                      text-sm
-
-                      font-semibold
+                  border-[#b8c5ca]
 
 
-                      text-[var(--editorial-text)]
+                  bg-transparent
 
 
-                      transition
+                  px-5
 
 
-                      hover:bg-black/5
+                  py-2.5
 
 
-                      dark:hover:bg-white/5
-                    `
+                  text-sm
+
+
+                  font-semibold
+
+
+                  text-[#172126]
+
+
+                  transition
+
+
+                  hover:bg-white/50
+
+
+                  dark:border-[#465550]
+
+
+                  dark:text-white
+
+
+                  `
                 }
-
               >
-
                 Sign in
-
               </NavLink>
 
-
-
               <NavLink
-
                 to="/register"
 
                 className={
-
                   isHome
-
                     ? `
-                      rounded-full
 
-                      bg-[#91aa9d]
-
-                      px-5
-                      py-2.5
-
-                      text-sm
-
-                      font-semibold
-
-                      text-[#10261f]
-
-                      transition
-
-                      hover:bg-[#a9beb3]
-                    `
+                  rounded-full
 
 
+                  bg-[#91aa9d]
+
+
+                  px-5
+
+
+                  py-2.5
+
+
+                  text-sm
+
+
+                  font-semibold
+
+
+                  text-[#10261f]
+
+
+                  transition
+
+
+                  hover:bg-[#a9beb3]
+
+
+                  `
                     : `
-                      rounded-full
 
-                      bg-[#586970]
-
-
-                      px-5
-
-                      py-2.5
+                  rounded-full
 
 
-                      text-sm
-
-                      font-semibold
+                  bg-[#20352d]
 
 
-                      text-white
+                  px-5
 
 
-                      transition
+                  py-2.5
 
 
-                      hover:bg-[#46575d]
-                    `
+                  text-sm
+
+
+                  font-semibold
+
+
+                  text-white
+
+
+                  transition
+
+
+                  hover:bg-[#314c42]
+
+
+                  dark:bg-[#d6e3dd]
+
+
+                  dark:text-[#10261f]
+
+
+                  `
                 }
-
               >
-
                 Get started
-
               </NavLink>
-
-
             </>
-
           ) : (
-
             <>
-
               {current?.profile?.role === "supporter" ? (
-
                 <span
-
                   className="
 
                     rounded-full
@@ -541,132 +569,114 @@ export function Navbar() {
 
                     text-[#10261f]
 
-                  "
-
+                    "
                 >
-
                   {current.profile.credits.toLocaleString()} credits
-
                 </span>
-
               ) : null}
 
-
-
               <NavLink
-
                 to={dashboardPath(current?.profile?.role)}
 
                 className={desktopLinkClass}
-
               >
-
                 Dashboard
-
               </NavLink>
 
-
-
               <NavLink
-
                 to="/dashboard/notifications"
-
-                aria-label="Notifications"
 
                 className={desktopLinkClass}
 
+                aria-label="Notifications"
               >
-
                 <Bell className="size-[18px]" />
-
               </NavLink>
 
-
-
               <button
-
                 type="button"
 
                 onClick={() => void logout()}
 
                 className="
 
-                  flex
+                flex
 
-                  size-10
+                size-10
 
-                  items-center
+                items-center
 
-                  justify-center
-
-
-                  rounded-full
+                justify-center
 
 
-                  bg-[#586970]
+                rounded-full
 
 
-                  text-white
+                bg-[#20352d]
 
 
-                  transition
+                text-white
 
 
-                  hover:bg-[#46575d]
+                transition
+
+
+                hover:bg-[#314c42]
+
 
                 "
-
               >
-
                 <LogOut className="size-[18px]" />
-
               </button>
-
-
             </>
-
           )}
 
-
-
-
           <ThemeToggle
-
             className={
-
               isHome
-
                 ? `
 
-                  !rounded-full
+              !rounded-full
 
-                  !border-white/10
 
-                  !bg-[#91aa9d]
+              !border-white/10
 
-                  !text-[#10261f]
 
-                `
+              !bg-[#91aa9d]
 
+
+              !text-[#10261f]
+
+
+              `
                 : `
 
-                  !rounded-full
+              !rounded-full
 
-                  !border-[var(--editorial-border)]
 
-                  !bg-transparent
+              !border-[#b8c5ca]
 
-                `
 
+              !bg-[#e7ecef]
+
+
+              !text-[#20352d]
+
+
+              dark:!border-[#465550]
+
+
+              dark:!bg-[#17221e]
+
+
+              dark:!text-[#d6e3dd]
+
+
+              `
             }
-
           />
 
-
-
-
           <a
-
             href={githubUrl}
 
             target="_blank"
@@ -675,141 +685,116 @@ export function Navbar() {
 
             className="
 
-              flex
-
-              size-10
-
-              items-center
-
-              justify-center
-
-
-              rounded-full
-
-
-              bg-[#91aa9d]
-
-
-              text-[#10261f]
-
-
-              transition
-
-
-              hover:bg-[#a9beb3]
-
-            "
-
-          >
-
-            <Code2 className="size-[18px]" />
-
-          </a>
-
-
-        </div>
-
-
-
-
-
-        {/* Mobile controls */}
-
-        <div
-
-          className="
-
-            ml-auto
-
             flex
+
+            size-10
 
             items-center
 
-            gap-2
+            justify-center
 
-            lg:hidden
+
+            rounded-full
+
+
+            bg-[#91aa9d]
+
+
+            text-[#10261f]
+
+
+            transition
+
+
+            hover:bg-[#a9beb3]
+
+
+            "
+          >
+            <Code2 className="size-[18px]" />
+          </a>
+        </div>
+
+        {/* MOBILE CONTROLS */}
+
+        <div
+          className="
+
+          ml-auto
+
+          flex
+
+          items-center
+
+          gap-2
+
+          lg:hidden
 
           "
-
         >
-
           <ThemeToggle />
 
-
           <button
-
             type="button"
 
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => setOpen((value) => !value)}
 
             className="
 
-              flex
+            flex
 
-              size-10
+            size-10
 
-              items-center
+            items-center
 
-              justify-center
-
-
-              rounded-full
+            justify-center
 
 
-              bg-[#91aa9d]
+            rounded-full
 
 
-              text-[#10261f]
+            bg-[#91aa9d]
+
+
+            text-[#10261f]
+
 
             "
-
           >
-
-            {open ? (
-
-              <X className="size-5" />
-
-            ) : (
-
-              <Menu className="size-5" />
-
-            )}
-
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
-
-
         </div>
-
-
-
       </div>
 
-
-
-
+      {/* MOBILE MENU */}
 
       {open ? (
-
         <div
-
           className="
 
             border-t
 
-            border-[var(--editorial-border)]
+            border-[#b8c5ca]
 
-            bg-[var(--editorial-bg)]
+
+            bg-[#d1d8dc]
+
 
             p-4
 
+
+            dark:border-[#2d3935]
+
+
+            dark:bg-[#111716]
+
+
             lg:hidden
 
-          "
 
+            "
         >
-
           <nav
-
             className="
 
               container-app
@@ -818,14 +803,10 @@ export function Navbar() {
 
               gap-2
 
-            "
-
+              "
           >
-
             {publicLinks.map((link) => (
-
               <NavLink
-
                 key={link.to}
 
                 to={link.to}
@@ -834,41 +815,159 @@ export function Navbar() {
 
                 className="
 
-                  rounded-full
+                    rounded-full
 
-                  px-4
+                    px-4
 
-                  py-3
+                    py-3
 
-                  text-sm
+                    text-sm
 
-                  font-semibold
+                    font-semibold
 
-                  text-[var(--editorial-text)]
 
-                  hover:bg-black/5
+                    text-[#172126]
 
-                "
 
+                    hover:bg-white/40
+
+
+                    dark:text-white
+
+
+                    dark:hover:bg-white/5
+
+
+                    "
               >
-
                 {link.label}
-
               </NavLink>
-
             ))}
 
+            <Link
+              to="/#how-it-works"
 
+              onClick={closeMenu}
+
+              className="
+
+                rounded-full
+
+                px-4
+
+                py-3
+
+                text-sm
+
+                font-semibold
+
+
+                text-[#172126]
+
+
+                dark:text-white
+
+
+                "
+            >
+              How it works
+            </Link>
+
+            {sessionUser ? (
+              <div
+                className="
+
+                    mt-3
+
+                    grid
+
+                    gap-2
+
+                    border-t
+
+                    border-[#b8c5ca]
+
+                    pt-4
+
+
+                    dark:border-[#2d3935]
+
+                    "
+              >
+                <Link
+                  to={dashboardPath(current?.profile?.role)}
+
+                  onClick={closeMenu}
+
+                  className="editorial-button"
+                >
+                  Dashboard
+                </Link>
+
+                <Link
+                  to="/dashboard/profile"
+
+                  onClick={closeMenu}
+
+                  className="editorial-button"
+                >
+                  <UserRound className="size-4" />
+                  Profile
+                </Link>
+
+                <button
+                  onClick={() => void logout()}
+
+                  className="editorial-button"
+                >
+                  <LogOut className="size-4" />
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div
+                className="
+
+                    mt-3
+
+                    grid
+
+                    grid-cols-2
+
+                    gap-2
+
+                    border-t
+
+                    border-[#b8c5ca]
+
+                    pt-4
+
+                    "
+              >
+                <Link
+                  to="/login"
+
+                  onClick={closeMenu}
+
+                  className="btn-secondary"
+                >
+                  Sign in
+                </Link>
+
+                <Link
+                  to="/register"
+
+                  onClick={closeMenu}
+
+                  className="editorial-button"
+                >
+                  Get started
+                </Link>
+              </div>
+            )}
           </nav>
-
         </div>
-
       ) : null}
-
-
-
     </header>
-
   );
-
 }
