@@ -102,17 +102,84 @@ export default function HomePage() {
       ).data.data
   });
 
-  const campaignGrid = (items: Campaign[] | undefined, loading: boolean) => (
-    <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-      {loading
-        ? Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="h-[470px] animate-pulse rounded-2xl bg-slate-200" />
-          ))
-        : items?.map((campaign) => (
-            <CampaignCard key={campaign.id || campaign._id} campaign={campaign} />
-          ))}
+  const campaignGrid = (
+  items: Campaign[] | undefined,
+  loading: boolean
+) => {
+  if (loading) {
+    return (
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div
+            key={index}
+            className="h-[470px] overflow-hidden rounded-[28px] border border-[#77877f]/25 bg-white/30 p-4 backdrop-blur-sm dark:border-[#496057]/30 dark:bg-white/5"
+          >
+            <div className="h-full animate-pulse rounded-[22px] bg-[#93a39c]/25 dark:bg-[#304038]/40" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (!items || items.length === 0) {
+    return (
+      <div className="mt-10 rounded-[32px] border border-[#77877f]/25 bg-white/35 px-8 py-16 text-center backdrop-blur-sm dark:border-[#496057]/30 dark:bg-white/5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#5a6c64] dark:text-[#93a79e]">
+          No featured data yet
+        </p>
+
+        <h3 className="mt-4 text-2xl font-semibold tracking-[-0.03em] text-[#18231f] dark:text-[#edf4f0]">
+          Top campaigns will appear here
+        </h3>
+
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[#31423b] dark:text-[#bccbc4]">
+          Once campaign data is available from the API, this section will automatically show the
+          strongest-performing campaigns.
+        </p>
+
+        <Link
+          to="/campaigns"
+          className="
+  inline-flex
+  items-center
+  gap-2
+
+  rounded-full
+
+  bg-[#9db5a9]
+
+  px-5
+  py-3
+
+  text-sm
+  font-semibold
+
+  text-[#10261f]
+
+  transition
+  duration-300
+
+  hover:bg-[#b2c6bc]
+"
+        >
+          Explore campaigns
+          <ArrowRight className="size-4" />
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+      {items.map((campaign) => (
+        <CampaignCard
+          key={campaign.id || campaign._id}
+          campaign={campaign}
+        />
+      ))}
     </div>
   );
+};
 
   return (
     <main>
@@ -253,19 +320,80 @@ export default function HomePage() {
       <ImpactEditorialSection />
 
       {/* Top campaigns */}
-      <section className="container-app py-20">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="font-bold text-emerald-700">Top funded campaigns</p>
-            <h2 className="mt-2 text-3xl font-black">Ideas receiving strong support</h2>
+      <section
+        className="
+    py-24
+
+    bg-[var(--editorial-bg)]
+    text-[var(--editorial-text)]
+  "
+      >
+        <div className="container-app">
+          <div
+            className="
+        flex
+        items-end
+        justify-between
+        gap-6
+      "
+          >
+            <div>
+              <p
+                className="
+            text-xs
+            font-semibold
+            uppercase
+            tracking-[0.25em]
+
+            text-[var(--editorial-muted)]
+          "
+              >
+                Top funded campaigns
+              </p>
+
+              <h2
+                className="
+            mt-4
+
+            display-heading
+
+            text-5xl
+            leading-[0.95]
+
+            text-[var(--editorial-text)]
+
+            md:text-6xl
+          "
+              >
+                Ideas receiving strong support
+              </h2>
+            </div>
+
+            <Link
+              to="/campaigns?sort=most_funded"
+              className="
+          hidden
+
+          text-sm
+          font-semibold
+          uppercase
+          tracking-[0.15em]
+
+          text-[var(--editorial-text)]
+
+          transition
+
+          hover:opacity-60
+
+          sm:block
+        "
+            >
+              View all →
+            </Link>
           </div>
 
-          <Link to="/campaigns?sort=most_funded" className="font-bold text-emerald-700">
-            View all
-          </Link>
+          {campaignGrid(topCampaigns.data, topCampaigns.isLoading)}
         </div>
-
-        {campaignGrid(topCampaigns.data, topCampaigns.isLoading)}
       </section>
 
       {/* Categories */}
