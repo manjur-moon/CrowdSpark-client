@@ -33,88 +33,55 @@ export default function LoginPage() {
     defaultValues: { email: "", password: "" }
   });
 
-  const submit = async (
-  values: Values
-) => {
-  try {
-    const result =
-      await authClient.signIn.email({
-        email: values.email
-          .trim()
-          .toLowerCase(),
+  const submit = async (values: Values) => {
+    try {
+      const result = await authClient.signIn.email({
+        email: values.email.trim().toLowerCase(),
 
-        password:
-          values.password,
+        password: values.password,
 
-        rememberMe:
-          true
+        rememberMe: true
       });
 
-    if (result.error) {
-      toast.error(
-        result.error.message ||
-          "Email or password is incorrect"
-      );
+      if (result.error) {
+        toast.error(result.error.message || "Email or password is incorrect");
 
-      return;
-    }
+        return;
+      }
 
-    const token =
-      await refreshAccessToken();
+      const token = await refreshAccessToken();
 
-    if (!token) {
-      throw new Error(
-        "Access token could not be created"
-      );
-    }
+      if (!token) {
+        throw new Error("Access token could not be created");
+      }
 
-    const response =
-      await api.get<{
+      const response = await api.get<{
         data: CurrentUserResponse;
       }>("/users/me");
 
-    const me =
-      response.data.data;
+      const me = response.data.data;
 
-    await refresh();
+      await refresh();
 
-    const redirect =
-      safeRedirect(
-        params.get("redirect")
+      const redirect = safeRedirect(params.get("redirect"));
+
+      navigate(
+        me.profile ? (redirect ?? dashboardPath(me.profile.role)) : "/onboarding",
+
+        {
+          replace: true
+        }
       );
 
-    navigate(
-      me.profile
-        ? redirect ??
-            dashboardPath(
-              me.profile.role
-            )
-        : "/onboarding",
+      toast.success("Signed in successfully");
+    } catch (error) {
+      console.error("CrowdSpark login failed:", error);
 
-      {
-        replace: true
-      }
-    );
-
-    toast.success(
-      "Signed in successfully"
-    );
-  } catch (error) {
-    console.error(
-      "CrowdSpark login failed:",
-      error
-    );
-
-    toast.error(
-      apiErrorMessage(
-        error,
-        error instanceof Error
-          ? error.message
-          : "Sign in failed"
-      )
-    );
-  }
-};
+      toast.error(
+        apiErrorMessage(error, error instanceof Error ? error.message : "Sign in failed")
+      );
+    }
+  };
 
   const demo = (role: "supporter" | "creator" | "admin") => {
     const values = {

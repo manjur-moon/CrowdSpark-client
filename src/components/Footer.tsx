@@ -44,30 +44,52 @@ export function Footer() {
         <div>
           <h3 className="text-sm font-semibold">Platform</h3>
           <div className="mt-4 grid gap-3">
-            <Link className={linkClass} to="/">Home</Link>
-            <Link className={linkClass} to="/campaigns">Explore campaigns</Link>
-            <Link className={linkClass} to="/register?role=creator">Start a campaign</Link>
-            <Link className={linkClass} to="/about">About us</Link>
+            <Link className={linkClass} to="/">
+              Home
+            </Link>
+            <Link className={linkClass} to="/campaigns">
+              Explore campaigns
+            </Link>
+            <Link className={linkClass} to="/register?role=creator">
+              Start a campaign
+            </Link>
+            <Link className={linkClass} to="/about">
+              About us
+            </Link>
           </div>
         </div>
 
         <div>
           <h3 className="text-sm font-semibold">Support & policies</h3>
           <div className="mt-4 grid gap-3">
-            <Link className={linkClass} to="/contact">Contact and support</Link>
-            <Link className={linkClass} to="/privacy">Privacy policy</Link>
-            <Link className={linkClass} to="/terms">Terms and conditions</Link>
-            <a className={linkClass} href={githubUrl} target="_blank" rel="noreferrer">Join as developer</a>
+            <Link className={linkClass} to="/contact">
+              Contact and support
+            </Link>
+            <Link className={linkClass} to="/privacy">
+              Privacy policy
+            </Link>
+            <Link className={linkClass} to="/terms">
+              Terms and conditions
+            </Link>
+            <a className={linkClass} href={githubUrl} target="_blank" rel="noreferrer">
+              Join as developer
+            </a>
           </div>
         </div>
 
         <div>
           <h3 className="text-sm font-semibold">Contact</h3>
           <div className="mt-4 grid gap-4 text-sm text-[#616161] dark:text-[#bdbdbd]">
-            <a className="flex items-start gap-3 transition hover:text-brand-700 dark:hover:text-brand-300" href={`mailto:${contactEmail}`}>
+            <a
+              className="flex items-start gap-3 transition hover:text-brand-700 dark:hover:text-brand-300"
+              href={`mailto:${contactEmail}`}
+            >
               <Mail className="mt-0.5 size-4 shrink-0" /> {contactEmail}
             </a>
-            <a className="flex items-start gap-3 transition hover:text-brand-700 dark:hover:text-brand-300" href={`tel:${contactPhone.replace(/\s/g, "")}`}>
+            <a
+              className="flex items-start gap-3 transition hover:text-brand-700 dark:hover:text-brand-300"
+              href={`tel:${contactPhone.replace(/\s/g, "")}`}
+            >
               <Phone className="mt-0.5 size-4 shrink-0" /> {contactPhone}
             </a>
             <p className="flex items-start gap-3">

@@ -48,11 +48,15 @@ export function NotificationBell() {
       {open ? (
         <div className="absolute right-0 top-11 z-50 w-[min(90vw,380px)] overflow-hidden rounded-lg border border-[#e1dfdd] bg-white shadow-xl shadow-black/10 dark:border-[#383838] dark:bg-[#1b1b1b] dark:shadow-black/30">
           <div className="border-b border-[#e1dfdd] px-4 py-3.5 dark:border-[#383838]">
-            <h3 className="text-sm font-semibold text-[#242424] dark:text-[#f5f5f5]">Notifications</h3>
+            <h3 className="text-sm font-semibold text-[#242424] dark:text-[#f5f5f5]">
+              Notifications
+            </h3>
           </div>
           <div className="max-h-96 overflow-y-auto">
             {items.isLoading ? (
-              <p className="p-6 text-center text-sm text-[#616161] dark:text-[#bdbdbd]">Loading...</p>
+              <p className="p-6 text-center text-sm text-[#616161] dark:text-[#bdbdbd]">
+                Loading...
+              </p>
             ) : items.data?.length ? (
               items.data.map((item) => (
                 <button
@@ -66,12 +70,18 @@ export function NotificationBell() {
                     navigate(item.actionUrl || "/dashboard/notifications");
                   }}
                 >
-                  <p className="text-sm font-semibold text-[#242424] dark:text-[#f5f5f5]">{item.title}</p>
-                  <p className="mt-1 text-xs leading-5 text-[#616161] dark:text-[#bdbdbd]">{item.message}</p>
+                  <p className="text-sm font-semibold text-[#242424] dark:text-[#f5f5f5]">
+                    {item.title}
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-[#616161] dark:text-[#bdbdbd]">
+                    {item.message}
+                  </p>
                 </button>
               ))
             ) : (
-              <p className="p-8 text-center text-sm text-[#707070] dark:text-[#adadad]">No notifications</p>
+              <p className="p-8 text-center text-sm text-[#707070] dark:text-[#adadad]">
+                No notifications
+              </p>
             )}
           </div>
           <Link

@@ -1,8 +1,5 @@
 import { ArrowUpRight, Sparkles } from "lucide-react";
-import {
-  motion,
-  useReducedMotion
-} from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -164,16 +161,11 @@ export function ImpactEditorialSection() {
               dark:text-[#bdcbc5]
             "
           >
-            CrowdSpark gives creators a transparent place to
-            launch meaningful campaigns while supporters can
-            contribute with confidence and follow every step
-            of the journey.
+            CrowdSpark gives creators a transparent place to launch meaningful campaigns while
+            supporters can contribute with confidence and follow every step of the journey.
           </motion.p>
 
-          <motion.div
-            variants={reveal}
-            className="mt-9"
-          >
+          <motion.div variants={reveal} className="mt-9">
             <Link
               to="/about"
               className="
@@ -193,7 +185,6 @@ export function ImpactEditorialSection() {
               "
             >
               About CrowdSpark
-
               <span
                 className="
                   flex
@@ -410,9 +401,8 @@ export function ImpactEditorialSection() {
                 dark:text-[#c8d6d0]
               "
             >
-              Transparent campaigns, secure contributions and
-              measurable progress — designed to build trust
-              between people who create and people who support.
+              Transparent campaigns, secure contributions and measurable progress — designed to
+              build trust between people who create and people who support.
             </p>
           </motion.div>
 

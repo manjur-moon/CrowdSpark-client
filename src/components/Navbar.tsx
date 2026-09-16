@@ -1,25 +1,10 @@
-import {
-  Bell,
-  Code2,
-  LogOut,
-  Menu,
-  UserRound,
-  X
-} from "lucide-react";
+import { Bell, Code2, LogOut, Menu, UserRound, X } from "lucide-react";
 
 import { useState } from "react";
 
-import {
-  Link,
-  NavLink,
-  useLocation,
-  useNavigate
-} from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 
-import {
-  dashboardPath,
-  useAuth
-} from "../lib/AuthContext";
+import { dashboardPath, useAuth } from "../lib/AuthContext";
 
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
@@ -42,21 +27,14 @@ const publicLinks = [
 export function Navbar() {
   const [open, setOpen] = useState(false);
 
-  const {
-    current,
-    sessionUser,
-    signOut
-  } = useAuth();
+  const { current, sessionUser, signOut } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isHome =
-    location.pathname === "/";
+  const isHome = location.pathname === "/";
 
-  const githubUrl =
-    import.meta.env.VITE_GITHUB_URL ||
-    "https://github.com";
+  const githubUrl = import.meta.env.VITE_GITHUB_URL || "https://github.com";
 
   const closeMenu = () => {
     setOpen(false);
@@ -70,11 +48,7 @@ export function Navbar() {
     navigate("/");
   };
 
-  const desktopLinkClass = ({
-    isActive
-  }: {
-    isActive: boolean;
-  }) => {
+  const desktopLinkClass = ({ isActive }: { isActive: boolean }) => {
     if (isHome) {
       return `
         inline-flex
@@ -92,11 +66,7 @@ export function Navbar() {
         backdrop-blur-xl
         transition
         hover:bg-[#1b4538]
-        ${
-          isActive
-            ? "border-white/20 bg-[#1b4538]"
-            : ""
-        }
+        ${isActive ? "border-white/20 bg-[#1b4538]" : ""}
       `;
     }
 
@@ -177,10 +147,7 @@ export function Navbar() {
             lg:flex
           "
         >
-          <NavLink
-            to="/campaigns"
-            className={desktopLinkClass}
-          >
+          <NavLink to="/campaigns" className={desktopLinkClass}>
             Explore
           </NavLink>
 
@@ -242,10 +209,7 @@ export function Navbar() {
             lg:flex
           "
         >
-          <NavLink
-            to="/about"
-            className={desktopLinkClass}
-          >
+          <NavLink to="/about" className={desktopLinkClass}>
             About
           </NavLink>
 
@@ -298,8 +262,7 @@ export function Navbar() {
             </>
           ) : (
             <>
-              {current?.profile?.role ===
-              "supporter" ? (
+              {current?.profile?.role === "supporter" ? (
                 <span
                   className={
                     isHome
@@ -328,17 +291,11 @@ export function Navbar() {
                       `
                   }
                 >
-                  {current.profile.credits.toLocaleString()}{" "}
-                  credits
+                  {current.profile.credits.toLocaleString()} credits
                 </span>
               ) : null}
 
-              <NavLink
-                to={dashboardPath(
-                  current?.profile?.role
-                )}
-                className={desktopLinkClass}
-              >
+              <NavLink to={dashboardPath(current?.profile?.role)} className={desktopLinkClass}>
                 Dashboard
               </NavLink>
 
@@ -454,15 +411,9 @@ export function Navbar() {
 
           <button
             type="button"
-            aria-label={
-              open
-                ? "Close menu"
-                : "Open menu"
-            }
+            aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
-            onClick={() =>
-              setOpen((value) => !value)
-            }
+            onClick={() => setOpen((value) => !value)}
             className={
               isHome
                 ? `
@@ -477,11 +428,7 @@ export function Navbar() {
                 : "theme-toggle"
             }
           >
-            {open ? (
-              <X className="size-5" />
-            ) : (
-              <Menu className="size-5" />
-            )}
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
         </div>
       </div>
@@ -560,28 +507,19 @@ export function Navbar() {
                 "
               >
                 <Link
-                  to={dashboardPath(
-                    current?.profile?.role
-                  )}
+                  to={dashboardPath(current?.profile?.role)}
                   onClick={closeMenu}
                   className="btn-secondary"
                 >
                   Dashboard
                 </Link>
 
-                <Link
-                  to="/dashboard/profile"
-                  onClick={closeMenu}
-                  className="btn-secondary"
-                >
+                <Link to="/dashboard/profile" onClick={closeMenu} className="btn-secondary">
                   <UserRound className="size-4" />
                   Profile
                 </Link>
 
-                <button
-                  onClick={() => void logout()}
-                  className="btn-primary"
-                >
+                <button onClick={() => void logout()} className="btn-primary">
                   <LogOut className="size-4" />
                   Logout
                 </button>
@@ -599,19 +537,11 @@ export function Navbar() {
                   dark:border-[#383838]
                 "
               >
-                <Link
-                  to="/login"
-                  onClick={closeMenu}
-                  className="btn-secondary"
-                >
+                <Link to="/login" onClick={closeMenu} className="btn-secondary">
                   Sign in
                 </Link>
 
-                <Link
-                  to="/register"
-                  onClick={closeMenu}
-                  className="btn-primary"
-                >
+                <Link to="/register" onClick={closeMenu} className="btn-primary">
                   Get started
                 </Link>
               </div>

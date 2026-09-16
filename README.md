@@ -53,10 +53,10 @@ This repository contains the **React + Vite + TypeScript frontend** of CrowdSpar
 
 ## Project Links
 
-| Resource | URL |
-|---|---|
-| Live Website | `https://YOUR_CLIENT_DOMAIN.vercel.app` |
-| Live API | `https://YOUR_SERVER_DOMAIN.onrender.com` |
+| Resource          | URL                                                         |
+| ----------------- | ----------------------------------------------------------- |
+| Live Website      | `https://YOUR_CLIENT_DOMAIN.vercel.app`                     |
+| Live API          | `https://YOUR_SERVER_DOMAIN.onrender.com`                   |
 | Client Repository | `https://github.com/YOUR_GITHUB_USERNAME/CrowdSpark-client` |
 | Server Repository | `https://github.com/YOUR_GITHUB_USERNAME/CrowdSpark-server` |
 
@@ -64,10 +64,10 @@ This repository contains the **React + Vite + TypeScript frontend** of CrowdSpar
 
 ## Demo Credentials
 
-| Role | Email | Password |
-|---|---|---|
-| Admin | `admin@crowdspark.demo` | `Admin12345` |
-| Creator | `creator@crowdspark.demo` | `Creator12345` |
+| Role      | Email                       | Password         |
+| --------- | --------------------------- | ---------------- |
+| Admin     | `admin@crowdspark.demo`     | `Admin12345`     |
+| Creator   | `creator@crowdspark.demo`   | `Creator12345`   |
 | Supporter | `supporter@crowdspark.demo` | `Supporter12345` |
 
 > Demo credentials are intended only for project review. Replace or disable them before using the application with real users.
@@ -136,44 +136,44 @@ This repository contains the **React + Vite + TypeScript frontend** of CrowdSpar
 
 ### Core
 
-| Technology | Purpose |
-|---|---|
-| React 18 | Component-based user interface |
-| TypeScript 5 | Static type safety |
-| Vite 7 | Development server and production build |
-| React Router DOM | Public and protected routing |
-| Tailwind CSS | Responsive styling |
+| Technology       | Purpose                                 |
+| ---------------- | --------------------------------------- |
+| React 18         | Component-based user interface          |
+| TypeScript 5     | Static type safety                      |
+| Vite 7           | Development server and production build |
+| React Router DOM | Public and protected routing            |
+| Tailwind CSS     | Responsive styling                      |
 
 ### State, Data, and Forms
 
-| Technology | Purpose |
-|---|---|
-| TanStack Query | Server-state fetching, caching, and invalidation |
-| Axios | API communication |
-| React Hook Form | Form state management |
-| Zod | Runtime validation and typed form schemas |
-| Better Auth Client | Authentication and session management |
+| Technology         | Purpose                                          |
+| ------------------ | ------------------------------------------------ |
+| TanStack Query     | Server-state fetching, caching, and invalidation |
+| Axios              | API communication                                |
+| React Hook Form    | Form state management                            |
+| Zod                | Runtime validation and typed form schemas        |
+| Better Auth Client | Authentication and session management            |
 
 ### UI and Visualization
 
-| Technology | Purpose |
-|---|---|
-| Framer Motion | Page and section animations |
-| Swiper | Hero and testimonial sliders |
-| Recharts | Dashboard analytics charts |
-| Lucide React | Accessible icons |
-| Sonner | Toast notifications |
+| Technology    | Purpose                      |
+| ------------- | ---------------------------- |
+| Framer Motion | Page and section animations  |
+| Swiper        | Hero and testimonial sliders |
+| Recharts      | Dashboard analytics charts   |
+| Lucide React  | Accessible icons             |
+| Sonner        | Toast notifications          |
 
 ### Testing and Quality
 
-| Technology | Purpose |
-|---|---|
-| Vitest | Unit and component tests |
-| Testing Library | User-focused component testing |
-| Playwright | End-to-end and responsive testing |
-| Axe Playwright | Accessibility checks |
-| ESLint | Static code analysis |
-| Prettier | Code formatting |
+| Technology      | Purpose                           |
+| --------------- | --------------------------------- |
+| Vitest          | Unit and component tests          |
+| Testing Library | User-focused component testing    |
+| Playwright      | End-to-end and responsive testing |
+| Axe Playwright  | Accessibility checks              |
+| ESLint          | Static code analysis              |
+| Prettier        | Code formatting                   |
 
 ---
 
@@ -212,52 +212,52 @@ src/
 
 ### Public Routes
 
-| Route | Description |
-|---|---|
-| `/` | Homepage |
-| `/campaigns` | Explore approved campaigns |
-| `/campaigns/:campaignId` | Public campaign details |
-| `/about` | About CrowdSpark |
-| `/contact` | Contact page |
-| `/privacy` | Privacy policy |
-| `/terms` | Terms and conditions |
-| `/login` | User login |
-| `/register` | Supporter/Creator registration |
-| `/forgot-password` | Password recovery request |
-| `/reset-password` | Password reset |
+| Route                    | Description                    |
+| ------------------------ | ------------------------------ |
+| `/`                      | Homepage                       |
+| `/campaigns`             | Explore approved campaigns     |
+| `/campaigns/:campaignId` | Public campaign details        |
+| `/about`                 | About CrowdSpark               |
+| `/contact`               | Contact page                   |
+| `/privacy`               | Privacy policy                 |
+| `/terms`                 | Terms and conditions           |
+| `/login`                 | User login                     |
+| `/register`              | Supporter/Creator registration |
+| `/forgot-password`       | Password recovery request      |
+| `/reset-password`        | Password reset                 |
 
 ### Supporter Dashboard
 
-| Route | Description |
-|---|---|
-| `/dashboard/supporter` | Supporter overview and analytics |
-| `/dashboard/supporter/explore` | Role-aware campaign explorer |
-| `/dashboard/supporter/contributions` | Contribution history and refund requests |
-| `/dashboard/supporter/purchase-credits` | Credit packages and checkout |
-| `/dashboard/supporter/payment-history` | Payment history |
+| Route                                   | Description                              |
+| --------------------------------------- | ---------------------------------------- |
+| `/dashboard/supporter`                  | Supporter overview and analytics         |
+| `/dashboard/supporter/explore`          | Role-aware campaign explorer             |
+| `/dashboard/supporter/contributions`    | Contribution history and refund requests |
+| `/dashboard/supporter/purchase-credits` | Credit packages and checkout             |
+| `/dashboard/supporter/payment-history`  | Payment history                          |
 
 ### Creator Dashboard
 
-| Route | Description |
-|---|---|
-| `/dashboard/creator` | Creator overview and analytics |
-| `/dashboard/creator/campaigns/add` | Create a campaign |
-| `/dashboard/creator/campaigns` | Manage campaigns |
-| `/dashboard/creator/contributions` | Review contributions and publish updates |
-| `/dashboard/creator/withdrawals` | Request and review withdrawals |
-| `/dashboard/creator/payment-history` | Creator financial history |
+| Route                                | Description                              |
+| ------------------------------------ | ---------------------------------------- |
+| `/dashboard/creator`                 | Creator overview and analytics           |
+| `/dashboard/creator/campaigns/add`   | Create a campaign                        |
+| `/dashboard/creator/campaigns`       | Manage campaigns                         |
+| `/dashboard/creator/contributions`   | Review contributions and publish updates |
+| `/dashboard/creator/withdrawals`     | Request and review withdrawals           |
+| `/dashboard/creator/payment-history` | Creator financial history                |
 
 ### Admin Dashboard
 
-| Route | Description |
-|---|---|
-| `/dashboard/admin` | Admin overview and analytics |
-| `/dashboard/admin/users` | User and role management |
-| `/dashboard/admin/campaign-approvals` | Pending campaign moderation |
-| `/dashboard/admin/campaigns` | Campaign management |
-| `/dashboard/admin/withdrawals` | Withdrawal processing |
-| `/dashboard/admin/reports` | Report resolution |
-| `/dashboard/admin/finance` | Payments, withdrawals, and ledger records |
+| Route                                 | Description                               |
+| ------------------------------------- | ----------------------------------------- |
+| `/dashboard/admin`                    | Admin overview and analytics              |
+| `/dashboard/admin/users`              | User and role management                  |
+| `/dashboard/admin/campaign-approvals` | Pending campaign moderation               |
+| `/dashboard/admin/campaigns`          | Campaign management                       |
+| `/dashboard/admin/withdrawals`        | Withdrawal processing                     |
+| `/dashboard/admin/reports`            | Report resolution                         |
+| `/dashboard/admin/finance`            | Payments, withdrawals, and ledger records |
 
 ---
 
@@ -265,28 +265,33 @@ src/
 
 Create a `docs/screenshots` folder and add the real screenshots using the exact filenames below. Then uncomment the image lines.
 
-
 ### Home Page
+
 ![CrowdSpark home page](docs/screenshots/login page.png)
 
 ### Explore Campaigns
+
 ![CrowdSpark campaign explorer](docs/screenshots/explore-campaigns.png)
 
 ### Campaign Details
+
 ![CrowdSpark campaign details](docs/screenshots/campaign-details.png)
 
 ### Supporter Dashboard
+
 ![CrowdSpark supporter dashboard](docs/screenshots/supporter-dashboard.png)
 
 ### Creator Dashboard
+
 ![CrowdSpark creator dashboard](docs/screenshots/creator-dashboard.png)
 
 ### Admin Dashboard
+
 ![CrowdSpark admin dashboard](docs/screenshots/admin-dashboard.png)
 
 ### Mobile View
-![CrowdSpark mobile responsive view](docs/screenshots/mobile-view.png)
 
+![CrowdSpark mobile responsive view](docs/screenshots/mobile-view.png)
 
 Recommended screenshot size: `1440 × 900` for desktop and `390 × 844` for mobile.
 
@@ -364,15 +369,15 @@ VITE_CONTACT_EMAIL=YOUR_EMAIL@example.com
 VITE_CONTACT_PHONE=+8801XXXXXXXXX
 ```
 
-| Variable | Description |
-|---|---|
-| `VITE_API_BASE_URL` | REST API base URL ending in `/api/v1` |
-| `VITE_AUTH_BASE_URL` | Better Auth server origin |
-| `VITE_GITHUB_URL` | Client repository or developer GitHub URL |
-| `VITE_LINKEDIN_URL` | Developer LinkedIn profile |
-| `VITE_FACEBOOK_URL` | Developer Facebook profile |
-| `VITE_CONTACT_EMAIL` | Public contact email |
-| `VITE_CONTACT_PHONE` | Public contact phone number |
+| Variable             | Description                               |
+| -------------------- | ----------------------------------------- |
+| `VITE_API_BASE_URL`  | REST API base URL ending in `/api/v1`     |
+| `VITE_AUTH_BASE_URL` | Better Auth server origin                 |
+| `VITE_GITHUB_URL`    | Client repository or developer GitHub URL |
+| `VITE_LINKEDIN_URL`  | Developer LinkedIn profile                |
+| `VITE_FACEBOOK_URL`  | Developer Facebook profile                |
+| `VITE_CONTACT_EMAIL` | Public contact email                      |
+| `VITE_CONTACT_PHONE` | Public contact phone number               |
 
 > Only public values belong in Vite environment variables. Never place server secrets, MongoDB credentials, Stripe secret keys, or Google client secrets in the frontend environment.
 
@@ -380,20 +385,20 @@ VITE_CONTACT_PHONE=+8801XXXXXXXXX
 
 ## Available Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start the Vite development server |
-| `npm run build` | Run TypeScript build and create production assets |
-| `npm run preview` | Preview the production build locally |
-| `npm run typecheck` | Run TypeScript validation |
-| `npm run lint` | Run ESLint with zero warnings allowed |
-| `npm run format` | Format source files with Prettier |
-| `npm run format:check` | Verify formatting without changing files |
-| `npm run test` | Run Vitest tests |
-| `npm run test:coverage` | Run tests with coverage reporting |
-| `npm run test:e2e` | Run Playwright end-to-end tests |
-| `npm run test:e2e:ui` | Open Playwright's interactive test runner |
-| `npm run test:e2e:report` | Open the latest Playwright HTML report |
+| Command                   | Description                                       |
+| ------------------------- | ------------------------------------------------- |
+| `npm run dev`             | Start the Vite development server                 |
+| `npm run build`           | Run TypeScript build and create production assets |
+| `npm run preview`         | Preview the production build locally              |
+| `npm run typecheck`       | Run TypeScript validation                         |
+| `npm run lint`            | Run ESLint with zero warnings allowed             |
+| `npm run format`          | Format source files with Prettier                 |
+| `npm run format:check`    | Verify formatting without changing files          |
+| `npm run test`            | Run Vitest tests                                  |
+| `npm run test:coverage`   | Run tests with coverage reporting                 |
+| `npm run test:e2e`        | Run Playwright end-to-end tests                   |
+| `npm run test:e2e:ui`     | Open Playwright's interactive test runner         |
+| `npm run test:e2e:report` | Open the latest Playwright HTML report            |
 
 ---
 

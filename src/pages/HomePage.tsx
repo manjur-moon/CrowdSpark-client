@@ -102,23 +102,14 @@ export default function HomePage() {
       ).data.data
   });
 
-  const campaignGrid = (
-    items: Campaign[] | undefined,
-    loading: boolean
-  ) => (
+  const campaignGrid = (items: Campaign[] | undefined, loading: boolean) => (
     <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
       {loading
         ? Array.from({ length: 4 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-[470px] animate-pulse rounded-2xl bg-slate-200"
-            />
+            <div key={index} className="h-[470px] animate-pulse rounded-2xl bg-slate-200" />
           ))
         : items?.map((campaign) => (
-            <CampaignCard
-              key={campaign.id || campaign._id}
-              campaign={campaign}
-            />
+            <CampaignCard key={campaign.id || campaign._id} campaign={campaign} />
           ))}
     </div>
   );
@@ -140,10 +131,7 @@ export default function HomePage() {
           className="min-h-[100svh]"
         >
           {slides.map((slide) => (
-            <SwiperSlide
-              key={slide.title}
-              className="min-h-[100svh]"
-            >
+            <SwiperSlide key={slide.title} className="min-h-[100svh]">
               <div className="relative min-h-[100svh] overflow-hidden">
                 {/* Existing slider image */}
                 <img
@@ -269,15 +257,10 @@ export default function HomePage() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="font-bold text-emerald-700">Top funded campaigns</p>
-            <h2 className="mt-2 text-3xl font-black">
-              Ideas receiving strong support
-            </h2>
+            <h2 className="mt-2 text-3xl font-black">Ideas receiving strong support</h2>
           </div>
 
-          <Link
-            to="/campaigns?sort=most_funded"
-            className="font-bold text-emerald-700"
-          >
+          <Link to="/campaigns?sort=most_funded" className="font-bold text-emerald-700">
             View all
           </Link>
         </div>
@@ -290,9 +273,7 @@ export default function HomePage() {
         <div className="container-app">
           <div className="mx-auto max-w-2xl text-center">
             <p className="font-bold text-emerald-700">Explore by category</p>
-            <h2 className="mt-2 text-3xl font-black">
-              Support the causes closest to you
-            </h2>
+            <h2 className="mt-2 text-3xl font-black">Support the causes closest to you</h2>
           </div>
 
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -320,15 +301,10 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section
-        id="how-it-works"
-        className="container-app py-20"
-      >
+      <section id="how-it-works" className="container-app py-20">
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-bold text-emerald-700">How it works</p>
-          <h2 className="mt-2 text-3xl font-black">
-            From discovery to real-world impact
-          </h2>
+          <h2 className="mt-2 text-3xl font-black">From discovery to real-world impact</h2>
         </div>
 
         <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -352,19 +328,12 @@ export default function HomePage() {
             const I = Icon as typeof Search;
 
             return (
-              <article
-                key={String(title)}
-                className="card p-7"
-              >
+              <article key={String(title)} className="card p-7">
                 <I className="size-9 text-emerald-600" />
 
-                <h3 className="mt-5 text-xl font-bold">
-                  {String(title)}
-                </h3>
+                <h3 className="mt-5 text-xl font-bold">{String(title)}</h3>
 
-                <p className="mt-3 leading-7 text-slate-600">
-                  {String(text)}
-                </p>
+                <p className="mt-3 leading-7 text-slate-600">{String(text)}</p>
               </article>
             );
           })}
@@ -376,27 +345,17 @@ export default function HomePage() {
         <div className="container-app">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="font-bold text-emerald-700">
-                Featured campaigns
-              </p>
+              <p className="font-bold text-emerald-700">Featured campaigns</p>
 
-              <h2 className="mt-2 text-3xl font-black">
-                Fresh opportunities to create impact
-              </h2>
+              <h2 className="mt-2 text-3xl font-black">Fresh opportunities to create impact</h2>
             </div>
 
-            <Link
-              to="/campaigns?sort=newest"
-              className="font-bold text-emerald-700"
-            >
+            <Link to="/campaigns?sort=newest" className="font-bold text-emerald-700">
               Browse newest
             </Link>
           </div>
 
-          {campaignGrid(
-            featuredCampaigns.data,
-            featuredCampaigns.isLoading
-          )}
+          {campaignGrid(featuredCampaigns.data, featuredCampaigns.isLoading)}
         </div>
       </section>
 
@@ -406,13 +365,11 @@ export default function HomePage() {
           <div>
             <ShieldCheck className="size-11 text-emerald-300" />
 
-            <h2 className="mt-5 text-4xl font-black">
-              Designed for trust and accountability
-            </h2>
+            <h2 className="mt-5 text-4xl font-black">Designed for trust and accountability</h2>
 
             <p className="mt-5 text-lg leading-8 text-emerald-100/80">
-              Campaign moderation, role-based dashboards, auditable credit
-              transactions and progress updates keep every participant informed.
+              Campaign moderation, role-based dashboards, auditable credit transactions and progress
+              updates keep every participant informed.
             </p>
           </div>
 
@@ -423,10 +380,7 @@ export default function HomePage() {
               "Contribution notifications",
               "Creator progress updates"
             ].map((item) => (
-              <div
-                key={item}
-                className="rounded-2xl bg-white/10 p-5 font-bold"
-              >
+              <div key={item} className="rounded-2xl bg-white/10 p-5 font-bold">
                 <BadgeCheck className="mb-3 text-emerald-300" />
                 {item}
               </div>
@@ -440,9 +394,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-bold text-emerald-700">Success stories</p>
 
-          <h2 className="mt-2 text-3xl font-black">
-            Small contributions, visible outcomes
-          </h2>
+          <h2 className="mt-2 text-3xl font-black">Small contributions, visible outcomes</h2>
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-3">
@@ -460,19 +412,12 @@ export default function HomePage() {
               "Transparent goals and Admin moderation helped a health campaign earn community trust."
             ]
           ].map(([title, text]) => (
-            <article
-              key={title}
-              className="card p-7"
-            >
+            <article key={title} className="card p-7">
               <HeartHandshake className="size-9 text-emerald-600" />
 
-              <h3 className="mt-5 text-xl font-bold">
-                {title}
-              </h3>
+              <h3 className="mt-5 text-xl font-bold">{title}</h3>
 
-              <p className="mt-3 leading-7 text-slate-600">
-                {text}
-              </p>
+              <p className="mt-3 leading-7 text-slate-600">{text}</p>
             </article>
           ))}
         </div>
@@ -484,9 +429,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-2xl text-center">
             <p className="font-bold text-emerald-700">Testimonials</p>
 
-            <h2 className="mt-2 text-3xl font-black">
-              Why users choose CrowdSpark
-            </h2>
+            <h2 className="mt-2 text-3xl font-black">Why users choose CrowdSpark</h2>
           </div>
 
           <Swiper
@@ -527,18 +470,12 @@ export default function HomePage() {
             ].map(([name, role, quote]) => (
               <SwiperSlide key={name}>
                 <article className="card h-full p-7">
-                  <p className="leading-7 text-slate-600">
-                    “{quote}”
-                  </p>
+                  <p className="leading-7 text-slate-600">“{quote}”</p>
 
                   <div className="mt-6">
-                    <p className="font-bold">
-                      {name}
-                    </p>
+                    <p className="font-bold">{name}</p>
 
-                    <p className="text-sm text-emerald-700">
-                      {role}
-                    </p>
+                    <p className="text-sm text-emerald-700">{role}</p>
                   </div>
                 </article>
               </SwiperSlide>
@@ -553,9 +490,7 @@ export default function HomePage() {
           <div className="text-center">
             <p className="font-bold text-emerald-700">FAQ</p>
 
-            <h2 className="mt-2 text-3xl font-black">
-              Common questions
-            </h2>
+            <h2 className="mt-2 text-3xl font-black">Common questions</h2>
           </div>
 
           <div className="mt-8 space-y-4">
@@ -577,17 +512,10 @@ export default function HomePage() {
                 "No. Public registration supports only Supporter and Creator roles. Admin access is managed securely by existing Admins."
               ]
             ].map(([question, answer]) => (
-              <details
-                key={question}
-                className="card p-5"
-              >
-                <summary className="cursor-pointer font-bold text-slate-950">
-                  {question}
-                </summary>
+              <details key={question} className="card p-5">
+                <summary className="cursor-pointer font-bold text-slate-950">{question}</summary>
 
-                <p className="mt-3 leading-7 text-slate-600">
-                  {answer}
-                </p>
+                <p className="mt-3 leading-7 text-slate-600">{answer}</p>
               </details>
             ))}
           </div>
