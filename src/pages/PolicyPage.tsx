@@ -1,10 +1,4 @@
-import {
-  ArrowUpRight,
-  FileText,
-  LockKeyhole,
-  Scale,
-  ShieldCheck
-} from "lucide-react";
+import { ArrowUpRight, FileText, LockKeyhole, Scale, ShieldCheck } from "lucide-react";
 
 import { motion } from "framer-motion";
 
@@ -80,11 +74,7 @@ export function TermsPage() {
   );
 }
 
-function Policy({
-  title,
-  description,
-  sections
-}: PolicyProps) {
+function Policy({ title, description, sections }: PolicyProps) {
   const isPrivacy = title === "Privacy Policy";
 
   return (
@@ -257,16 +247,10 @@ function Policy({
                   dark:text-[#10261f]
                 "
               >
-                {isPrivacy ? (
-                  <LockKeyhole className="size-4" />
-                ) : (
-                  <Scale className="size-4" />
-                )}
+                {isPrivacy ? <LockKeyhole className="size-4" /> : <Scale className="size-4" />}
               </div>
 
-              <p className="editorial-label">
-                CrowdSpark policy
-              </p>
+              <p className="editorial-label">CrowdSpark policy</p>
             </div>
 
             <h1
@@ -326,7 +310,6 @@ function Policy({
                   opacity-30
                 "
               />
-
               Last updated: July 14, 2026
             </div>
           </div>
@@ -509,8 +492,8 @@ function Policy({
               />
 
               <p>
-                These policies describe the current CrowdSpark demo platform
-                behavior and operating rules.
+                These policies describe the current CrowdSpark demo platform behavior and operating
+                rules.
               </p>
             </div>
           </motion.aside>
