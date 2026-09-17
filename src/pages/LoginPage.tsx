@@ -1,23 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  ArrowRight,
-  Eye,
-  EyeOff,
-  LogIn,
-  ShieldCheck,
-  Sparkles
-} from "lucide-react";
+import { ArrowRight, Eye, EyeOff, LogIn, ShieldCheck, Sparkles } from "lucide-react";
 
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import {
-  Link,
-  useNavigate,
-  useSearchParams
-} from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import { toast } from "sonner";
 import { z } from "zod";
@@ -33,19 +22,13 @@ import type { CurrentUserResponse } from "../types";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email address"),
-  password: z
-    .string()
-    .min(8, "Password must contain at least 8 characters")
+  password: z.string().min(8, "Password must contain at least 8 characters")
 });
 
 type Values = z.infer<typeof schema>;
 
 export function safeRedirect(value: string | null) {
-  if (
-    !value ||
-    !value.startsWith("/") ||
-    value.startsWith("//")
-  ) {
+  if (!value || !value.startsWith("/") || value.startsWith("//")) {
     return null;
   }
 
@@ -123,10 +106,7 @@ export default function LoginPage() {
     register,
     handleSubmit,
     setValue,
-    formState: {
-      errors,
-      isSubmitting
-    }
+    formState: { errors, isSubmitting }
   } = useForm<Values>({
     resolver: zodResolver(schema),
 
@@ -145,10 +125,7 @@ export default function LoginPage() {
       });
 
       if (result.error) {
-        toast.error(
-          result.error.message ||
-            "Email or password is incorrect"
-        );
+        toast.error(result.error.message || "Email or password is incorrect");
 
         return;
       }
@@ -156,9 +133,7 @@ export default function LoginPage() {
       const token = await refreshAccessToken();
 
       if (!token) {
-        throw new Error(
-          "Access token could not be created"
-        );
+        throw new Error("Access token could not be created");
       }
 
       const response = await api.get<{
@@ -169,41 +144,23 @@ export default function LoginPage() {
 
       await refresh();
 
-      const redirect = safeRedirect(
-        params.get("redirect")
-      );
+      const redirect = safeRedirect(params.get("redirect"));
 
-      navigate(
-        me.profile
-          ? (redirect ??
-              dashboardPath(me.profile.role))
-          : "/onboarding",
-        {
-          replace: true
-        }
-      );
+      navigate(me.profile ? (redirect ?? dashboardPath(me.profile.role)) : "/onboarding", {
+        replace: true
+      });
 
       toast.success("Signed in successfully");
     } catch (error) {
-      console.error(
-        "CrowdSpark login failed:",
-        error
-      );
+      console.error("CrowdSpark login failed:", error);
 
       toast.error(
-        apiErrorMessage(
-          error,
-          error instanceof Error
-            ? error.message
-            : "Sign in failed"
-        )
+        apiErrorMessage(error, error instanceof Error ? error.message : "Sign in failed")
       );
     }
   };
 
-  const demo = (
-    role: "supporter" | "creator" | "admin"
-  ) => {
+  const demo = (role: "supporter" | "creator" | "admin") => {
     const account = demoAccounts[role];
 
     setValue("email", account.email, {
@@ -223,12 +180,7 @@ export default function LoginPage() {
         callbackURL: `${window.location.origin}/onboarding`
       });
     } catch (error) {
-      toast.error(
-        apiErrorMessage(
-          error,
-          "Google login is not configured"
-        )
-      );
+      toast.error(apiErrorMessage(error, "Google login is not configured"));
     }
   };
 
@@ -284,17 +236,17 @@ export default function LoginPage() {
           />
 
           {/* Forest green tint */}
-<div
-  className="
+          <div
+            className="
     absolute
     inset-0
     bg-[#0c3024]/48
   "
-/>
+          />
 
-{/* Cinematic depth */}
-<div
-  className="
+          {/* Cinematic depth */}
+          <div
+            className="
     absolute
     inset-0
     bg-gradient-to-br
@@ -302,16 +254,16 @@ export default function LoginPage() {
     via-[#102b21]/15
     to-[#050c09]/76
   "
-/>
+          />
 
-{/* Sage highlight */}
-<div
-  className="
+          {/* Sage highlight */}
+          <div
+            className="
     absolute
     inset-0
     bg-[radial-gradient(circle_at_25%_24%,rgba(163,199,182,0.18),transparent_38%)]
   "
-/>
+          />
 
           {/* Dark depth */}
           <div
@@ -456,9 +408,8 @@ export default function LoginPage() {
                 text-[#c5d5cd]
               "
             >
-              Access your CrowdSpark workspace to
-              support campaigns, manage projects and
-              follow measurable community impact.
+              Access your CrowdSpark workspace to support campaigns, manage projects and follow
+              measurable community impact.
             </p>
 
             <div
@@ -475,7 +426,6 @@ export default function LoginPage() {
               "
             >
               <ShieldCheck className="size-4" />
-
               Secure role-based access
             </div>
           </motion.div>
@@ -498,9 +448,7 @@ export default function LoginPage() {
           >
             <span>CrowdSpark</span>
 
-            <span>
-              Transparent crowdfunding platform
-            </span>
+            <span>Transparent crowdfunding platform</span>
           </div>
         </div>
       </section>
@@ -633,9 +581,7 @@ export default function LoginPage() {
 
           {/* Heading */}
           <div>
-            <p className="editorial-label">
-              Account access
-            </p>
+            <p className="editorial-label">Account access</p>
 
             <h2
               className="
@@ -664,8 +610,7 @@ export default function LoginPage() {
                 dark:text-[#aebfb7]
               "
             >
-              Access your role-based dashboard and
-              continue where you left off.
+              Access your role-based dashboard and continue where you left off.
             </p>
           </div>
 
@@ -826,11 +771,7 @@ export default function LoginPage() {
                       ${fieldClass}
                       pr-12
                     `}
-                    type={
-                      showPassword
-                        ? "text"
-                        : "password"
-                    }
+                    type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     placeholder="Enter your password"
                     {...register("password")}
@@ -838,16 +779,8 @@ export default function LoginPage() {
 
                   <button
                     type="button"
-                    aria-label={
-                      showPassword
-                        ? "Hide password"
-                        : "Show password"
-                    }
-                    onClick={() =>
-                      setShowPassword(
-                        (value) => !value
-                      )
-                    }
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    onClick={() => setShowPassword((value) => !value)}
                     className="
                       absolute
                       right-3
@@ -873,11 +806,7 @@ export default function LoginPage() {
                       dark:hover:text-white
                     "
                   >
-                    {showPassword ? (
-                      <EyeOff className="size-4" />
-                    ) : (
-                      <Eye className="size-4" />
-                    )}
+                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                   </button>
                 </div>
 
@@ -952,9 +881,7 @@ export default function LoginPage() {
               >
                 <LogIn className="size-4" />
 
-                {isSubmitting
-                  ? "Signing in..."
-                  : "Sign in"}
+                {isSubmitting ? "Signing in..." : "Sign in"}
 
                 {!isSubmitting ? (
                   <ArrowRight
@@ -1059,7 +986,6 @@ export default function LoginPage() {
                 "
               >
                 <GoogleIcon />
-
                 Continue with Google
               </button>
             </div>
@@ -1112,13 +1038,7 @@ export default function LoginPage() {
                 gap-2
               "
             >
-              {(
-                [
-                  "supporter",
-                  "creator",
-                  "admin"
-                ] as const
-              ).map((role) => (
+              {(["supporter", "creator", "admin"] as const).map((role) => (
                 <button
                   key={role}
                   type="button"
@@ -1202,11 +1122,7 @@ export default function LoginPage() {
 
 function GoogleIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className="size-[18px]"
-    >
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-[18px]">
       <path
         fill="#4285F4"
         d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-1.99 3.02v2.54h3.23c1.89-1.74 2.98-4.3 2.98-7.41Z"
