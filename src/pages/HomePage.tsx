@@ -102,44 +102,41 @@ export default function HomePage() {
       ).data.data
   });
 
-  const campaignGrid = (
-  items: Campaign[] | undefined,
-  loading: boolean
-) => {
-  if (loading) {
-    return (
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div
-            key={index}
-            className="h-[470px] overflow-hidden rounded-[28px] border border-[#77877f]/25 bg-white/30 p-4 backdrop-blur-sm dark:border-[#496057]/30 dark:bg-white/5"
-          >
-            <div className="h-full animate-pulse rounded-[22px] bg-[#93a39c]/25 dark:bg-[#304038]/40" />
-          </div>
-        ))}
-      </div>
-    );
-  }
+  const campaignGrid = (items: Campaign[] | undefined, loading: boolean) => {
+    if (loading) {
+      return (
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-[470px] overflow-hidden rounded-[28px] border border-[#77877f]/25 bg-white/30 p-4 backdrop-blur-sm dark:border-[#496057]/30 dark:bg-white/5"
+            >
+              <div className="h-full animate-pulse rounded-[22px] bg-[#93a39c]/25 dark:bg-[#304038]/40" />
+            </div>
+          ))}
+        </div>
+      );
+    }
 
-  if (!items || items.length === 0) {
-    return (
-      <div className="mt-10 rounded-[32px] border border-[#77877f]/25 bg-white/35 px-8 py-16 text-center backdrop-blur-sm dark:border-[#496057]/30 dark:bg-white/5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#5a6c64] dark:text-[#93a79e]">
-          No featured data yet
-        </p>
+    if (!items || items.length === 0) {
+      return (
+        <div className="mt-10 rounded-[32px] border border-[#77877f]/25 bg-white/35 px-8 py-16 text-center backdrop-blur-sm dark:border-[#496057]/30 dark:bg-white/5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#5a6c64] dark:text-[#93a79e]">
+            No featured data yet
+          </p>
 
-        <h3 className="mt-4 text-2xl font-semibold tracking-[-0.03em] text-[#18231f] dark:text-[#edf4f0]">
-          Top campaigns will appear here
-        </h3>
+          <h3 className="mt-4 text-2xl font-semibold tracking-[-0.03em] text-[#18231f] dark:text-[#edf4f0]">
+            Top campaigns will appear here
+          </h3>
 
-        <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[#31423b] dark:text-[#bccbc4]">
-          Once campaign data is available from the API, this section will automatically show the
-          strongest-performing campaigns.
-        </p>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[#31423b] dark:text-[#bccbc4]">
+            Once campaign data is available from the API, this section will automatically show the
+            strongest-performing campaigns.
+          </p>
 
-        <Link
-          to="/campaigns"
-          className="
+          <Link
+            to="/campaigns"
+            className="
   inline-flex
   items-center
   gap-2
@@ -161,25 +158,22 @@ export default function HomePage() {
 
   hover:bg-[#b2c6bc]
 "
-        >
-          Explore campaigns
-          <ArrowRight className="size-4" />
-        </Link>
+          >
+            Explore campaigns
+            <ArrowRight className="size-4" />
+          </Link>
+        </div>
+      );
+    }
+
+    return (
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        {items.map((campaign) => (
+          <CampaignCard key={campaign.id || campaign._id} campaign={campaign} />
+        ))}
       </div>
     );
-  }
-
-  return (
-    <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-      {items.map((campaign) => (
-        <CampaignCard
-          key={campaign.id || campaign._id}
-          campaign={campaign}
-        />
-      ))}
-    </div>
-  );
-};
+  };
 
   return (
     <main>

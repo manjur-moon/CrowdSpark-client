@@ -6,16 +6,11 @@ import type { Campaign } from "../types";
 export function CampaignCard({ campaign }: { campaign: Campaign }) {
   const goal = campaign.fundingGoalCredits ?? campaign.goalCredits;
 
-  const progress = Math.min(
-    100,
-    Math.round((campaign.raisedCredits / Math.max(1, goal)) * 100)
-  );
+  const progress = Math.min(100, Math.round((campaign.raisedCredits / Math.max(1, goal)) * 100));
 
   const days = Math.max(
     0,
-    Math.ceil(
-      (new Date(campaign.deadline).getTime() - Date.now()) / 86400000
-    )
+    Math.ceil((new Date(campaign.deadline).getTime() - Date.now()) / 86400000)
   );
 
   return (

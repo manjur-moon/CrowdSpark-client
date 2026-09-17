@@ -1,11 +1,4 @@
-import {
-  Facebook,
-  Github,
-  Linkedin,
-  Mail,
-  MapPin,
-  Phone
-} from "lucide-react";
+import { Facebook, Github, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 
 import { Link } from "react-router-dom";
 
@@ -24,29 +17,19 @@ const linkClass = `
 `;
 
 export function Footer() {
-  const githubUrl =
-    import.meta.env.VITE_GITHUB_URL ||
-    "https://github.com";
+  const githubUrl = import.meta.env.VITE_GITHUB_URL || "https://github.com";
 
-  const linkedInUrl =
-    import.meta.env.VITE_LINKEDIN_URL ||
-    "https://www.linkedin.com";
+  const linkedInUrl = import.meta.env.VITE_LINKEDIN_URL || "https://www.linkedin.com";
 
-  const facebookUrl =
-    import.meta.env.VITE_FACEBOOK_URL ||
-    "https://www.facebook.com";
+  const facebookUrl = import.meta.env.VITE_FACEBOOK_URL || "https://www.facebook.com";
 
-  const contactEmail =
-    import.meta.env.VITE_CONTACT_EMAIL ||
-    "support@crowdspark.app";
+  const contactEmail = import.meta.env.VITE_CONTACT_EMAIL || "support@crowdspark.app";
 
-  const contactPhone =
-    import.meta.env.VITE_CONTACT_PHONE ||
-    "+880 1700-000000";
+  const contactPhone = import.meta.env.VITE_CONTACT_PHONE || "+880 1700-000000";
 
   return (
     <footer
-  className="
+      className="
     relative
     overflow-hidden
 
@@ -59,7 +42,7 @@ export function Footer() {
     dark:bg-[#09140f]
     dark:text-[#edf4f0]
   "
->
+    >
       {/* Soft background atmosphere */}
       <div
         aria-hidden="true"
@@ -120,8 +103,8 @@ export function Footer() {
               dark:text-[#b5c6be]
             "
           >
-            Transparent crowdfunding for projects, causes and products that
-            create measurable community impact.
+            Transparent crowdfunding for projects, causes and products that create measurable
+            community impact.
           </p>
 
           {/* Social media */}
@@ -188,31 +171,19 @@ export function Footer() {
           </h3>
 
           <div className="mt-4 grid gap-3">
-            <Link
-              className={linkClass}
-              to="/"
-            >
+            <Link className={linkClass} to="/">
               Home
             </Link>
 
-            <Link
-              className={linkClass}
-              to="/campaigns"
-            >
+            <Link className={linkClass} to="/campaigns">
               Explore campaigns
             </Link>
 
-            <Link
-              className={linkClass}
-              to="/register?role=creator"
-            >
+            <Link className={linkClass} to="/register?role=creator">
               Start a campaign
             </Link>
 
-            <Link
-              className={linkClass}
-              to="/about"
-            >
+            <Link className={linkClass} to="/about">
               About us
             </Link>
           </div>
@@ -233,33 +204,19 @@ export function Footer() {
           </h3>
 
           <div className="mt-4 grid gap-3">
-            <Link
-              className={linkClass}
-              to="/contact"
-            >
+            <Link className={linkClass} to="/contact">
               Contact and support
             </Link>
 
-            <Link
-              className={linkClass}
-              to="/privacy"
-            >
+            <Link className={linkClass} to="/privacy">
               Privacy policy
             </Link>
 
-            <Link
-              className={linkClass}
-              to="/terms"
-            >
+            <Link className={linkClass} to="/terms">
               Terms and conditions
             </Link>
 
-            <a
-              className={linkClass}
-              href={githubUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a className={linkClass} href={githubUrl} target="_blank" rel="noreferrer">
               Join as developer
             </a>
           </div>

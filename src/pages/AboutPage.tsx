@@ -1,10 +1,5 @@
 import { motion } from "framer-motion";
-import {
-  BadgeCheck,
-  Eye,
-  HeartHandshake,
-  ShieldCheck
-} from "lucide-react";
+import { BadgeCheck, Eye, HeartHandshake, ShieldCheck } from "lucide-react";
 
 const values = [
   {
@@ -62,7 +57,7 @@ const cardVariants = {
 export default function AboutPage() {
   return (
     <main
-  className="
+      className="
     relative
     min-h-screen
     overflow-hidden
@@ -83,22 +78,22 @@ export default function AboutPage() {
     dark:[--editorial-card:rgba(10,30,23,0.76)]
     dark:[--editorial-border:rgba(211,229,220,0.13)]
   "
->
-     {/* Background image */}
-<div
-  aria-hidden="true"
-  className="
+    >
+      {/* Background image */}
+      <div
+        aria-hidden="true"
+        className="
     pointer-events-none
     fixed
     inset-0
     z-0
     overflow-hidden
   "
->
-  <img
-    src="https://images.pexels.com/photos/7345444/pexels-photo-7345444.jpeg"
-    alt=""
-    className="
+      >
+        <img
+          src="https://images.pexels.com/photos/7345444/pexels-photo-7345444.jpeg"
+          alt=""
+          className="
       h-full
       w-full
       object-cover
@@ -114,41 +109,41 @@ export default function AboutPage() {
       dark:brightness-[0.48]
       dark:opacity-[0.54]
     "
-  />
+        />
 
-  {/* Forest green tint */}
-  <div
-    className="
+        {/* Forest green tint */}
+        <div
+          className="
       absolute
       inset-0
       bg-[#123b2d]/48
       dark:bg-[#082b20]/58
     "
-  />
+        />
 
-  {/* Deep editorial wash */}
-  <div
-    className="
+        {/* Deep editorial wash */}
+        <div
+          className="
       absolute
       inset-0
       bg-[#10251e]/34
       dark:bg-[#07130f]/42
     "
-  />
+        />
 
-  {/* Green atmospheric light */}
-  <div
-    className="
+        {/* Green atmospheric light */}
+        <div
+          className="
       absolute
       inset-0
       bg-[radial-gradient(circle_at_18%_10%,rgba(100,158,132,0.18),transparent_42%)]
       dark:bg-[radial-gradient(circle_at_18%_10%,rgba(72,137,108,0.14),transparent_42%)]
     "
-  />
+        />
 
-  {/* Bottom depth */}
-  <div
-    className="
+        {/* Bottom depth */}
+        <div
+          className="
       absolute
       inset-0
       bg-gradient-to-b
@@ -157,23 +152,23 @@ export default function AboutPage() {
       to-[#07150f]/30
       dark:to-black/38
     "
-  />
+        />
 
-  {/* Edge vignette */}
-  <div
-    className="
+        {/* Edge vignette */}
+        <div
+          className="
       absolute
       inset-0
       bg-[radial-gradient(circle_at_center,transparent_45%,rgba(3,15,10,0.26)_100%)]
       dark:bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.34)_100%)]
     "
-  />
-</div>
+        />
+      </div>
 
-{/* Editorial guide lines */}
-<div
-  aria-hidden="true"
-  className="
+      {/* Editorial guide lines */}
+      <div
+        aria-hidden="true"
+        className="
     pointer-events-none
     absolute
     bottom-0
@@ -189,11 +184,11 @@ export default function AboutPage() {
 
     xl:block
   "
-/>
+      />
 
-<div
-  aria-hidden="true"
-  className="
+      <div
+        aria-hidden="true"
+        className="
     pointer-events-none
     absolute
     bottom-0
@@ -209,11 +204,11 @@ export default function AboutPage() {
 
     xl:block
   "
-/>
+      />
 
-{/* Page content */}
-<div
-  className="
+      {/* Page content */}
+      <div
+        className="
     container-app
     relative
     z-10
@@ -222,7 +217,7 @@ export default function AboutPage() {
     sm:py-12
     lg:py-14
   "
->
+      >
         {/* Hero */}
         <section className="mx-auto max-w-6xl">
           <div
@@ -251,9 +246,7 @@ export default function AboutPage() {
                 ease: [0.22, 1, 0.36, 1]
               }}
             >
-              <p className="editorial-label">
-                About CrowdSpark
-              </p>
+              <p className="editorial-label">About CrowdSpark</p>
 
               <h1
                 className="
@@ -294,9 +287,8 @@ export default function AboutPage() {
                   text-[var(--editorial-text-soft)]
                 "
               >
-                CrowdSpark connects Supporters with Creators through moderated
-                campaigns, platform credits, progress updates and traceable
-                financial records.
+                CrowdSpark connects Supporters with Creators through moderated campaigns, platform
+                credits, progress updates and traceable financial records.
               </p>
 
               <motion.div
@@ -351,9 +343,7 @@ export default function AboutPage() {
             "
           >
             <div>
-              <p className="editorial-label">
-                Our principles
-              </p>
+              <p className="editorial-label">Our principles</p>
 
               <h2
                 className="
@@ -377,8 +367,8 @@ export default function AboutPage() {
                 text-[var(--editorial-text-soft)]
               "
             >
-              Every core workflow is designed to make participation easier to
-              understand, verify and follow.
+              Every core workflow is designed to make participation easier to understand, verify and
+              follow.
             </p>
           </motion.div>
 
@@ -399,24 +389,18 @@ export default function AboutPage() {
               md:grid-cols-2
             "
           >
-            {values.map(
-              ({
-                icon: Icon,
-                number,
-                title,
-                text
-              }) => (
-                <motion.article
-                  key={title}
-                  variants={cardVariants}
-                  whileHover={{
-                    y: -6,
-                    scale: 1.006
-                  }}
-                  transition={{
-                    duration: 0.25
-                  }}
-                  className="
+            {values.map(({ icon: Icon, number, title, text }) => (
+              <motion.article
+                key={title}
+                variants={cardVariants}
+                whileHover={{
+                  y: -6,
+                  scale: 1.006
+                }}
+                transition={{
+                  duration: 0.25
+                }}
+                className="
                     group
                     relative
                     min-h-[245px]
@@ -429,11 +413,11 @@ export default function AboutPage() {
                     backdrop-blur-md
                     sm:p-7
                   "
-                >
-                  {/* Hover glow */}
-                  <div
-                    aria-hidden="true"
-                    className="
+              >
+                {/* Hover glow */}
+                <div
+                  aria-hidden="true"
+                  className="
                       pointer-events-none
                       absolute
                       -right-20
@@ -447,11 +431,11 @@ export default function AboutPage() {
                       group-hover:bg-[#91aa9d]/20
                       dark:group-hover:bg-[#91aa9d]/9
                     "
-                  />
+                />
 
-                  {/* Top */}
-                  <div
-                    className="
+                {/* Top */}
+                <div
+                  className="
                       relative
                       z-10
                       flex
@@ -459,18 +443,18 @@ export default function AboutPage() {
                       justify-between
                       gap-6
                     "
-                  >
-                    <motion.div
-  whileHover={{
-    rotate: 8,
-    scale: 1.07
-  }}
-  transition={{
-    type: "spring",
-    stiffness: 280,
-    damping: 18
-  }}
-  className="
+                >
+                  <motion.div
+                    whileHover={{
+                      rotate: 8,
+                      scale: 1.07
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 280,
+                      damping: 18
+                    }}
+                    className="
     flex
     size-11
     items-center
@@ -485,12 +469,12 @@ export default function AboutPage() {
     dark:bg-[#d6e3dd]
     dark:text-[#10261f]
   "
->
-  <Icon className="size-[18px]" />
-</motion.div>
+                  >
+                    <Icon className="size-[18px]" />
+                  </motion.div>
 
-                    <span
-                      className="
+                  <span
+                    className="
                         text-[10px]
                         font-semibold
                         tracking-[0.22em]
@@ -499,14 +483,14 @@ export default function AboutPage() {
                         duration-300
                         group-hover:-translate-y-1
                       "
-                    >
-                      {number}
-                    </span>
-                  </div>
+                  >
+                    {number}
+                  </span>
+                </div>
 
-                  {/* Content */}
-                  <div
-                    className="
+                {/* Content */}
+                <div
+                  className="
                       relative
                       z-10
                       mt-9
@@ -515,21 +499,21 @@ export default function AboutPage() {
                       ease-out
                       group-hover:-translate-y-1
                     "
-                  >
-                    <h3
-                      className="
+                >
+                  <h3
+                    className="
                         display-heading
                         max-w-lg
                         text-[clamp(2.2rem,3.5vw,3.1rem)]
                         leading-[0.96]
                         text-[var(--editorial-text)]
                       "
-                    >
-                      {title}
-                    </h3>
+                  >
+                    {title}
+                  </h3>
 
-                    <p
-                      className="
+                  <p
+                    className="
                         mt-3
                         max-w-xl
                         text-sm
@@ -537,15 +521,15 @@ export default function AboutPage() {
                         text-[var(--editorial-text-soft)]
                         sm:text-[15px]
                       "
-                    >
-                      {text}
-                    </p>
-                  </div>
+                  >
+                    {text}
+                  </p>
+                </div>
 
-                  {/* Animated accent */}
-                  <div
-                    aria-hidden="true"
-                    className="
+                {/* Animated accent */}
+                <div
+                  aria-hidden="true"
+                  className="
                       absolute
                       bottom-0
                       left-0
@@ -560,10 +544,9 @@ export default function AboutPage() {
                       group-hover:scale-x-100
                       dark:bg-[#d6e3dd]
                     "
-                  />
-                </motion.article>
-              )
-            )}
+                />
+              </motion.article>
+            ))}
           </motion.div>
         </section>
       </div>
