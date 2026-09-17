@@ -36,15 +36,7 @@ import {
 import { api } from "../lib/api";
 import { useAuth } from "../lib/AuthContext";
 
-const CHART_COLORS = [
-  "#20352d",
-  "#527064",
-  "#78988a",
-  "#91aa9d",
-  "#afc1b8",
-  "#677c72",
-  "#3e594d"
-];
+const CHART_COLORS = ["#20352d", "#527064", "#78988a", "#91aa9d", "#afc1b8", "#677c72", "#3e594d"];
 
 interface SupporterDashboardData {
   totalContributions: number;
@@ -122,10 +114,7 @@ interface AdminDashboardData {
   }>;
 }
 
-type DashboardData =
-  | SupporterDashboardData
-  | CreatorDashboardData
-  | AdminDashboardData;
+type DashboardData = SupporterDashboardData | CreatorDashboardData | AdminDashboardData;
 
 type StatItem = {
   label: string;
@@ -277,9 +266,7 @@ function ChartCard({
           "
         >
           <div>
-            <p className="editorial-label">
-              Analytics
-            </p>
+            <p className="editorial-label">Analytics</p>
 
             <h2
               className="
@@ -343,11 +330,7 @@ function ChartCard({
   );
 }
 
-function SupporterCharts({
-  data
-}: {
-  data: SupporterDashboardData;
-}) {
+function SupporterCharts({ data }: { data: SupporterDashboardData }) {
   return (
     <div
       className="
@@ -361,10 +344,7 @@ function SupporterCharts({
         description="Approved contribution credits grouped by month."
       >
         {data.monthlyContributions.length ? (
-          <ResponsiveContainer
-            width="100%"
-            height="100%"
-          >
+          <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={data.monthlyContributions}
               margin={{
@@ -374,29 +354,13 @@ function SupporterCharts({
                 bottom: 0
               }}
             >
-              <CartesianGrid
-                stroke={gridStroke}
-                strokeDasharray="4 4"
-                vertical={false}
-              />
+              <CartesianGrid stroke={gridStroke} strokeDasharray="4 4" vertical={false} />
 
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={axisTick} />
 
-              <YAxis
-                allowDecimals={false}
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={axisTick} />
 
-              <Tooltip
-                contentStyle={chartTooltipStyle}
-              />
+              <Tooltip contentStyle={chartTooltipStyle} />
 
               <Legend
                 wrapperStyle={{
@@ -431,10 +395,7 @@ function SupporterCharts({
         description="Count of your contributions by current status."
       >
         {data.statusDistribution.length ? (
-          <ResponsiveContainer
-            width="100%"
-            height="100%"
-          >
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={data.statusDistribution}
@@ -444,25 +405,16 @@ function SupporterCharts({
                 outerRadius={88}
                 paddingAngle={3}
               >
-                {data.statusDistribution.map(
-                  (entry, index) => (
-                    <Cell
-                      key={entry.status}
-                      fill={
-                        CHART_COLORS[
-                          index %
-                            CHART_COLORS.length
-                        ]
-                      }
-                      stroke="transparent"
-                    />
-                  )
-                )}
+                {data.statusDistribution.map((entry, index) => (
+                  <Cell
+                    key={entry.status}
+                    fill={CHART_COLORS[index % CHART_COLORS.length]}
+                    stroke="transparent"
+                  />
+                ))}
               </Pie>
 
-              <Tooltip
-                contentStyle={chartTooltipStyle}
-              />
+              <Tooltip contentStyle={chartTooltipStyle} />
 
               <Legend
                 wrapperStyle={{
@@ -480,11 +432,7 @@ function SupporterCharts({
   );
 }
 
-function CreatorCharts({
-  data
-}: {
-  data: CreatorDashboardData;
-}) {
+function CreatorCharts({ data }: { data: CreatorDashboardData }) {
   return (
     <div
       className="
@@ -493,15 +441,9 @@ function CreatorCharts({
         xl:grid-cols-2
       "
     >
-      <ChartCard
-        title="Campaign funding"
-        description="Raised credits compared with funding goals."
-      >
+      <ChartCard title="Campaign funding" description="Raised credits compared with funding goals.">
         {data.campaignFunds.length ? (
-          <ResponsiveContainer
-            width="100%"
-            height="100%"
-          >
+          <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data.campaignFunds}
               margin={{
@@ -511,32 +453,19 @@ function CreatorCharts({
                 bottom: 0
               }}
             >
-              <CartesianGrid
-                stroke={gridStroke}
-                strokeDasharray="4 4"
-                vertical={false}
-              />
+              <CartesianGrid stroke={gridStroke} strokeDasharray="4 4" vertical={false} />
 
               <XAxis
                 dataKey="title"
                 axisLine={false}
                 tickLine={false}
                 tick={axisTick}
-                tickFormatter={(value) =>
-                  String(value).slice(0, 11)
-                }
+                tickFormatter={(value) => String(value).slice(0, 11)}
               />
 
-              <YAxis
-                allowDecimals={false}
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={axisTick} />
 
-              <Tooltip
-                contentStyle={chartTooltipStyle}
-              />
+              <Tooltip contentStyle={chartTooltipStyle} />
 
               <Legend
                 wrapperStyle={{
@@ -544,19 +473,9 @@ function CreatorCharts({
                 }}
               />
 
-              <Bar
-                dataKey="raisedCredits"
-                name="Raised"
-                fill="#527064"
-                radius={[7, 7, 0, 0]}
-              />
+              <Bar dataKey="raisedCredits" name="Raised" fill="#527064" radius={[7, 7, 0, 0]} />
 
-              <Bar
-                dataKey="goalCredits"
-                name="Goal"
-                fill="#aebfb7"
-                radius={[7, 7, 0, 0]}
-              />
+              <Bar dataKey="goalCredits" name="Goal" fill="#aebfb7" radius={[7, 7, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         ) : (
@@ -569,10 +488,7 @@ function CreatorCharts({
         description="Approved credits received across your campaigns."
       >
         {data.monthlyContributions.length ? (
-          <ResponsiveContainer
-            width="100%"
-            height="100%"
-          >
+          <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={data.monthlyContributions}
               margin={{
@@ -582,29 +498,13 @@ function CreatorCharts({
                 bottom: 0
               }}
             >
-              <CartesianGrid
-                stroke={gridStroke}
-                strokeDasharray="4 4"
-                vertical={false}
-              />
+              <CartesianGrid stroke={gridStroke} strokeDasharray="4 4" vertical={false} />
 
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={axisTick} />
 
-              <YAxis
-                allowDecimals={false}
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={axisTick} />
 
-              <Tooltip
-                contentStyle={chartTooltipStyle}
-              />
+              <Tooltip contentStyle={chartTooltipStyle} />
 
               <Legend
                 wrapperStyle={{
@@ -636,16 +536,11 @@ function CreatorCharts({
   );
 }
 
-function AdminCharts({
-  data
-}: {
-  data: AdminDashboardData;
-}) {
-  const monthlyPayments =
-    data.monthlyPayments.map((item) => ({
-      ...item,
-      amount: item.amountCents / 100
-    }));
+function AdminCharts({ data }: { data: AdminDashboardData }) {
+  const monthlyPayments = data.monthlyPayments.map((item) => ({
+    ...item,
+    amount: item.amountCents / 100
+  }));
 
   return (
     <div
@@ -655,15 +550,9 @@ function AdminCharts({
         xl:grid-cols-2
       "
     >
-      <ChartCard
-        title="User roles"
-        description="Active platform accounts grouped by role."
-      >
+      <ChartCard title="User roles" description="Active platform accounts grouped by role.">
         {data.roleDistribution.length ? (
-          <ResponsiveContainer
-            width="100%"
-            height="100%"
-          >
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={data.roleDistribution}
@@ -673,25 +562,16 @@ function AdminCharts({
                 outerRadius={88}
                 paddingAngle={3}
               >
-                {data.roleDistribution.map(
-                  (entry, index) => (
-                    <Cell
-                      key={entry.role}
-                      fill={
-                        CHART_COLORS[
-                          index %
-                            CHART_COLORS.length
-                        ]
-                      }
-                      stroke="transparent"
-                    />
-                  )
-                )}
+                {data.roleDistribution.map((entry, index) => (
+                  <Cell
+                    key={entry.role}
+                    fill={CHART_COLORS[index % CHART_COLORS.length]}
+                    stroke="transparent"
+                  />
+                ))}
               </Pie>
 
-              <Tooltip
-                contentStyle={chartTooltipStyle}
-              />
+              <Tooltip contentStyle={chartTooltipStyle} />
 
               <Legend
                 wrapperStyle={{
@@ -709,42 +589,27 @@ function AdminCharts({
         title="Campaign status"
         description="Campaigns grouped by moderation and lifecycle status."
       >
-        {data.campaignStatusDistribution
-          .length ? (
-          <ResponsiveContainer
-            width="100%"
-            height="100%"
-          >
+        {data.campaignStatusDistribution.length ? (
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={
-                  data.campaignStatusDistribution
-                }
+                data={data.campaignStatusDistribution}
                 dataKey="count"
                 nameKey="status"
                 innerRadius={52}
                 outerRadius={88}
                 paddingAngle={3}
               >
-                {data.campaignStatusDistribution.map(
-                  (entry, index) => (
-                    <Cell
-                      key={entry.status}
-                      fill={
-                        CHART_COLORS[
-                          index %
-                            CHART_COLORS.length
-                        ]
-                      }
-                      stroke="transparent"
-                    />
-                  )
-                )}
+                {data.campaignStatusDistribution.map((entry, index) => (
+                  <Cell
+                    key={entry.status}
+                    fill={CHART_COLORS[index % CHART_COLORS.length]}
+                    stroke="transparent"
+                  />
+                ))}
               </Pie>
 
-              <Tooltip
-                contentStyle={chartTooltipStyle}
-              />
+              <Tooltip contentStyle={chartTooltipStyle} />
 
               <Legend
                 wrapperStyle={{
@@ -763,10 +628,7 @@ function AdminCharts({
         description="Successful Stripe and demo payment value in USD."
       >
         {monthlyPayments.length ? (
-          <ResponsiveContainer
-            width="100%"
-            height="100%"
-          >
+          <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={monthlyPayments}
               margin={{
@@ -776,38 +638,18 @@ function AdminCharts({
                 bottom: 0
               }}
             >
-              <CartesianGrid
-                stroke={gridStroke}
-                strokeDasharray="4 4"
-                vertical={false}
-              />
+              <CartesianGrid stroke={gridStroke} strokeDasharray="4 4" vertical={false} />
 
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={axisTick} />
 
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <YAxis axisLine={false} tickLine={false} tick={axisTick} />
 
               <Tooltip
                 contentStyle={chartTooltipStyle}
-                formatter={(value) =>
-                  `$${Number(value).toFixed(2)}`
-                }
+                formatter={(value) => `$${Number(value).toFixed(2)}`}
               />
 
-              <Bar
-                dataKey="amount"
-                name="Payment amount"
-                fill="#527064"
-                radius={[7, 7, 0, 0]}
-              />
+              <Bar dataKey="amount" name="Payment amount" fill="#527064" radius={[7, 7, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         ) : (
@@ -820,40 +662,26 @@ function AdminCharts({
         description="Withdrawal requests grouped by review status."
       >
         {data.withdrawalDistribution.length ? (
-          <ResponsiveContainer
-            width="100%"
-            height="100%"
-          >
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={
-                  data.withdrawalDistribution
-                }
+                data={data.withdrawalDistribution}
                 dataKey="count"
                 nameKey="status"
                 innerRadius={52}
                 outerRadius={88}
                 paddingAngle={3}
               >
-                {data.withdrawalDistribution.map(
-                  (entry, index) => (
-                    <Cell
-                      key={entry.status}
-                      fill={
-                        CHART_COLORS[
-                          index %
-                            CHART_COLORS.length
-                        ]
-                      }
-                      stroke="transparent"
-                    />
-                  )
-                )}
+                {data.withdrawalDistribution.map((entry, index) => (
+                  <Cell
+                    key={entry.status}
+                    fill={CHART_COLORS[index % CHART_COLORS.length]}
+                    stroke="transparent"
+                  />
+                ))}
               </Pie>
 
-              <Tooltip
-                contentStyle={chartTooltipStyle}
-              />
+              <Tooltip contentStyle={chartTooltipStyle} />
 
               <Legend
                 wrapperStyle={{
@@ -870,13 +698,7 @@ function AdminCharts({
   );
 }
 
-function StatCard({
-  item,
-  index
-}: {
-  item: StatItem;
-  index: number;
-}) {
+function StatCard({ item, index }: { item: StatItem; index: number }) {
   const Icon = item.icon;
 
   return (
@@ -971,10 +793,7 @@ function StatCard({
               text-[var(--editorial-muted)]
             "
           >
-            {String(index + 1).padStart(
-              2,
-              "0"
-            )}
+            {String(index + 1).padStart(2, "0")}
           </span>
         </div>
 
@@ -1109,10 +928,7 @@ export default function DashboardHome() {
     return <DashboardLoading />;
   }
 
-  if (
-    query.isError ||
-    !query.data
-  ) {
+  if (query.isError || !query.data) {
     return (
       <section
         className="
@@ -1176,16 +992,13 @@ export default function DashboardHome() {
 
         <button
           type="button"
-          onClick={() =>
-            void query.refetch()
-          }
+          onClick={() => void query.refetch()}
           className="
             editorial-button
             mt-6
           "
         >
           <RefreshCw className="size-4" />
-
           Try again
         </button>
       </section>
@@ -1197,38 +1010,27 @@ export default function DashboardHome() {
       ? [
           {
             label: "Total campaigns",
-            value: (
-              query.data as CreatorDashboardData
-            ).totalCampaigns,
+            value: (query.data as CreatorDashboardData).totalCampaigns,
             icon: Rocket
           },
           {
             label: "Active campaigns",
-            value: (
-              query.data as CreatorDashboardData
-            ).activeCampaigns,
+            value: (query.data as CreatorDashboardData).activeCampaigns,
             icon: FileCheck2
           },
           {
             label: "Pending campaigns",
-            value: (
-              query.data as CreatorDashboardData
-            ).pendingCampaigns,
+            value: (query.data as CreatorDashboardData).pendingCampaigns,
             icon: BarChart3
           },
           {
             label: "Total raised credits",
-            value: (
-              query.data as CreatorDashboardData
-            ).totalRaisedCredits,
+            value: (query.data as CreatorDashboardData).totalRaisedCredits,
             icon: HandHeart
           },
           {
-            label:
-              "Available withdrawal credits",
-            value: (
-              query.data as CreatorDashboardData
-            ).availableCreatorCredits,
+            label: "Available withdrawal credits",
+            value: (query.data as CreatorDashboardData).availableCreatorCredits,
             icon: WalletCards
           }
         ]
@@ -1236,88 +1038,64 @@ export default function DashboardHome() {
         ? [
             {
               label: "Supporters",
-              value: (
-                query.data as AdminDashboardData
-              ).supporters,
+              value: (query.data as AdminDashboardData).supporters,
               icon: Users
             },
             {
               label: "Creators",
-              value: (
-                query.data as AdminDashboardData
-              ).creators,
+              value: (query.data as AdminDashboardData).creators,
               icon: Rocket
             },
             {
               label: "Total campaigns",
-              value: (
-                query.data as AdminDashboardData
-              ).totalCampaigns,
+              value: (query.data as AdminDashboardData).totalCampaigns,
               icon: FileCheck2
             },
             {
               label: "Pending campaigns",
-              value: (
-                query.data as AdminDashboardData
-              ).campaignsPending,
+              value: (query.data as AdminDashboardData).campaignsPending,
               icon: BarChart3
             },
             {
               label: "Available credits",
-              value: (
-                query.data as AdminDashboardData
-              ).totalAvailableCredits,
+              value: (query.data as AdminDashboardData).totalAvailableCredits,
               icon: Coins
             },
             {
               label: "Successful payments",
-              value: (
-                query.data as AdminDashboardData
-              ).successfulPayments,
+              value: (query.data as AdminDashboardData).successfulPayments,
               icon: HandHeart
             },
             {
               label: "Pending withdrawals",
-              value: (
-                query.data as AdminDashboardData
-              ).withdrawalsPending,
+              value: (query.data as AdminDashboardData).withdrawalsPending,
               icon: WalletCards
             },
             {
               label: "Open reports",
-              value: (
-                query.data as AdminDashboardData
-              ).openReports,
+              value: (query.data as AdminDashboardData).openReports,
               icon: Flag
             }
           ]
         : [
             {
               label: "Total contributions",
-              value: (
-                query.data as SupporterDashboardData
-              ).totalContributions,
+              value: (query.data as SupporterDashboardData).totalContributions,
               icon: HandHeart
             },
             {
               label: "Pending contributions",
-              value: (
-                query.data as SupporterDashboardData
-              ).pendingContributions,
+              value: (query.data as SupporterDashboardData).pendingContributions,
               icon: BarChart3
             },
             {
               label: "Approved credits",
-              value: (
-                query.data as SupporterDashboardData
-              ).approvedContributionCredits,
+              value: (query.data as SupporterDashboardData).approvedContributionCredits,
               icon: Coins
             },
             {
               label: "Available credits",
-              value: (
-                query.data as SupporterDashboardData
-              ).availableCredits,
+              value: (query.data as SupporterDashboardData).availableCredits,
               icon: WalletCards
             }
           ];
@@ -1488,7 +1266,6 @@ export default function DashboardHome() {
             "
           >
             Live overview
-
             <ArrowRight className="size-3.5" />
           </div>
         </div>
@@ -1507,9 +1284,7 @@ export default function DashboardHome() {
           "
         >
           <div>
-            <p className="editorial-label">
-              Key metrics
-            </p>
+            <p className="editorial-label">Key metrics</p>
 
             <h2
               className="
@@ -1549,15 +1324,9 @@ export default function DashboardHome() {
             xl:grid-cols-4
           "
         >
-          {cards.map(
-            (item, index) => (
-              <StatCard
-                key={item.label}
-                item={item}
-                index={index}
-              />
-            )
-          )}
+          {cards.map((item, index) => (
+            <StatCard key={item.label} item={item} index={index} />
+          ))}
         </div>
       </section>
 
@@ -1574,9 +1343,7 @@ export default function DashboardHome() {
           "
         >
           <div>
-            <p className="editorial-label">
-              Performance
-            </p>
+            <p className="editorial-label">Performance</p>
 
             <h2
               className="
@@ -1594,23 +1361,11 @@ export default function DashboardHome() {
         </div>
 
         {role === "supporter" ? (
-          <SupporterCharts
-            data={
-              query.data as SupporterDashboardData
-            }
-          />
+          <SupporterCharts data={query.data as SupporterDashboardData} />
         ) : role === "creator" ? (
-          <CreatorCharts
-            data={
-              query.data as CreatorDashboardData
-            }
-          />
+          <CreatorCharts data={query.data as CreatorDashboardData} />
         ) : (
-          <AdminCharts
-            data={
-              query.data as AdminDashboardData
-            }
-          />
+          <AdminCharts data={query.data as AdminDashboardData} />
         )}
       </section>
     </motion.main>
