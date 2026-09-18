@@ -1,46 +1,95 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
+
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+
 import { DashboardLayout } from "./components/DashboardLayout";
-import { ThemeToggle } from "./components/ThemeToggle";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PublicLayout } from "./components/PublicLayout";
+import { ThemeToggle } from "./components/ThemeToggle";
+
 import { dashboardPath, useAuth } from "./lib/AuthContext";
 
 const AdminFinancePage = lazy(() => import("./dashboard/AdminFinancePage"));
+
 const AdminModerationPage = lazy(() => import("./dashboard/AdminModerationPage"));
+
 const CreatorCampaignsPage = lazy(() => import("./dashboard/CreatorCampaignsPage"));
+
 const CreatorContributionsPage = lazy(() => import("./dashboard/CreatorContributionsPage"));
+
 const CreatorWithdrawalsPage = lazy(() => import("./dashboard/CreatorWithdrawalsPage"));
+
 const DashboardHome = lazy(() => import("./dashboard/DashboardHome"));
+
 const NotificationsPage = lazy(() => import("./dashboard/NotificationsPage"));
+
 const ProfilePage = lazy(() => import("./dashboard/ProfilePage"));
+
 const SupporterContributionsPage = lazy(() => import("./dashboard/SupporterContributionsPage"));
+
 const SupporterPaymentsPage = lazy(() => import("./dashboard/SupporterPaymentsPage"));
+
 const AboutPage = lazy(() => import("./pages/AboutPage"));
+
 const CampaignDetailsPage = lazy(() => import("./pages/CampaignDetailsPage"));
+
 const ContactPage = lazy(() => import("./pages/ContactPage"));
+
 const ExplorePage = lazy(() => import("./pages/ExplorePage"));
+
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
+
 const HomePage = lazy(() => import("./pages/HomePage"));
+
 const LoginPage = lazy(() => import("./pages/LoginPage"));
+
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+
 const OnboardingPage = lazy(() => import("./pages/OnboardingPage"));
+
 const PrivacyPage = lazy(() =>
-  import("./pages/PolicyPage").then((module) => ({ default: module.PrivacyPage }))
+  import("./pages/PolicyPage").then((module) => ({
+    default: module.PrivacyPage
+  }))
 );
+
 const TermsPage = lazy(() =>
-  import("./pages/PolicyPage").then((module) => ({ default: module.TermsPage }))
+  import("./pages/PolicyPage").then((module) => ({
+    default: module.TermsPage
+  }))
 );
+
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
+
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
+
+const AUTH_PATHS = new Set([
+  "/login",
+  "/register",
+  "/onboarding",
+  "/forgot-password",
+  "/reset-password"
+]);
 
 function AuthThemeAccess() {
   const { pathname } = useLocation();
-  const authPaths = ["/login", "/register", "/onboarding", "/forgot-password", "/reset-password"];
-  if (!authPaths.includes(pathname)) return null;
+
+  if (!AUTH_PATHS.has(pathname)) {
+    return null;
+  }
 
   return (
-    <div className="fixed right-4 top-4 z-[70] sm:right-6 sm:top-6">
+    <div
+      className="
+        fixed
+        right-4
+        top-4
+        z-[70]
+
+        sm:right-6
+        sm:top-6
+      "
+    >
       <ThemeToggle />
     </div>
   );
@@ -48,107 +97,430 @@ function AuthThemeAccess() {
 
 function PageLoader() {
   return (
-    <div className="flex min-h-64 items-center justify-center">
-      <div
-        className="size-10 animate-spin rounded-full border-4 border-[#d2d0ce] border-t-brand-600 dark:border-[#383838] dark:border-t-brand-400"
-        aria-label="Loading page"
-      />
+    <div
+      className="
+        flex
+        min-h-[360px]
+        items-center
+        justify-center
+
+        px-6
+      "
+      role="status"
+      aria-live="polite"
+    >
+      <div className="text-center">
+        <div
+          className="
+            relative
+            mx-auto
+
+            flex
+            size-14
+            items-center
+            justify-center
+          "
+        >
+          <div
+            className="
+              absolute
+              inset-0
+
+              animate-spin
+
+              rounded-full
+
+              border-2
+              border-[#b7c5bf]
+              border-t-[#315b4a]
+
+              dark:border-[#263a31]
+              dark:border-t-[#a9c2b6]
+            "
+          />
+
+          <div
+            className="
+              size-2
+              rounded-full
+
+              bg-[#527064]
+
+              dark:bg-[#91aa9d]
+            "
+          />
+        </div>
+
+        <p
+          className="
+            mt-4
+
+            text-[10px]
+            font-bold
+            uppercase
+            tracking-[0.2em]
+
+            text-[#65776f]
+
+            dark:text-[#8da198]
+          "
+        >
+          Loading CrowdSpark
+        </p>
+      </div>
     </div>
   );
 }
 
+function LazyPage({ children }: { children: ReactNode }) {
+  return <Suspense fallback={<PageLoader />}>{children}</Suspense>;
+}
+
 function DashboardRedirect() {
   const { current } = useAuth();
+
   return <Navigate to={dashboardPath(current?.profile?.role)} replace />;
 }
 
 export default function App() {
   return (
-    <Suspense fallback={<PageLoader />}>
+    <>
       <AuthThemeAccess />
+
       <Routes>
+        {/* PUBLIC */}
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/campaigns" element={<ExplorePage />} />
-          <Route path="/campaigns/:campaignId" element={<CampaignDetailsPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/terms" element={<TermsPage />} />
+          <Route
+            path="/"
+            element={
+              <LazyPage>
+                <HomePage />
+              </LazyPage>
+            }
+          />
+
+          <Route
+            path="/campaigns"
+            element={
+              <LazyPage>
+                <ExplorePage />
+              </LazyPage>
+            }
+          />
+
+          <Route
+            path="/campaigns/:campaignId"
+            element={
+              <LazyPage>
+                <CampaignDetailsPage />
+              </LazyPage>
+            }
+          />
+
+          <Route
+            path="/about"
+            element={
+              <LazyPage>
+                <AboutPage />
+              </LazyPage>
+            }
+          />
+
+          <Route
+            path="/contact"
+            element={
+              <LazyPage>
+                <ContactPage />
+              </LazyPage>
+            }
+          />
+
+          <Route
+            path="/privacy"
+            element={
+              <LazyPage>
+                <PrivacyPage />
+              </LazyPage>
+            }
+          />
+
+          <Route
+            path="/terms"
+            element={
+              <LazyPage>
+                <TermsPage />
+              </LazyPage>
+            }
+          />
         </Route>
 
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/onboarding" element={<OnboardingPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        {/* AUTH */}
+        <Route
+          path="/login"
+          element={
+            <LazyPage>
+              <LoginPage />
+            </LazyPage>
+          }
+        />
 
+        <Route
+          path="/register"
+          element={
+            <LazyPage>
+              <RegisterPage />
+            </LazyPage>
+          }
+        />
+
+        <Route
+          path="/onboarding"
+          element={
+            <LazyPage>
+              <OnboardingPage />
+            </LazyPage>
+          }
+        />
+
+        <Route
+          path="/forgot-password"
+          element={
+            <LazyPage>
+              <ForgotPasswordPage />
+            </LazyPage>
+          }
+        />
+
+        <Route
+          path="/reset-password"
+          element={
+            <LazyPage>
+              <ResetPasswordPage />
+            </LazyPage>
+          }
+        />
+
+        {/* AUTHENTICATED DASHBOARD */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardRedirect />} />
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="notifications" element={<NotificationsPage />} />
 
+            {/* SHARED DASHBOARD */}
+            <Route
+              path="profile"
+              element={
+                <LazyPage>
+                  <ProfilePage />
+                </LazyPage>
+              }
+            />
+
+            <Route
+              path="notifications"
+              element={
+                <LazyPage>
+                  <NotificationsPage />
+                </LazyPage>
+              }
+            />
+
+            {/* SUPPORTER */}
             <Route element={<ProtectedRoute roles={["supporter"]} />}>
-              <Route path="supporter" element={<DashboardHome />} />
-              <Route path="supporter/explore" element={<ExplorePage />} />
-              <Route path="supporter/contributions" element={<SupporterContributionsPage />} />
+              <Route
+                path="supporter"
+                element={
+                  <LazyPage>
+                    <DashboardHome />
+                  </LazyPage>
+                }
+              />
+
+              <Route
+                path="supporter/explore"
+                element={
+                  <LazyPage>
+                    <ExplorePage />
+                  </LazyPage>
+                }
+              />
+
+              <Route
+                path="supporter/contributions"
+                element={
+                  <LazyPage>
+                    <SupporterContributionsPage />
+                  </LazyPage>
+                }
+              />
+
               <Route
                 path="supporter/purchase-credits"
-                element={<SupporterPaymentsPage mode="purchase" />}
+                element={
+                  <LazyPage>
+                    <SupporterPaymentsPage mode="purchase" />
+                  </LazyPage>
+                }
               />
+
               <Route
                 path="supporter/payment-history"
-                element={<SupporterPaymentsPage mode="history" />}
+                element={
+                  <LazyPage>
+                    <SupporterPaymentsPage mode="history" />
+                  </LazyPage>
+                }
               />
+
               <Route
                 path="supporter/payments"
                 element={<Navigate to="/dashboard/supporter/purchase-credits" replace />}
               />
             </Route>
 
+            {/* CREATOR */}
             <Route element={<ProtectedRoute roles={["creator"]} />}>
-              <Route path="creator" element={<DashboardHome />} />
-              <Route path="creator/campaigns/add" element={<CreatorCampaignsPage mode="add" />} />
-              <Route path="creator/campaigns" element={<CreatorCampaignsPage mode="manage" />} />
-              <Route path="creator/contributions" element={<CreatorContributionsPage />} />
+              <Route
+                path="creator"
+                element={
+                  <LazyPage>
+                    <DashboardHome />
+                  </LazyPage>
+                }
+              />
+
+              <Route
+                path="creator/campaigns/add"
+                element={
+                  <LazyPage>
+                    <CreatorCampaignsPage mode="add" />
+                  </LazyPage>
+                }
+              />
+
+              <Route
+                path="creator/campaigns"
+                element={
+                  <LazyPage>
+                    <CreatorCampaignsPage mode="manage" />
+                  </LazyPage>
+                }
+              />
+
+              <Route
+                path="creator/contributions"
+                element={
+                  <LazyPage>
+                    <CreatorContributionsPage />
+                  </LazyPage>
+                }
+              />
+
               <Route
                 path="creator/withdrawals"
-                element={<CreatorWithdrawalsPage mode="request" />}
+                element={
+                  <LazyPage>
+                    <CreatorWithdrawalsPage mode="request" />
+                  </LazyPage>
+                }
               />
+
               <Route
                 path="creator/payment-history"
-                element={<CreatorWithdrawalsPage mode="history" />}
+                element={
+                  <LazyPage>
+                    <CreatorWithdrawalsPage mode="history" />
+                  </LazyPage>
+                }
               />
             </Route>
 
+            {/* ADMIN */}
             <Route element={<ProtectedRoute roles={["admin"]} />}>
-              <Route path="admin" element={<DashboardHome />} />
-              <Route path="admin/users" element={<AdminModerationPage forcedSection="users" />} />
+              <Route
+                path="admin"
+                element={
+                  <LazyPage>
+                    <DashboardHome />
+                  </LazyPage>
+                }
+              />
+
+              <Route
+                path="admin/users"
+                element={
+                  <LazyPage>
+                    <AdminModerationPage forcedSection="users" />
+                  </LazyPage>
+                }
+              />
+
               <Route
                 path="admin/campaign-approvals"
-                element={<AdminModerationPage forcedSection="campaigns" campaignStatus="pending" />}
+                element={
+                  <LazyPage>
+                    <AdminModerationPage forcedSection="campaigns" campaignStatus="pending" />
+                  </LazyPage>
+                }
               />
+
               <Route
                 path="admin/campaigns"
-                element={<AdminModerationPage forcedSection="campaigns" />}
+                element={
+                  <LazyPage>
+                    <AdminModerationPage forcedSection="campaigns" />
+                  </LazyPage>
+                }
               />
+
               <Route
                 path="admin/withdrawals"
-                element={<AdminFinancePage forcedSection="withdrawals" />}
+                element={
+                  <LazyPage>
+                    <AdminFinancePage forcedSection="withdrawals" />
+                  </LazyPage>
+                }
               />
+
               <Route
                 path="admin/reports"
-                element={<AdminModerationPage forcedSection="reports" />}
+                element={
+                  <LazyPage>
+                    <AdminModerationPage forcedSection="reports" />
+                  </LazyPage>
+                }
               />
-              <Route path="admin/moderation" element={<AdminModerationPage />} />
-              <Route path="admin/finance" element={<AdminFinancePage />} />
+
+              <Route
+                path="admin/moderation"
+                element={
+                  <LazyPage>
+                    <AdminModerationPage />
+                  </LazyPage>
+                }
+              />
+
+              <Route
+                path="admin/finance"
+                element={
+                  <LazyPage>
+                    <AdminFinancePage />
+                  </LazyPage>
+                }
+              />
             </Route>
           </Route>
         </Route>
 
-        <Route path="*" element={<NotFoundPage />} />
+        {/* 404 */}
+        <Route
+          path="*"
+          element={
+            <LazyPage>
+              <NotFoundPage />
+            </LazyPage>
+          }
+        />
       </Routes>
-    </Suspense>
+    </>
   );
 }
