@@ -38,14 +38,7 @@ import {
 import { api } from "../lib/api";
 import { useAuth } from "../lib/AuthContext";
 
-const CHART_COLORS = [
-  "#173329",
-  "#527064",
-  "#78988a",
-  "#91aa9d",
-  "#b5c7be",
-  "#637b70"
-];
+const CHART_COLORS = ["#173329", "#527064", "#78988a", "#91aa9d", "#b5c7be", "#637b70"];
 
 interface SupporterDashboardData {
   totalContributions: number;
@@ -123,10 +116,7 @@ interface AdminDashboardData {
   }>;
 }
 
-type DashboardData =
-  | SupporterDashboardData
-  | CreatorDashboardData
-  | AdminDashboardData;
+type DashboardData = SupporterDashboardData | CreatorDashboardData | AdminDashboardData;
 
 interface StatItem {
   label: string;
@@ -191,13 +181,10 @@ function ChartEmpty() {
         <Activity className="size-4" />
       </div>
 
-      <p className="mt-4 text-sm font-semibold text-[var(--editorial-text)]">
-        No activity yet
-      </p>
+      <p className="mt-4 text-sm font-semibold text-[var(--editorial-text)]">No activity yet</p>
 
       <p className="mt-1 max-w-xs text-xs leading-5 text-[var(--editorial-muted)]">
-        This visualization will populate automatically as platform activity
-        grows.
+        This visualization will populate automatically as platform activity grows.
       </p>
     </div>
   );
@@ -300,19 +287,9 @@ function SupporterCharts({ data }: { data: SupporterDashboardData }) {
                 strokeDasharray="4 5"
               />
 
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={axisTick} />
 
-              <YAxis
-                allowDecimals={false}
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={axisTick} />
 
               <Tooltip contentStyle={tooltipStyle} />
 
@@ -405,30 +382,15 @@ function CreatorCharts({ data }: { data: CreatorDashboardData }) {
                 tickFormatter={(value) => String(value).slice(0, 12)}
               />
 
-              <YAxis
-                allowDecimals={false}
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={axisTick} />
 
               <Tooltip contentStyle={tooltipStyle} />
 
               <Legend wrapperStyle={{ fontSize: 11 }} />
 
-              <Bar
-                dataKey="raisedCredits"
-                name="Raised"
-                fill="#527064"
-                radius={[7, 7, 0, 0]}
-              />
+              <Bar dataKey="raisedCredits" name="Raised" fill="#527064" radius={[7, 7, 0, 0]} />
 
-              <Bar
-                dataKey="goalCredits"
-                name="Goal"
-                fill="#b5c7be"
-                radius={[7, 7, 0, 0]}
-              />
+              <Bar dataKey="goalCredits" name="Goal" fill="#b5c7be" radius={[7, 7, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         ) : (
@@ -454,19 +416,9 @@ function CreatorCharts({ data }: { data: CreatorDashboardData }) {
                 strokeDasharray="4 5"
               />
 
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={axisTick} />
 
-              <YAxis
-                allowDecimals={false}
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={axisTick} />
 
               <Tooltip contentStyle={tooltipStyle} />
 
@@ -505,28 +457,16 @@ function AdminCharts({ data }: { data: AdminDashboardData }) {
       >
         {monthlyPayments.length ? (
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={monthlyPayments}
-              margin={{ top: 10, right: 12, left: -12, bottom: 0 }}
-            >
+            <BarChart data={monthlyPayments} margin={{ top: 10, right: 12, left: -12, bottom: 0 }}>
               <CartesianGrid
                 vertical={false}
                 stroke="var(--editorial-border)"
                 strokeDasharray="4 5"
               />
 
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <XAxis dataKey="month" axisLine={false} tickLine={false} tick={axisTick} />
 
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={axisTick}
-              />
+              <YAxis axisLine={false} tickLine={false} tick={axisTick} />
 
               <Tooltip
                 contentStyle={tooltipStyle}
@@ -658,13 +598,7 @@ function AdminCharts({ data }: { data: AdminDashboardData }) {
   );
 }
 
-function MetricCard({
-  item,
-  index
-}: {
-  item: StatItem;
-  index: number;
-}) {
+function MetricCard({ item, index }: { item: StatItem; index: number }) {
   const Icon = item.icon;
 
   return (
@@ -732,18 +666,14 @@ function MetricCard({
               text-[var(--editorial-text)]
             "
           >
-            {typeof item.value === "number"
-              ? item.value.toLocaleString()
-              : item.value}
+            {typeof item.value === "number" ? item.value.toLocaleString() : item.value}
           </p>
 
           <p className="mt-2 text-sm font-semibold text-[var(--editorial-text-soft)]">
             {item.label}
           </p>
 
-          <p className="mt-1 text-[11px] leading-5 text-[var(--editorial-muted)]">
-            {item.helper}
-          </p>
+          <p className="mt-1 text-[11px] leading-5 text-[var(--editorial-muted)]">{item.helper}</p>
         </div>
       </div>
 
@@ -763,13 +693,7 @@ function MetricCard({
   );
 }
 
-function MiniMetricCard({
-  item,
-  index
-}: {
-  item: StatItem;
-  index: number;
-}) {
+function MiniMetricCard({ item, index }: { item: StatItem; index: number }) {
   const Icon = item.icon;
 
   return (
@@ -799,26 +723,16 @@ function MiniMetricCard({
 
       <div className="min-w-0 flex-1">
         <p className="text-xl font-semibold tracking-[-0.04em] text-[var(--editorial-text)]">
-          {typeof item.value === "number"
-            ? item.value.toLocaleString()
-            : item.value}
+          {typeof item.value === "number" ? item.value.toLocaleString() : item.value}
         </p>
 
-        <p className="mt-0.5 text-xs font-medium text-[var(--editorial-muted)]">
-          {item.label}
-        </p>
+        <p className="mt-0.5 text-xs font-medium text-[var(--editorial-muted)]">{item.label}</p>
       </div>
     </motion.article>
   );
 }
 
-function FocusCard({
-  item,
-  index
-}: {
-  item: FocusItem;
-  index: number;
-}) {
+function FocusCard({ item, index }: { item: FocusItem; index: number }) {
   const Icon = item.icon;
 
   const toneClass =
@@ -892,9 +806,7 @@ function FocusCard({
         <div className="mt-auto pt-5">
           <div className="flex items-end justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-[var(--editorial-text)]">
-                {item.label}
-              </p>
+              <p className="text-sm font-semibold text-[var(--editorial-text)]">{item.label}</p>
 
               <p className="mt-1 text-xs leading-5 text-[var(--editorial-muted)]">
                 {item.description}
@@ -917,11 +829,7 @@ function FocusCard({
   );
 }
 
-function HeroPulse({
-  items
-}: {
-  items: PulseItem[];
-}) {
+function HeroPulse({ items }: { items: PulseItem[] }) {
   return (
     <div
       className="
@@ -960,9 +868,7 @@ function HeroPulse({
               text-white
             "
           >
-            {typeof item.value === "number"
-              ? item.value.toLocaleString()
-              : item.value}
+            {typeof item.value === "number" ? item.value.toLocaleString() : item.value}
           </p>
         </div>
       ))}
@@ -1048,9 +954,7 @@ export default function DashboardHome() {
           <BarChart3 className="size-5" />
         </div>
 
-        <h1 className="display-heading mt-5 text-4xl">
-          Dashboard unavailable.
-        </h1>
+        <h1 className="display-heading mt-5 text-4xl">Dashboard unavailable.</h1>
 
         <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[var(--editorial-muted)]">
           CrowdSpark could not retrieve the latest dashboard information.
@@ -1527,11 +1431,7 @@ export default function DashboardHome() {
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {primaryStats.map((item, index) => (
-            <MetricCard
-              key={item.label}
-              item={item}
-              index={index}
-            />
+            <MetricCard key={item.label} item={item} index={index} />
           ))}
         </div>
 
@@ -1547,11 +1447,7 @@ export default function DashboardHome() {
             `}
           >
             {secondaryStats.map((item, index) => (
-              <MiniMetricCard
-                key={item.label}
-                item={item}
-                index={index}
-              />
+              <MiniMetricCard key={item.label} item={item} index={index} />
             ))}
           </div>
         ) : null}
@@ -1582,18 +1478,13 @@ export default function DashboardHome() {
               md:block
             "
           >
-            High-value actions surfaced directly from your current platform
-            data.
+            High-value actions surfaced directly from your current platform data.
           </p>
         </div>
 
         <div className="grid gap-4 lg:grid-cols-3">
           {focusItems.map((item, index) => (
-            <FocusCard
-              key={item.label}
-              item={item}
-              index={index}
-            />
+            <FocusCard key={item.label} item={item} index={index} />
           ))}
         </div>
       </section>
@@ -1635,17 +1526,11 @@ export default function DashboardHome() {
         </div>
 
         {role === "supporter" ? (
-          <SupporterCharts
-            data={query.data as SupporterDashboardData}
-          />
+          <SupporterCharts data={query.data as SupporterDashboardData} />
         ) : role === "creator" ? (
-          <CreatorCharts
-            data={query.data as CreatorDashboardData}
-          />
+          <CreatorCharts data={query.data as CreatorDashboardData} />
         ) : (
-          <AdminCharts
-            data={query.data as AdminDashboardData}
-          />
+          <AdminCharts data={query.data as AdminDashboardData} />
         )}
       </section>
 
@@ -1705,8 +1590,8 @@ export default function DashboardHome() {
                 text-[#b9ccc3]
               "
             >
-              Metrics, moderation and financial operations stay connected in
-              one role-aware workspace.
+              Metrics, moderation and financial operations stay connected in one role-aware
+              workspace.
             </p>
           </div>
 

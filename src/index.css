@@ -19,11 +19,12 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
-  /* Premium Editorial Theme */
+  color-scheme: light;
 
+  /* Core theme */
   --app-bg: #d1d8dc;
-
   --surface: #e7ecef;
   --surface-subtle: #edf1f3;
   --surface-hover: #dce3e7;
@@ -35,14 +36,13 @@
   --border: rgba(141, 152, 157, 0.3);
   --border-strong: rgba(120, 132, 138, 0.45);
 
-  --brand: #586970;
-  --brand-hover: #46575d;
-  --brand-soft: #e6ecef;
+  --brand: #315b4a;
+  --brand-hover: #173329;
+  --brand-soft: #d6e3dd;
 
-  --focus: rgba(88, 105, 112, 0.25);
+  --focus: rgba(49, 91, 74, 0.22);
 
-  /* Editorial Tokens */
-
+  /* Editorial tokens */
   --editorial-bg: #d1d8dc;
   --editorial-card: #e7ecef;
   --editorial-text: #171b1e;
@@ -52,8 +52,9 @@
 }
 
 .dark {
-  --app-bg: #111716;
+  color-scheme: dark;
 
+  --app-bg: #111716;
   --surface: #17221e;
   --surface-subtle: #1d2925;
   --surface-hover: #26352f;
@@ -65,14 +66,13 @@
   --border: rgba(139, 160, 150, 0.25);
   --border-strong: rgba(139, 160, 150, 0.4);
 
-  --brand: #8fa99d;
-  --brand-hover: #b2c6bc;
+  --brand: #91aa9d;
+  --brand-hover: #b8cec3;
   --brand-soft: #1c3029;
 
   --focus: rgba(143, 169, 157, 0.3);
 
-  /* Editorial Dark */
-
+  /* Editorial dark */
   --editorial-bg: #111716;
   --editorial-card: #17221e;
   --editorial-text: #edf2f0;
@@ -82,23 +82,33 @@
 }
 
 html {
+  min-height: 100%;
   scroll-behavior: smooth;
   background: var(--app-bg);
 }
 
 body {
   margin: 0;
+
   min-width: 320px;
   min-height: 100vh;
+  min-height: 100dvh;
+
   background: var(--app-bg);
   color: var(--text-primary);
+
   transition:
     background-color 160ms ease,
     color 160ms ease;
 }
 
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 ::selection {
-  background: rgba(25, 122, 99, 0.18);
+  background: rgba(49, 91, 74, 0.2);
 }
 
 button,
@@ -106,6 +116,16 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+input,
+textarea,
+select {
+  max-width: 100%;
+}
+
+textarea {
+  resize: vertical;
 }
 
 button {
@@ -121,12 +141,17 @@ button:disabled {
   outline-offset: 2px;
 }
 
+/* ==============================
+   Shared component system
+============================== */
+
 @layer components {
   .display-heading {
     font-family: "Instrument Serif", Georgia, "Times New Roman", serif;
     font-weight: 400;
     letter-spacing: -0.04em;
   }
+
   .container-app {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
@@ -144,6 +169,7 @@ button:disabled {
 
   .card {
     @apply rounded-xl border shadow-fluent transition-colors dark:shadow-fluent-dark;
+
     background: var(--surface);
     border-color: var(--border);
     color: var(--text-primary);
@@ -151,6 +177,7 @@ button:disabled {
 
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold text-white transition duration-150 disabled:opacity-50;
+
     background: var(--brand);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
   }
@@ -161,6 +188,7 @@ button:disabled {
 
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-semibold transition duration-150 disabled:opacity-50;
+
     background: var(--surface);
     border-color: var(--border-strong);
     color: var(--text-primary);
@@ -172,6 +200,7 @@ button:disabled {
 
   .field {
     @apply w-full rounded-md border px-3.5 py-2.5 outline-none transition duration-150;
+
     background: var(--surface);
     border-color: var(--border-strong);
     color: var(--text-primary);
@@ -181,8 +210,8 @@ button:disabled {
     color: var(--text-muted);
   }
 
-  .field:hover {
-    border-color: #8a8886;
+  .field:hover:not(:disabled) {
+    border-color: #7b9187;
   }
 
   .field:focus {
@@ -190,13 +219,21 @@ button:disabled {
     box-shadow: 0 0 0 3px var(--focus);
   }
 
+  .field:disabled,
+  .field:read-only {
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
+
   .label {
     @apply mb-2 block text-sm font-semibold;
+
     color: var(--text-secondary);
   }
 
   .theme-toggle {
     @apply inline-flex size-9 shrink-0 items-center justify-center rounded-md border transition duration-150;
+
     background: var(--surface);
     border-color: var(--border);
     color: var(--text-secondary);
@@ -220,70 +257,93 @@ button:disabled {
   }
 }
 
-/* Legacy utility compatibility while screens are migrated to semantic theme tokens. */
+/* ==============================
+   Legacy dark utility compatibility
+============================== */
+
 .dark .bg-white {
-  background-color: #1b1b1b;
+  background-color: #17221e;
 }
+
 .dark .bg-slate-50 {
-  background-color: #151515;
+  background-color: #121b18;
 }
+
 .dark .bg-slate-100 {
-  background-color: #202020;
+  background-color: #1b2823;
 }
+
 .dark .bg-slate-200 {
-  background-color: #2b2b2b;
+  background-color: #26362f;
 }
+
 .dark .border-slate-200 {
-  border-color: #383838;
+  border-color: rgba(139, 160, 150, 0.25);
 }
+
 .dark .border-slate-300 {
-  border-color: #4a4a4a;
+  border-color: rgba(139, 160, 150, 0.4);
 }
+
 .dark .text-slate-950,
 .dark .text-slate-800,
 .dark .text-slate-700 {
-  color: #f5f5f5;
+  color: #edf2f0;
 }
+
 .dark .text-slate-600 {
-  color: #d6d6d6;
+  color: #c5d3cd;
 }
+
 .dark .text-slate-500 {
-  color: #b3b3b3;
+  color: #a8bbb2;
 }
+
 .dark .text-slate-400 {
-  color: #9f9f9f;
+  color: #93a79e;
 }
+
 .dark .text-slate-300 {
-  color: #d6d6d6;
+  color: #c5d3cd;
 }
+
 .dark .bg-emerald-50 {
   background-color: #12351f;
 }
+
 .dark .bg-emerald-100 {
   background-color: #17472a;
 }
+
 .dark .text-emerald-800,
 .dark .text-emerald-700 {
-  color: #6ccb8e;
+  color: #78d19a;
 }
+
 .dark .bg-red-50 {
   background-color: #3b1717;
 }
+
 .dark .border-red-200 {
   border-color: #6b2b2b;
 }
+
 .dark .text-red-700,
 .dark .text-red-600 {
-  color: #ff8a8a;
+  color: #ff9696;
 }
+
 .dark .bg-amber-50 {
   background-color: #3b2e13;
 }
+
 .dark .text-amber-800 {
   color: #f6c76b;
 }
 
-/* CrowdSpark cinematic homepage hero */
+/* ==============================
+   CrowdSpark cinematic homepage hero
+============================== */
 
 .crowdspark-hero {
   --swiper-theme-color: #b3c9bd;
@@ -300,9 +360,11 @@ button:disabled {
 
 .crowdspark-hero .swiper-pagination {
   bottom: 14px !important;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 6px;
 }
 
@@ -325,7 +387,6 @@ button:disabled {
 
 .crowdspark-hero .swiper-pagination-bullet-active {
   width: 48px;
-
   background: #b3c9bd;
 }
 
@@ -342,6 +403,12 @@ button:disabled {
     width: 34px;
   }
 }
+
+/* ==============================
+   Impact editorial section
+   Intentionally unchanged
+============================== */
+
 .impact-section {
   position: relative;
   height: 100vh;
@@ -426,55 +493,286 @@ button:disabled {
 }
 
 /* ==============================
-   Campaign Editorial Theme
+   Campaign / Dashboard Editorial Theme
 ============================== */
 
 .campaign-page {
-  background: var(--editorial-bg);
+  min-height: 100%;
 
+  background: var(--editorial-bg);
   color: var(--editorial-text);
 }
 
-.campaign-card {
+.campaign-card,
+.campaign-surface {
   background: var(--editorial-card);
 
   border: 1px solid var(--editorial-border);
-
   border-radius: 24px;
 
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+  color: var(--editorial-text);
+
+  box-shadow: 0 20px 50px rgba(13, 37, 29, 0.055);
 }
 
-.campaign-input {
-  background: transparent;
+.dark .campaign-card,
+.dark .campaign-surface {
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.18);
+}
+
+.campaign-input,
+.campaign-field {
+  width: 100%;
 
   border: 1px solid var(--editorial-border);
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  padding: 11px 14px;
 
   color: var(--editorial-text);
+
+  outline: none;
+
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
 }
 
-.campaign-input:focus {
-  border-color: #586970;
+.dark .campaign-input,
+.dark .campaign-field {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.campaign-input::placeholder,
+.campaign-field::placeholder {
+  color: var(--editorial-muted);
+}
+
+.campaign-input:hover:not(:disabled),
+.campaign-field:hover:not(:disabled) {
+  border-color: rgba(82, 112, 100, 0.65);
+}
+
+.campaign-input:focus,
+.campaign-field:focus {
+  border-color: #527064;
+
+  background: rgba(255, 255, 255, 0.28);
+
+  box-shadow: 0 0 0 4px rgba(82, 112, 100, 0.1);
+}
+
+.dark .campaign-input:focus,
+.dark .campaign-field:focus {
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.campaign-input:disabled,
+.campaign-field:disabled,
+.campaign-input:read-only,
+.campaign-field:read-only {
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.editorial-label {
+  display: block;
+
+  color: var(--editorial-muted);
+
+  font-size: 10px;
+  font-weight: 700;
+
+  line-height: 1.4;
+
+  letter-spacing: 0.18em;
+
+  text-transform: uppercase;
+}
+
+.editorial-title {
+  margin: 0;
+
+  font-family: "Instrument Serif", Georgia, "Times New Roman", serif;
+
+  color: var(--editorial-text);
+
+  font-weight: 400;
+
+  letter-spacing: -0.04em;
 }
 
 .editorial-button {
-  background: #586970;
+  display: inline-flex;
+  min-height: 42px;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: #173329;
+
+  padding: 10px 22px;
 
   color: white;
 
-  border-radius: 999px;
-
-  padding: 12px 26px;
-
+  font-size: 14px;
   font-weight: 600;
 
-  transition: 0.25s;
+  line-height: 1;
+
+  box-shadow: 0 8px 24px rgba(23, 51, 41, 0.12);
+
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease;
 }
 
-.editorial-button:hover {
-  background: #46575d;
+.editorial-button:hover:not(:disabled) {
+  background: #23483a;
+
+  box-shadow: 0 10px 28px rgba(23, 51, 41, 0.16);
+
+  transform: translateY(-1px);
+}
+
+.editorial-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.editorial-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+
+  box-shadow: none;
+}
+
+.dark .editorial-button {
+  background: #d6e3dd;
+  color: #10261f;
+}
+
+.dark .editorial-button:hover:not(:disabled) {
+  background: #e4eee9;
+}
+
+.editorial-empty {
+  display: flex;
+
+  min-height: 180px;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px dashed var(--editorial-border);
+  border-radius: 22px;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  padding: 28px;
+
+  color: var(--editorial-muted);
+
+  text-align: center;
+}
+
+.dark .editorial-empty {
+  background: rgba(255, 255, 255, 0.018);
 }
 
 .campaign-muted {
   color: var(--editorial-muted);
+}
+
+/* ==============================
+   Dashboard scrollbar
+============================== */
+
+.dashboard-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(159, 181, 170, 0.3) transparent;
+}
+
+.dashboard-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.dashboard-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dashboard-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(159, 181, 170, 0.28);
+}
+
+.dashboard-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(159, 181, 170, 0.48);
+}
+
+/* ==============================
+   Responsive baseline
+============================== */
+
+@media (max-width: 639px) {
+  /*
+   * Prevent iOS Safari from zooming the viewport
+   * when a text field receives focus.
+   */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  .campaign-card,
+  .campaign-surface {
+    border-radius: 20px;
+  }
+
+  .campaign-input,
+  .campaign-field {
+    border-radius: 12px;
+  }
+
+  .editorial-button {
+    min-height: 44px;
+  }
+
+  .editorial-empty {
+    min-height: 150px;
+    border-radius: 18px;
+    padding: 22px;
+  }
+}
+
+/* ==============================
+   Reduced motion
+============================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body,
+  .btn-primary,
+  .btn-secondary,
+  .field,
+  .theme-toggle,
+  .campaign-input,
+  .campaign-field,
+  .editorial-button,
+  .crowdspark-hero .swiper-pagination-bullet {
+    transition-duration: 0.01ms;
+  }
 }
