@@ -23,9 +23,11 @@ import {
 
 import type { LucideIcon } from "lucide-react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+
+import { toast } from "sonner";
 
 import { useAuth } from "../lib/AuthContext";
 
@@ -106,6 +108,62 @@ export function DashboardLayout() {
 
   const avatarImage = profile.image || sessionUser?.image || "";
 
+  /*
+   * Close the mobile drawer whenever navigation completes.
+   */
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname, location.search, location.hash]);
+
+  /*
+   * Reset mobile drawer state when entering desktop mode.
+   */
+  useEffect(() => {
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+
+    const handleViewportChange = () => {
+      if (desktopQuery.matches) {
+        setOpen(false);
+      }
+    };
+
+    handleViewportChange();
+
+    desktopQuery.addEventListener("change", handleViewportChange);
+
+    return () => {
+      desktopQuery.removeEventListener("change", handleViewportChange);
+    };
+  }, []);
+
+  /*
+   * Mobile drawer behaves like an application drawer:
+   * lock page scrolling and allow Escape to dismiss it.
+   */
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
   const logout = async () => {
     if (signingOut) {
       return;
@@ -116,9 +174,13 @@ export function DashboardLayout() {
     try {
       await signOut();
 
+      setOpen(false);
+
       navigate("/", {
         replace: true
       });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to sign out");
     } finally {
       setSigningOut(false);
     }
@@ -128,6 +190,7 @@ export function DashboardLayout() {
     <div
       className="
         min-h-screen
+        min-w-0
 
         bg-[#d1d8dc]
         text-[#17211d]
@@ -140,7 +203,7 @@ export function DashboardLayout() {
       {open ? (
         <button
           type="button"
-          aria-label="Close dashboard menu overlay"
+          aria-label="Close dashboard menu"
           className="
             fixed
             inset-0
@@ -158,6 +221,8 @@ export function DashboardLayout() {
 
       {/* SIDEBAR */}
       <aside
+        id="dashboard-sidebar"
+        aria-label={`${profile.role} dashboard sidebar`}
         className={`
           fixed
           inset-y-0
@@ -165,7 +230,8 @@ export function DashboardLayout() {
           z-50
 
           flex
-          w-[274px]
+          w-[286px]
+          max-w-[calc(100vw-24px)]
           flex-col
 
           overflow-hidden
@@ -180,7 +246,7 @@ export function DashboardLayout() {
 
           text-[#edf4f0]
 
-          shadow-[18px_0_65px_rgba(10,35,26,0.13)]
+          shadow-[18px_0_65px_rgba(10,35,26,0.16)]
 
           transition-transform
           duration-300
@@ -191,12 +257,14 @@ export function DashboardLayout() {
 
           dark:shadow-[20px_0_70px_rgba(0,0,0,0.34)]
 
+          lg:w-[274px]
+          lg:max-w-none
           lg:translate-x-0
 
           ${open ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        {/* SIDEBAR ATMOSPHERE */}
+        {/* ATMOSPHERE */}
         <div
           aria-hidden="true"
           className="
@@ -251,7 +319,8 @@ export function DashboardLayout() {
           <div
             className="
               flex
-              h-[68px]
+              h-[64px]
+              shrink-0
               items-center
               justify-between
 
@@ -259,6 +328,8 @@ export function DashboardLayout() {
               border-white/[0.08]
 
               px-1.5
+
+              sm:h-[68px]
             "
           >
             <Link
@@ -276,10 +347,11 @@ export function DashboardLayout() {
             <button
               type="button"
               aria-label="Close dashboard menu"
+              aria-controls="dashboard-sidebar"
               onClick={() => setOpen(false)}
               className="
                 flex
-                size-9
+                size-10
                 items-center
                 justify-center
 
@@ -299,16 +371,18 @@ export function DashboardLayout() {
                 lg:hidden
               "
             >
-              <X className="size-[17px]" />
+              <X className="size-[18px]" />
             </button>
           </div>
 
-          {/* ACCOUNT CARD */}
+          {/* ACCOUNT */}
           <div
             className="
-              mt-4
+              mt-3.5
 
-              rounded-[22px]
+              shrink-0
+
+              rounded-[20px]
 
               border
               border-white/[0.10]
@@ -320,6 +394,9 @@ export function DashboardLayout() {
               shadow-[0_12px_40px_rgba(0,0,0,0.06)]
 
               backdrop-blur-xl
+
+              sm:mt-4
+              sm:rounded-[22px]
             "
           >
             <Link
@@ -415,7 +492,7 @@ export function DashboardLayout() {
 
             <div
               className="
-                mt-3.5
+                mt-3
 
                 border-t
                 border-white/[0.08]
@@ -460,12 +537,15 @@ export function DashboardLayout() {
                 className="
                   mt-1.5
 
+                  truncate
+
                   text-[11px]
                   font-semibold
                   leading-5
 
                   text-[#d3e1da]
                 "
+                title={balanceLabel}
               >
                 {balanceLabel}
               </p>
@@ -475,12 +555,14 @@ export function DashboardLayout() {
           {/* NAVIGATION */}
           <div
             className="
-              mt-5
+              mt-4
 
               flex
               min-h-0
               flex-1
               flex-col
+
+              sm:mt-5
             "
           >
             <div
@@ -505,13 +587,7 @@ export function DashboardLayout() {
                 Workspace
               </p>
 
-              <Sparkles
-                className="
-                  size-3
-
-                  text-[#759185]
-                "
-              />
+              <Sparkles className="size-3 text-[#759185]" />
             </div>
 
             <nav
@@ -521,11 +597,13 @@ export function DashboardLayout() {
 
                 mt-2.5
 
+                min-h-0
                 flex-1
 
                 space-y-1
 
                 overflow-y-auto
+                overscroll-contain
 
                 pr-0.5
               "
@@ -537,42 +615,42 @@ export function DashboardLayout() {
                   to={to}
                   onClick={() => setOpen(false)}
                   className={({ isActive }) => `
-                      group
-                      relative
+                    group
+                    relative
 
-                      flex
-                      min-h-[43px]
-                      items-center
-                      gap-3
+                    flex
+                    min-h-[44px]
+                    items-center
+                    gap-3
 
-                      overflow-hidden
+                    overflow-hidden
 
-                      rounded-[13px]
+                    rounded-[13px]
 
-                      px-3
+                    px-3
 
-                      text-[13px]
-                      font-semibold
+                    text-[13px]
+                    font-semibold
 
-                      transition-all
-                      duration-200
+                    transition-all
+                    duration-200
 
-                      ${
-                        isActive
-                          ? `
-                              bg-[#dde8e3]
-                              text-[#10261f]
+                    ${
+                      isActive
+                        ? `
+                            bg-[#dde8e3]
+                            text-[#10261f]
 
-                              shadow-[0_10px_26px_rgba(0,0,0,0.10)]
-                            `
-                          : `
-                              text-[#bdd0c7]
+                            shadow-[0_10px_26px_rgba(0,0,0,0.10)]
+                          `
+                        : `
+                            text-[#bdd0c7]
 
-                              hover:bg-white/[0.065]
-                              hover:text-white
-                            `
-                      }
-                    `}
+                            hover:bg-white/[0.065]
+                            hover:text-white
+                          `
+                    }
+                  `}
                 >
                   {({ isActive }) => (
                     <>
@@ -580,78 +658,78 @@ export function DashboardLayout() {
                         <span
                           aria-hidden="true"
                           className="
-                              absolute
-                              left-1.5
-                              top-1/2
+                            absolute
+                            left-1.5
+                            top-1/2
 
-                              h-5
-                              w-[3px]
+                            h-5
+                            w-[3px]
 
-                              -translate-y-1/2
+                            -translate-y-1/2
 
-                              rounded-full
+                            rounded-full
 
-                              bg-[#315b4a]
-                            "
+                            bg-[#315b4a]
+                          "
                         />
                       ) : null}
 
                       <span
                         className={`
-                            flex
-                            size-7
-                            shrink-0
-                            items-center
-                            justify-center
+                          flex
+                          size-7
+                          shrink-0
+                          items-center
+                          justify-center
 
-                            rounded-lg
+                          rounded-lg
 
-                            transition-all
+                          transition-all
 
-                            ${
-                              isActive
-                                ? `
-                                    bg-[#c8dbd1]
-                                    text-[#173329]
-                                  `
-                                : `
-                                    bg-transparent
-                                    text-[#aac0b5]
+                          ${
+                            isActive
+                              ? `
+                                  bg-[#c8dbd1]
+                                  text-[#173329]
+                                `
+                              : `
+                                  bg-transparent
+                                  text-[#aac0b5]
 
-                                    group-hover:bg-white/[0.06]
-                                    group-hover:text-white
-                                  `
-                            }
-                          `}
+                                  group-hover:bg-white/[0.06]
+                                  group-hover:text-white
+                                `
+                          }
+                        `}
                       >
                         <Icon className="size-[15px]" strokeWidth={isActive ? 2.1 : 1.8} />
                       </span>
 
-                      <span className="flex-1 truncate">{label}</span>
+                      <span className="min-w-0 flex-1 truncate">{label}</span>
 
                       <ChevronRight
                         className={`
-                            size-3.5
-                            shrink-0
+                          size-3.5
+                          shrink-0
 
-                            transition-all
-                            duration-200
+                          transition-all
+                          duration-200
 
-                            ${
-                              isActive
-                                ? `
-                                    translate-x-0
-                                    opacity-80
-                                  `
-                                : `
-                                    -translate-x-1
-                                    opacity-0
+                          ${
+                            isActive
+                              ? `
+                                  translate-x-0
+                                  opacity-80
+                                `
+                              : `
+                                  -translate-x-1
+                                  opacity-0
 
-                                    group-hover:translate-x-0
-                                    group-hover:opacity-50
-                                  `
-                            }
-                          `}
+                                  group-hover:translate-x-0
+                                  group-hover:opacity-50
+                                `
+                          }
+                        `}
                       />
                     </>
                   )}
@@ -664,6 +742,8 @@ export function DashboardLayout() {
           <div
             className="
               mt-3
+
+              shrink-0
 
               border-t
               border-white/[0.08]
@@ -679,7 +759,7 @@ export function DashboardLayout() {
                 group
 
                 flex
-                min-h-[42px]
+                min-h-[44px]
                 w-full
                 items-center
                 gap-3
@@ -754,6 +834,7 @@ export function DashboardLayout() {
         className="
           flex
           min-h-screen
+          min-w-0
           flex-col
 
           lg:pl-[274px]
@@ -767,7 +848,8 @@ export function DashboardLayout() {
             z-30
 
             flex
-            h-[68px]
+            h-[64px]
+            shrink-0
             items-center
 
             border-b
@@ -775,11 +857,13 @@ export function DashboardLayout() {
 
             bg-[#d1d8dc]/88
 
-            px-4
+            px-3.5
 
             backdrop-blur-2xl
 
+            sm:h-[68px]
             sm:px-6
+
             lg:px-7
             xl:px-8
 
@@ -791,10 +875,12 @@ export function DashboardLayout() {
           <button
             type="button"
             aria-label="Open dashboard menu"
+            aria-controls="dashboard-sidebar"
+            aria-expanded={open}
             onClick={() => setOpen(true)}
             className="
               flex
-              size-9
+              size-10
               shrink-0
               items-center
               justify-center
@@ -819,14 +905,15 @@ export function DashboardLayout() {
               lg:hidden
             "
           >
-            <Menu className="size-[17px]" />
+            <Menu className="size-[18px]" />
           </button>
 
-          {/* CONTEXT */}
+          {/* PAGE CONTEXT */}
           <div
             className="
               ml-3
               min-w-0
+              flex-1
 
               lg:ml-0
             "
@@ -834,6 +921,7 @@ export function DashboardLayout() {
             <div
               className="
                 flex
+                min-w-0
                 items-center
                 gap-2
               "
@@ -841,6 +929,7 @@ export function DashboardLayout() {
               <p
                 className="
                   hidden
+                  shrink-0
 
                   text-[9px]
                   font-bold
@@ -849,7 +938,7 @@ export function DashboardLayout() {
 
                   text-[#6b7e75]
 
-                  sm:block
+                  md:block
 
                   dark:text-[#8da096]
                 "
@@ -861,25 +950,30 @@ export function DashboardLayout() {
                 className="
                   hidden
                   size-1
+                  shrink-0
                   rounded-full
 
                   bg-[#6e887c]
 
-                  sm:block
+                  md:block
                 "
               />
 
               <p
                 className="
+                  min-w-0
                   truncate
 
-                  text-[13px]
+                  text-[12px]
                   font-semibold
 
                   text-[#24352e]
 
+                  sm:text-[13px]
+
                   dark:text-[#edf4f0]
                 "
+                title={currentPageLabel}
               >
                 {currentPageLabel}
               </p>
@@ -899,6 +993,7 @@ export function DashboardLayout() {
               <span
                 className="
                   size-1.5
+                  shrink-0
 
                   rounded-full
 
@@ -910,6 +1005,8 @@ export function DashboardLayout() {
 
               <p
                 className="
+                  truncate
+
                   text-[10px]
                   font-medium
 
@@ -926,18 +1023,22 @@ export function DashboardLayout() {
           {/* ACTIONS */}
           <div
             className="
-              ml-auto
+              ml-2
 
               flex
+              shrink-0
               items-center
-              gap-2
+              gap-1.5
+
+              sm:ml-4
+              sm:gap-2
             "
           >
             <div
               className="
                 flex
                 items-center
-                gap-1
+                gap-0.5
 
                 rounded-2xl
 
@@ -946,9 +1047,12 @@ export function DashboardLayout() {
 
                 bg-[#e3e9e6]/65
 
-                p-1
+                p-0.5
 
                 shadow-[0_5px_18px_rgba(20,45,36,0.04)]
+
+                sm:gap-1
+                sm:p-1
 
                 dark:border-[#30443b]
                 dark:bg-[#15201c]/80
@@ -990,12 +1094,19 @@ export function DashboardLayout() {
               </div>
             </div>
 
+            {/* 
+              Mobile already has Sign out inside the drawer.
+              Keeping this hidden below sm prevents a crowded
+              320px/375px topbar.
+            */}
             <button
               type="button"
               onClick={() => void logout()}
               disabled={signingOut}
+              aria-label="Sign out"
               className="
-                flex
+                hidden
+
                 h-10
                 items-center
                 justify-center
@@ -1024,6 +1135,8 @@ export function DashboardLayout() {
                 disabled:cursor-not-allowed
                 disabled:opacity-60
 
+                sm:flex
+
                 dark:border-[#31463c]
                 dark:text-[#c5d4cd]
 
@@ -1037,14 +1150,7 @@ export function DashboardLayout() {
                 <LogOut className="size-4" />
               )}
 
-              <span
-                className="
-                  hidden
-                  sm:inline
-                "
-              >
-                Sign out
-              </span>
+              <span className="hidden md:inline">Sign out</span>
             </button>
           </div>
         </header>
@@ -1053,15 +1159,18 @@ export function DashboardLayout() {
         <main
           className="
             relative
+
+            min-w-0
             flex-1
 
-            overflow-hidden
+            px-3.5
+            py-4
 
-            px-4
-            py-5
+            sm:px-5
+            sm:py-5
 
-            sm:px-6
-            sm:py-6
+            md:px-6
+            md:py-6
 
             lg:px-7
             lg:py-7
@@ -1069,7 +1178,7 @@ export function DashboardLayout() {
             xl:px-8
           "
         >
-          {/* ATMOSPHERE */}
+          {/* BACKGROUND ATMOSPHERE */}
           <div
             aria-hidden="true"
             className="
@@ -1143,7 +1252,7 @@ export function DashboardLayout() {
 
               mx-auto
               w-full
-
+              min-w-0
               max-w-[1740px]
             "
           >
@@ -1154,13 +1263,17 @@ export function DashboardLayout() {
         {/* FOOTER */}
         <footer
           className="
+            shrink-0
+
             border-t
             border-[#aab8b2]/35
 
             bg-[#d1d8dc]/75
 
-            px-5
+            px-4
             py-2.5
+
+            sm:px-5
 
             dark:border-white/[0.07]
             dark:bg-[#0d1612]
@@ -1174,7 +1287,7 @@ export function DashboardLayout() {
               w-full
               max-w-[1740px]
               items-center
-              justify-between
+              justify-center
               gap-4
 
               text-[9px]
@@ -1182,19 +1295,14 @@ export function DashboardLayout() {
 
               text-[#708079]
 
+              sm:justify-between
+
               dark:text-[#7e9288]
             "
           >
             <span>CrowdSpark operational workspace</span>
 
-            <span
-              className="
-                hidden
-                sm:inline
-              "
-            >
-              Secure crowdfunding · transparent impact
-            </span>
+            <span className="hidden sm:inline">Secure crowdfunding · transparent impact</span>
           </div>
         </footer>
       </div>
