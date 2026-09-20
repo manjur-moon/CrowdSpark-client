@@ -1,13 +1,9 @@
-import { Bell, Code2, LoaderCircle, LogOut, Menu, UserRound, X } from "lucide-react";
-
+import { ArrowRight, Bell, Code2, LoaderCircle, LogOut, Menu, UserRound, X } from "lucide-react";
 import { useEffect, useState } from "react";
-
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-
 import { toast } from "sonner";
 
 import { dashboardPath, useAuth } from "../lib/AuthContext";
-
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -15,6 +11,10 @@ const publicLinks = [
   {
     label: "Explore",
     to: "/campaigns"
+  },
+  {
+    label: "How it works",
+    to: "/#how-it-works"
   },
   {
     label: "About",
@@ -28,23 +28,16 @@ const publicLinks = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
-
   const [signingOut, setSigningOut] = useState(false);
 
   const { current, sessionUser, signOut } = useAuth();
 
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const location = useLocation();
-
   const isHome = location.pathname === "/";
-
   const isAbout = location.pathname === "/about";
 
-  /*
-   * Home and About share the cinematic,
-   * transparent navigation treatment.
-   */
   const useCinematicNavbar = isHome || isAbout;
 
   const githubUrl = import.meta.env.VITE_GITHUB_URL || "https://github.com";
@@ -53,46 +46,10 @@ export function Navbar() {
 
   const accountLabel = current?.profile ? "Dashboard" : "Finish setup";
 
-  const closeMenu = () => {
-    setOpen(false);
-  };
-
-  /*
-   * Always close the mobile navigation
-   * after the URL changes.
-   */
   useEffect(() => {
     setOpen(false);
   }, [location.pathname, location.search, location.hash]);
 
-  /*
-   * If the viewport grows into desktop
-   * mode while the menu is open, reset
-   * the mobile state.
-   */
-  useEffect(() => {
-    const desktopQuery = window.matchMedia("(min-width: 1280px)");
-
-    const handleDesktopChange = () => {
-      if (desktopQuery.matches) {
-        setOpen(false);
-      }
-    };
-
-    handleDesktopChange();
-
-    desktopQuery.addEventListener("change", handleDesktopChange);
-
-    return () => {
-      desktopQuery.removeEventListener("change", handleDesktopChange);
-    };
-  }, []);
-
-  /*
-   * Prevent the page behind the mobile
-   * navigation from scrolling and support
-   * keyboard dismissal.
-   */
   useEffect(() => {
     if (!open) {
       return;
@@ -117,6 +74,24 @@ export function Navbar() {
     };
   }, [open]);
 
+  useEffect(() => {
+    const desktopQuery = window.matchMedia("(min-width: 1280px)");
+
+    const handleChange = () => {
+      if (desktopQuery.matches) {
+        setOpen(false);
+      }
+    };
+
+    handleChange();
+
+    desktopQuery.addEventListener("change", handleChange);
+
+    return () => {
+      desktopQuery.removeEventListener("change", handleChange);
+    };
+  }, []);
+
   const logout = async () => {
     if (signingOut) {
       return;
@@ -127,7 +102,7 @@ export function Navbar() {
     try {
       await signOut();
 
-      closeMenu();
+      setOpen(false);
 
       navigate("/", {
         replace: true
@@ -139,1046 +114,946 @@ export function Navbar() {
     }
   };
 
-  const desktopLinkClass = ({ isActive }: { isActive: boolean }) => {
-    if (useCinematicNavbar) {
-      return `
-        inline-flex
-        items-center
-        justify-center
+  const desktopLinkClass = ({ isActive }: { isActive: boolean }) => `
+    inline-flex
+    items-center
+    justify-center
 
-        rounded-full
+    rounded-full
 
-        border
-        border-white/10
+    border
+    border-white/10
 
-        bg-[#143229]/80
+    bg-[#123229]/80
 
-        px-4
-        py-2.5
+    px-4
+    py-2.5
 
-        text-sm
-        font-semibold
-        text-white
+    text-sm
+    font-semibold
+    text-white
 
-        backdrop-blur-xl
+    backdrop-blur-xl
 
-        transition-all
-        duration-200
+    transition-all
+    duration-200
 
-        hover:-translate-y-0.5
-        hover:border-[#2f5c4d]
-        hover:bg-[#1b4538]
+    hover:-translate-y-0.5
+    hover:border-[#315f50]
+    hover:bg-[#194438]
 
-        ${
-          isActive
-            ? `
-                border-[#315f50]
-                bg-[#1b4538]
-              `
-            : ""
-        }
-      `;
+    ${
+      isActive
+        ? `
+            border-[#315f50]
+            bg-[#194438]
+          `
+        : ""
     }
+  `;
 
-    return `
-      inline-flex
-      items-center
-      justify-center
+  const mobileNavigationClass = `
+    group
 
-      rounded-full
+    flex
+    min-h-[42px]
+    items-center
+    justify-between
 
-      px-4
-      py-2.5
+    rounded-[14px]
 
-      text-sm
-      font-semibold
+    border
+    border-white/10
 
-      transition-all
-      duration-200
+    bg-white/[0.035]
 
-      ${
-        isActive
-          ? `
-              bg-[#20352d]
-              text-white
+    px-3.5
 
-              dark:bg-[#d6e3dd]
-              dark:text-[#10261f]
-            `
-          : `
-              text-[#45545b]
+    text-[13px]
+    font-semibold
 
-              hover:bg-white/40
-              hover:text-[#172126]
+    text-white/90
 
-              dark:text-[#d6d6d6]
-              dark:hover:bg-white/5
-              dark:hover:text-white
-            `
-      }
-    `;
-  };
+    transition-all
 
-  const secondaryDesktopLink = useCinematicNavbar
-    ? `
-          rounded-full
-
-          border
-          border-white/10
-
-          bg-[#143229]/80
-
-          px-4
-          py-2.5
-
-          text-sm
-          font-semibold
-          text-white
-
-          backdrop-blur-xl
-
-          transition-all
-          duration-200
-
-          hover:-translate-y-0.5
-          hover:border-[#2f5c4d]
-          hover:bg-[#1b4538]
-        `
-    : `
-          rounded-full
-
-          px-4
-          py-2.5
-
-          text-sm
-          font-semibold
-
-          text-[#45545b]
-
-          transition-all
-          duration-200
-
-          hover:bg-white/40
-          hover:text-[#172126]
-
-          dark:text-[#d6d6d6]
-          dark:hover:bg-white/5
-          dark:hover:text-white
-        `;
-
-  const mobileBasicLink = useCinematicNavbar
-    ? `
-          rounded-2xl
-
-          border
-          border-white/10
-
-          bg-[#143229]/70
-
-          px-4
-          py-3.5
-
-          text-sm
-          font-semibold
-          text-white
-
-          transition
-
-          hover:bg-[#1b4538]
-        `
-    : `
-          rounded-2xl
-
-          px-4
-          py-3.5
-
-          text-sm
-          font-semibold
-
-          text-[#172126]
-
-          transition
-
-          hover:bg-white/40
-
-          dark:text-white
-          dark:hover:bg-white/5
-        `;
+    hover:bg-white/[0.07]
+    hover:text-white
+  `;
 
   return (
-    <header
-      className={
-        useCinematicNavbar
-          ? `
-              absolute
-              left-0
-              right-0
-              top-0
-              z-50
-
-              w-full
-
-              border-b
-              border-white/15
-
-              bg-[#07140f]/20
-
-              backdrop-blur-md
-            `
-          : `
-              sticky
-              top-0
-              z-50
-
-              w-full
-
-              border-b
-              border-[#81958d]/25
-
-              bg-[#d1d8dc]/75
-
-              backdrop-blur-2xl
-
-              dark:border-white/10
-              dark:bg-[#0d1b16]/88
-            `
-      }
-    >
-      <div
+    <>
+      {/* FIXED NAVBAR */}
+      <header
         className="
-          container-app
-          relative
+          fixed
+          inset-x-0
+          top-0
+          z-50
 
-          flex
-          h-[78px]
-          items-center
-          justify-between
+          w-full
 
-          gap-3
+          border-b
+          border-white/10
 
-          sm:h-[84px]
+          bg-[#08130f]/88
 
-          xl:h-[94px]
+          shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+
+          backdrop-blur-2xl
         "
       >
-        {/* DESKTOP LEFT NAV */}
-        <nav
-          aria-label="Primary navigation"
-          className="
-            hidden
-            items-center
-            gap-1.5
-
-            xl:flex
-          "
-        >
-          <NavLink to="/campaigns" className={desktopLinkClass}>
-            Explore
-          </NavLink>
-
-          <Link to="/#how-it-works" className={secondaryDesktopLink}>
-            How it works
-          </Link>
-        </nav>
-
-        {/* LOGO */}
         <div
           className="
-            shrink-0
+            container-app
+            relative
 
-            xl:absolute
-            xl:left-1/2
-            xl:-translate-x-1/2
-          "
-        >
-          <Logo light={useCinematicNavbar} />
-        </div>
-
-        {/* DESKTOP RIGHT NAV */}
-        <div
-          className="
-            hidden
+            flex
+            h-[64px]
             items-center
-            gap-1.5
+            justify-between
 
-            xl:flex
+            gap-3
+
+            sm:h-[68px]
+
+            xl:h-[92px]
           "
         >
-          <NavLink to="/about" className={desktopLinkClass}>
-            About
-          </NavLink>
+          {/* DESKTOP LEFT */}
+          <nav
+            aria-label="Primary navigation"
+            className="
+              hidden
+              items-center
+              gap-2
 
-          <NavLink to="/contact" className={desktopLinkClass}>
-            Contact
-          </NavLink>
+              xl:flex
+            "
+          >
+            <NavLink to="/campaigns" className={desktopLinkClass}>
+              Explore
+            </NavLink>
 
-          {!sessionUser ? (
-            <>
-              <NavLink
-                to="/login"
-                className={
-                  useCinematicNavbar
-                    ? `
-                        rounded-full
+            <Link
+              to="/#how-it-works"
+              className="
+                inline-flex
+                items-center
+                justify-center
 
-                        border
-                        border-white/10
+                rounded-full
 
-                        bg-[#143229]/80
+                border
+                border-white/10
 
-                        px-4
-                        py-2.5
+                bg-[#123229]/80
 
-                        text-sm
-                        font-semibold
-                        text-white
+                px-4
+                py-2.5
 
-                        backdrop-blur-xl
+                text-sm
+                font-semibold
+                text-white
 
-                        transition-all
-                        duration-200
+                backdrop-blur-xl
 
-                        hover:-translate-y-0.5
-                        hover:border-[#2f5c4d]
-                        hover:bg-[#1b4538]
-                      `
-                    : `
-                        rounded-full
+                transition-all
+                duration-200
 
-                        border
-                        border-[#b8c5ca]
+                hover:-translate-y-0.5
+                hover:border-[#315f50]
+                hover:bg-[#194438]
+              "
+            >
+              How it works
+            </Link>
+          </nav>
 
-                        bg-transparent
+          {/* MAIN LOGO */}
+          <div
+            className="
+              shrink-0
 
-                        px-4
-                        py-2.5
+              xl:absolute
+              xl:left-1/2
+              xl:-translate-x-1/2
+            "
+          >
+            <Logo light />
+          </div>
 
-                        text-sm
-                        font-semibold
+          {/* DESKTOP RIGHT */}
+          <div
+            className="
+              hidden
+              items-center
+              gap-2
 
-                        text-[#172126]
+              xl:flex
+            "
+          >
+            <NavLink to="/about" className={desktopLinkClass}>
+              About
+            </NavLink>
 
-                        transition-all
-                        duration-200
+            <NavLink to="/contact" className={desktopLinkClass}>
+              Contact
+            </NavLink>
 
-                        hover:bg-white/50
-
-                        dark:border-[#465550]
-                        dark:text-white
-                        dark:hover:bg-white/5
-                      `
-                }
-              >
-                Sign in
-              </NavLink>
-
-              <NavLink
-                to="/register"
-                className={
-                  useCinematicNavbar
-                    ? `
-                        rounded-full
-
-                        bg-[#91aa9d]
-
-                        px-4
-                        py-2.5
-
-                        text-sm
-                        font-semibold
-                        text-[#10261f]
-
-                        transition-all
-                        duration-200
-
-                        hover:-translate-y-0.5
-                        hover:bg-[#a9beb3]
-                      `
-                    : `
-                        rounded-full
-
-                        bg-[#20352d]
-
-                        px-4
-                        py-2.5
-
-                        text-sm
-                        font-semibold
-                        text-white
-
-                        transition-all
-                        duration-200
-
-                        hover:-translate-y-0.5
-                        hover:bg-[#314c42]
-
-                        dark:bg-[#d6e3dd]
-                        dark:text-[#10261f]
-                        dark:hover:bg-[#eef5f1]
-                      `
-                }
-              >
-                Get started
-              </NavLink>
-            </>
-          ) : (
-            <>
-              {current?.profile?.role === "supporter" ? (
-                <span
+            {!sessionUser ? (
+              <>
+                <NavLink
+                  to="/login"
                   className="
+                    inline-flex
+                    items-center
+                    justify-center
+
                     rounded-full
 
-                    bg-[#91aa9d]
+                    border
+                    border-white/10
 
-                    px-3.5
-                    py-2
+                    bg-[#123229]/80
 
-                    text-xs
+                    px-4
+                    py-2.5
+
+                    text-sm
                     font-semibold
+                    text-white
 
-                    text-[#10261f]
-                  "
-                >
-                  {current.profile.credits.toLocaleString()} credits
-                </span>
-              ) : null}
-
-              <NavLink to={accountDestination} className={desktopLinkClass}>
-                {accountLabel}
-              </NavLink>
-
-              {current?.profile ? (
-                <NavLink
-                  to="/dashboard/notifications"
-                  className={desktopLinkClass}
-                  aria-label="Notifications"
-                >
-                  <Bell className="size-[18px]" />
-                </NavLink>
-              ) : null}
-
-              <button
-                type="button"
-                onClick={() => void logout()}
-                disabled={signingOut}
-                aria-label="Sign out"
-                className={
-                  useCinematicNavbar
-                    ? `
-                        flex
-                        size-10
-                        items-center
-                        justify-center
-
-                        rounded-full
-
-                        border
-                        border-white/10
-
-                        bg-[#143229]/80
-
-                        text-white
-
-                        backdrop-blur-xl
-
-                        transition-all
-                        duration-200
-
-                        hover:bg-[#1b4538]
-
-                        disabled:cursor-not-allowed
-                        disabled:opacity-60
-                      `
-                    : `
-                        flex
-                        size-10
-                        items-center
-                        justify-center
-
-                        rounded-full
-
-                        bg-[#20352d]
-
-                        text-white
-
-                        transition-all
-                        duration-200
-
-                        hover:bg-[#314c42]
-
-                        disabled:cursor-not-allowed
-                        disabled:opacity-60
-
-                        dark:bg-[#d6e3dd]
-                        dark:text-[#10261f]
-                      `
-                }
-              >
-                {signingOut ? (
-                  <LoaderCircle className="size-[18px] animate-spin" />
-                ) : (
-                  <LogOut className="size-[18px]" />
-                )}
-              </button>
-            </>
-          )}
-
-          <ThemeToggle
-            className={
-              useCinematicNavbar
-                ? `
-                    !rounded-full
-                    !border-white/10
-                    !bg-[#91aa9d]
-                    !text-[#10261f]
+                    backdrop-blur-xl
 
                     transition-all
                     duration-200
 
-                    hover:!bg-[#a9beb3]
-                  `
-                : `
-                    !rounded-full
-                    !border-[#b8c5ca]
-                    !bg-[#e7ecef]
-                    !text-[#20352d]
+                    hover:-translate-y-0.5
+                    hover:bg-[#194438]
+                  "
+                >
+                  Sign in
+                </NavLink>
 
-                    dark:!border-[#465550]
-                    dark:!bg-[#17221e]
-                    dark:!text-[#d6e3dd]
-                  `
-            }
-          />
+                <NavLink
+                  to="/register"
+                  className="
+                    inline-flex
+                    items-center
+                    justify-center
 
-          <a
-            href={githubUrl}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="CrowdSpark GitHub"
-            className="
-              flex
-              size-10
-              items-center
-              justify-center
+                    rounded-full
 
-              rounded-full
+                    bg-[#b5c8be]
 
-              bg-[#91aa9d]
+                    px-5
+                    py-2.5
 
-              text-[#10261f]
+                    text-sm
+                    font-semibold
 
-              transition-all
-              duration-200
+                    text-[#10261f]
 
-              hover:-translate-y-0.5
-              hover:bg-[#a9beb3]
-            "
-          >
-            <Code2 className="size-[18px]" />
-          </a>
-        </div>
+                    transition-all
+                    duration-200
 
-        {/* MOBILE / TABLET CONTROLS */}
-        <div
-          className="
-            ml-auto
-
-            flex
-            items-center
-            gap-2
-
-            xl:hidden
-          "
-        >
-          <ThemeToggle
-            className={
-              useCinematicNavbar
-                ? `
-                    !rounded-full
-                    !border-white/10
-                    !bg-[#91aa9d]
-                    !text-[#10261f]
-                  `
-                : `
-                    !rounded-full
-                    !border-[#b8c5ca]
-                    !bg-[#e7ecef]
-                    !text-[#20352d]
-
-                    dark:!border-[#465550]
-                    dark:!bg-[#17221e]
-                    dark:!text-[#d6e3dd]
-                  `
-            }
-          />
-
-          <button
-            type="button"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            aria-controls="public-mobile-menu"
-            onClick={() => setOpen((value) => !value)}
-            className="
-              flex
-              size-10
-              items-center
-              justify-center
-
-              rounded-full
-
-              border
-              border-[#91aa9d]/30
-
-              bg-[#91aa9d]
-
-              text-[#10261f]
-
-              shadow-[0_7px_22px_rgba(16,38,31,0.12)]
-
-              transition-all
-
-              hover:bg-[#a9beb3]
-            "
-          >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
-        </div>
-      </div>
-
-      {/* MOBILE / TABLET MENU */}
-      {open ? (
-        <div
-          id="public-mobile-menu"
-          className={
-            useCinematicNavbar
-              ? `
-                  absolute
-                  left-0
-                  right-0
-                  top-full
-
-                  max-h-[calc(100dvh-78px)]
-
-                  overflow-y-auto
-
-                  border-t
-                  border-white/10
-
-                  bg-[#0b2119]/96
-
-                  shadow-[0_24px_70px_rgba(0,0,0,0.30)]
-
-                  backdrop-blur-2xl
-
-                  sm:max-h-[calc(100dvh-84px)]
-
-                  xl:hidden
-                `
-              : `
-                  absolute
-                  left-0
-                  right-0
-                  top-full
-
-                  max-h-[calc(100dvh-78px)]
-
-                  overflow-y-auto
-
-                  border-t
-                  border-[#aebdb6]/55
-
-                  bg-[#d9e0e3]/97
-
-                  shadow-[0_24px_70px_rgba(20,45,36,0.16)]
-
-                  backdrop-blur-2xl
-
-                  sm:max-h-[calc(100dvh-84px)]
-
-                  dark:border-[#2d3935]
-                  dark:bg-[#101916]/98
-
-                  xl:hidden
-                `
-          }
-        >
-          <nav
-            aria-label="Mobile navigation"
-            className="
-              container-app
-
-              grid
-              gap-2
-
-              py-4
-              sm:py-5
-            "
-          >
-            {publicLinks.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                onClick={closeMenu}
-                className={({ isActive }) =>
-                  useCinematicNavbar
-                    ? `
-                          rounded-2xl
-
-                          border
-                          border-white/10
-
-                          px-4
-                          py-3.5
-
-                          text-sm
-                          font-semibold
-                          text-white
-
-                          transition
-
-                          ${isActive ? "bg-[#1b4538]" : "bg-[#143229]/70 hover:bg-[#1b4538]"}
-                        `
-                    : `
-                          rounded-2xl
-
-                          px-4
-                          py-3.5
-
-                          text-sm
-                          font-semibold
-
-                          transition
-
-                          ${
-                            isActive
-                              ? `
-                                  bg-[#20352d]
-                                  text-white
-
-                                  dark:bg-[#d6e3dd]
-                                  dark:text-[#10261f]
-                                `
-                              : `
-                                  text-[#172126]
-
-                                  hover:bg-white/45
-
-                                  dark:text-white
-                                  dark:hover:bg-white/5
-                                `
-                          }
-                        `
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
-
-            <Link to="/#how-it-works" onClick={closeMenu} className={mobileBasicLink}>
-              How it works
-            </Link>
-
-            {sessionUser ? (
-              <div
-                className={
-                  useCinematicNavbar
-                    ? `
-                        mt-2
-
-                        grid
-                        gap-2
-
-                        border-t
-                        border-white/10
-
-                        pt-4
-                      `
-                    : `
-                        mt-2
-
-                        grid
-                        gap-2
-
-                        border-t
-                        border-[#aebdb6]
-
-                        pt-4
-
-                        dark:border-[#2d3935]
-                      `
-                }
-              >
+                    hover:-translate-y-0.5
+                    hover:bg-[#d2e1da]
+                  "
+                >
+                  Get started
+                </NavLink>
+              </>
+            ) : (
+              <>
                 {current?.profile?.role === "supporter" ? (
-                  <div
+                  <span
                     className="
-                      flex
-                      items-center
-                      justify-between
+                      rounded-full
 
-                      rounded-2xl
-
-                      bg-[#91aa9d]/20
+                      bg-[#91aa9d]
 
                       px-4
-                      py-3
+                      py-2.5
 
                       text-xs
                       font-semibold
 
-                      text-[#173329]
-
-                      dark:text-[#c9ddd3]
+                      text-[#10261f]
                     "
                   >
-                    <span>Available credits</span>
-
-                    <strong>{current.profile.credits.toLocaleString()}</strong>
-                  </div>
+                    {current.profile.credits.toLocaleString()} credits
+                  </span>
                 ) : null}
 
-                <Link
-                  to={accountDestination}
-                  onClick={closeMenu}
-                  className={
-                    useCinematicNavbar
-                      ? `
-                          flex
-                          min-h-11
-                          items-center
-                          justify-center
-
-                          rounded-full
-
-                          bg-[#91aa9d]
-
-                          px-5
-                          py-3
-
-                          text-sm
-                          font-semibold
-                          text-[#10261f]
-                        `
-                      : "editorial-button"
-                  }
-                >
+                <NavLink to={accountDestination} className={desktopLinkClass}>
                   {accountLabel}
-                </Link>
+                </NavLink>
 
                 {current?.profile ? (
-                  <>
-                    <Link to="/dashboard/profile" onClick={closeMenu} className={mobileBasicLink}>
-                      <span
-                        className="
-                          flex
-                          items-center
-                          justify-center
-                          gap-2
-                        "
-                      >
-                        <UserRound className="size-4" />
-                        Profile
-                      </span>
-                    </Link>
-
-                    <Link
-                      to="/dashboard/notifications"
-                      onClick={closeMenu}
-                      className={mobileBasicLink}
-                    >
-                      <span
-                        className="
-                          flex
-                          items-center
-                          justify-center
-                          gap-2
-                        "
-                      >
-                        <Bell className="size-4" />
-                        Notifications
-                      </span>
-                    </Link>
-                  </>
+                  <NavLink
+                    to="/dashboard/notifications"
+                    aria-label="Notifications"
+                    className={desktopLinkClass}
+                  >
+                    <Bell className="size-[17px]" />
+                  </NavLink>
                 ) : null}
 
                 <button
                   type="button"
                   onClick={() => void logout()}
                   disabled={signingOut}
-                  className={
-                    useCinematicNavbar
-                      ? `
-                          flex
-                          min-h-11
-                          items-center
-                          justify-center
-                          gap-2
+                  aria-label="Sign out"
+                  className="
+                    flex
+                    size-10
+                    items-center
+                    justify-center
 
-                          rounded-full
+                    rounded-full
 
-                          border
-                          border-white/10
+                    border
+                    border-white/10
 
-                          bg-[#143229]/80
+                    bg-[#123229]/80
 
-                          px-5
-                          py-3
+                    text-white
 
-                          text-sm
-                          font-semibold
-                          text-white
+                    transition-all
 
-                          disabled:cursor-not-allowed
-                          disabled:opacity-60
-                        `
-                      : `
-                          flex
-                          min-h-11
-                          items-center
-                          justify-center
-                          gap-2
+                    hover:bg-[#194438]
 
-                          rounded-full
-
-                          border
-                          border-[var(--editorial-border)]
-
-                          px-5
-                          py-3
-
-                          text-sm
-                          font-semibold
-
-                          text-[var(--editorial-text)]
-
-                          transition
-
-                          hover:bg-white/40
-
-                          disabled:cursor-not-allowed
-                          disabled:opacity-60
-
-                          dark:hover:bg-white/5
-                        `
-                  }
+                    disabled:cursor-not-allowed
+                    disabled:opacity-60
+                  "
                 >
                   {signingOut ? (
-                    <LoaderCircle className="size-4 animate-spin" />
+                    <LoaderCircle className="size-[17px] animate-spin" />
                   ) : (
-                    <LogOut className="size-4" />
+                    <LogOut className="size-[17px]" />
                   )}
-
-                  {signingOut ? "Signing out..." : "Sign out"}
                 </button>
-              </div>
-            ) : (
-              <div
-                className={
-                  useCinematicNavbar
-                    ? `
-                        mt-2
-
-                        grid
-                        grid-cols-2
-                        gap-2
-
-                        border-t
-                        border-white/10
-
-                        pt-4
-                      `
-                    : `
-                        mt-2
-
-                        grid
-                        grid-cols-2
-                        gap-2
-
-                        border-t
-                        border-[#aebdb6]
-
-                        pt-4
-
-                        dark:border-[#2d3935]
-                      `
-                }
-              >
-                <Link
-                  to="/login"
-                  onClick={closeMenu}
-                  className={
-                    useCinematicNavbar
-                      ? `
-                          flex
-                          min-h-11
-                          items-center
-                          justify-center
-
-                          rounded-full
-
-                          border
-                          border-white/10
-
-                          bg-[#143229]/80
-
-                          px-4
-                          py-3
-
-                          text-sm
-                          font-semibold
-                          text-white
-                        `
-                      : "btn-secondary"
-                  }
-                >
-                  Sign in
-                </Link>
-
-                <Link
-                  to="/register"
-                  onClick={closeMenu}
-                  className={
-                    useCinematicNavbar
-                      ? `
-                          flex
-                          min-h-11
-                          items-center
-                          justify-center
-
-                          rounded-full
-
-                          bg-[#91aa9d]
-
-                          px-4
-                          py-3
-
-                          text-sm
-                          font-semibold
-                          text-[#10261f]
-                        `
-                      : "editorial-button"
-                  }
-                >
-                  Get started
-                </Link>
-              </div>
+              </>
             )}
 
-            <a href={githubUrl} target="_blank" rel="noreferrer" className={mobileBasicLink}>
-              <span
+            <ThemeToggle
+              className="
+                !rounded-full
+                !border-white/10
+                !bg-[#91aa9d]
+                !text-[#10261f]
+
+                hover:!bg-[#aec1b7]
+              "
+            />
+
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="CrowdSpark GitHub"
+              className="
+                flex
+                size-10
+                items-center
+                justify-center
+
+                rounded-full
+
+                bg-[#91aa9d]
+
+                text-[#10261f]
+
+                transition-all
+
+                hover:-translate-y-0.5
+                hover:bg-[#aec1b7]
+              "
+            >
+              <Code2 className="size-[17px]" />
+            </a>
+          </div>
+
+          {/* MOBILE ONLY */}
+          <div
+            className="
+              ml-auto
+
+              flex
+              items-center
+              gap-2
+
+              xl:hidden
+            "
+          >
+            <ThemeToggle
+              className="
+                !size-10
+                !rounded-full
+
+                !border-white/10
+
+                !bg-[#91aa9d]
+
+                !text-[#10261f]
+
+                hover:!bg-[#aec1b7]
+              "
+            />
+
+            <button
+              type="button"
+              aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={open}
+              aria-controls="mobile-navigation-drawer"
+              onClick={() => setOpen((value) => !value)}
+              className="
+                flex
+                size-10
+                items-center
+                justify-center
+
+                rounded-full
+
+                border
+                border-white/10
+
+                bg-[#a9bdb3]
+
+                text-[#10261f]
+
+                transition-all
+
+                hover:bg-[#c5d6ce]
+              "
+            >
+              {open ? <X className="size-5" /> : <Menu className="size-5" />}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* FIXED NAVBAR SPACER */}
+      {!useCinematicNavbar ? (
+        <div
+          aria-hidden="true"
+          className="
+            h-[64px]
+
+            sm:h-[68px]
+
+            xl:h-[92px]
+          "
+        />
+      ) : null}
+
+      {/* MOBILE BACKDROP */}
+      {open ? (
+        <button
+          type="button"
+          aria-label="Close navigation overlay"
+          onClick={() => setOpen(false)}
+          className="
+            fixed
+            inset-0
+            z-[55]
+
+            bg-[#020805]/65
+
+            backdrop-blur-[3px]
+
+            xl:hidden
+          "
+        />
+      ) : null}
+
+      {/* MOBILE DRAWER */}
+      <aside
+        id="mobile-navigation-drawer"
+        aria-label="Mobile navigation"
+        className={`
+          fixed
+          bottom-0
+          right-0
+          top-0
+          z-[60]
+
+          flex
+          w-[calc(100vw-60px)]
+          max-w-[330px]
+          flex-col
+
+          border-l
+          border-white/10
+
+          bg-[linear-gradient(180deg,#08140f_0%,#101914_50%,#111914_100%)]
+
+          text-white
+
+          shadow-[-24px_0_70px_rgba(0,0,0,0.34)]
+
+          backdrop-blur-2xl
+
+          transition-transform
+          duration-300
+          ease-out
+
+          xl:hidden
+
+          ${open ? "translate-x-0" : "translate-x-full"}
+        `}
+      >
+        {/* DRAWER HEADER — NO EXTRA LOGO */}
+        <div
+          className="
+            flex
+            min-h-[64px]
+            shrink-0
+            items-center
+            justify-between
+
+            border-b
+            border-white/[0.08]
+
+            px-4
+          "
+        >
+          <div className="min-w-0">
+            <p
+              className="
+                text-[9px]
+                font-bold
+                uppercase
+                tracking-[0.22em]
+
+                text-[#8fa99d]
+              "
+            >
+              Navigation
+            </p>
+
+            <p
+              className="
+                mt-0.5
+
+                truncate
+
+                text-[11px]
+
+                text-white/70
+              "
+            >
+              Explore CrowdSpark
+            </p>
+          </div>
+
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            onClick={() => setOpen(false)}
+            className="
+              flex
+              size-9
+              shrink-0
+              items-center
+              justify-center
+
+              rounded-full
+
+              border
+              border-white/10
+
+              bg-white/[0.04]
+
+              text-white
+
+              transition-all
+
+              hover:bg-white/[0.09]
+            "
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+
+        {/* DRAWER BODY */}
+        <div
+          className="
+            dashboard-scrollbar
+
+            min-h-0
+            flex-1
+
+            overflow-y-auto
+            overscroll-contain
+
+            px-3
+            py-3
+          "
+        >
+          {/* NAVIGATION */}
+          <nav
+            className="
+              grid
+              gap-2
+            "
+          >
+            {publicLinks.map((item) => {
+              if (item.to.includes("#")) {
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setOpen(false)}
+                    className={mobileNavigationClass}
+                  >
+                    <span>{item.label}</span>
+
+                    <ArrowRight
+                      className="
+                          size-3.5
+
+                          text-white/45
+
+                          transition-transform
+
+                          group-hover:translate-x-0.5
+                        "
+                    />
+                  </Link>
+                );
+              }
+
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  className={({ isActive }) => `
+                      ${mobileNavigationClass}
+
+                      ${
+                        isActive
+                          ? `
+                              border-[#7fa393]/30
+                              bg-white/[0.08]
+                            `
+                          : ""
+                      }
+                    `}
+                >
+                  <span>{item.label}</span>
+
+                  <ArrowRight
+                    className="
+                        size-3.5
+
+                        text-white/45
+
+                        transition-transform
+
+                        group-hover:translate-x-0.5
+                      "
+                  />
+                </NavLink>
+              );
+            })}
+          </nav>
+
+          {/* QUICK ACCESS */}
+          <section
+            className="
+              mt-4
+
+              rounded-[20px]
+
+              border
+              border-white/10
+
+              bg-white/[0.035]
+
+              p-3
+            "
+          >
+            <p
+              className="
+                px-1
+
+                text-[9px]
+                font-bold
+                uppercase
+                tracking-[0.2em]
+
+                text-[#91aa9d]
+              "
+            >
+              Quick access
+            </p>
+
+            <div
+              className="
+                mt-3
+
+                grid
+                gap-2
+              "
+            >
+              {!sessionUser ? (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setOpen(false)}
+                    className="
+                      flex
+                      min-h-[38px]
+                      items-center
+                      justify-center
+
+                      rounded-full
+
+                      border
+                      border-white/10
+
+                      bg-white/[0.035]
+
+                      px-4
+
+                      text-[12px]
+                      font-semibold
+
+                      text-white
+
+                      transition-all
+
+                      hover:bg-white/[0.08]
+                    "
+                  >
+                    Sign in
+                  </Link>
+
+                  <Link
+                    to="/register"
+                    onClick={() => setOpen(false)}
+                    className="
+                      flex
+                      min-h-[38px]
+                      items-center
+                      justify-center
+
+                      rounded-full
+
+                      bg-[#d6e3dd]
+
+                      px-4
+
+                      text-[12px]
+                      font-semibold
+
+                      text-[#10261f]
+
+                      transition-all
+
+                      hover:bg-[#edf4f0]
+                    "
+                  >
+                    Get started
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to={accountDestination}
+                    onClick={() => setOpen(false)}
+                    className="
+                      flex
+                      min-h-[40px]
+                      items-center
+                      justify-center
+                      gap-2
+
+                      rounded-full
+
+                      bg-[#d6e3dd]
+
+                      px-4
+
+                      text-[12px]
+                      font-semibold
+
+                      text-[#10261f]
+                    "
+                  >
+                    <UserRound className="size-4" />
+
+                    {accountLabel}
+                  </Link>
+
+                  {current?.profile ? (
+                    <Link
+                      to="/dashboard/notifications"
+                      onClick={() => setOpen(false)}
+                      className="
+                        flex
+                        min-h-[40px]
+                        items-center
+                        justify-center
+                        gap-2
+
+                        rounded-full
+
+                        border
+                        border-white/10
+
+                        bg-white/[0.035]
+
+                        px-4
+
+                        text-[12px]
+                        font-semibold
+
+                        text-white
+                      "
+                    >
+                      <Bell className="size-4" />
+                      Notifications
+                    </Link>
+                  ) : null}
+
+                  <button
+                    type="button"
+                    onClick={() => void logout()}
+                    disabled={signingOut}
+                    className="
+                      flex
+                      min-h-[40px]
+                      items-center
+                      justify-center
+                      gap-2
+
+                      rounded-full
+
+                      border
+                      border-white/10
+
+                      bg-white/[0.035]
+
+                      px-4
+
+                      text-[12px]
+                      font-semibold
+
+                      text-white
+
+                      disabled:cursor-not-allowed
+                      disabled:opacity-60
+                    "
+                  >
+                    {signingOut ? (
+                      <LoaderCircle className="size-4 animate-spin" />
+                    ) : (
+                      <LogOut className="size-4" />
+                    )}
+
+                    {signingOut ? "Signing out..." : "Sign out"}
+                  </button>
+                </>
+              )}
+
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noreferrer"
                 className="
                   flex
+                  min-h-[38px]
                   items-center
                   justify-center
                   gap-2
+
+                  rounded-full
+
+                  border
+                  border-white/10
+
+                  bg-transparent
+
+                  px-4
+
+                  text-[12px]
+                  font-semibold
+
+                  text-white/90
+
+                  transition-all
+
+                  hover:bg-white/[0.05]
                 "
               >
                 <Code2 className="size-4" />
                 GitHub
-              </span>
-            </a>
-          </nav>
+              </a>
+            </div>
+          </section>
         </div>
-      ) : null}
-    </header>
+
+        {/* DRAWER FOOTER */}
+        <div
+          className="
+            shrink-0
+
+            border-t
+            border-white/[0.08]
+
+            p-3
+          "
+        >
+          <Link
+            to="/campaigns"
+            onClick={() => setOpen(false)}
+            className="
+              group
+
+              flex
+              min-h-[40px]
+              items-center
+              justify-between
+
+              rounded-[13px]
+
+              border
+              border-white/10
+
+              bg-white/[0.035]
+
+              px-3.5
+
+              text-[12px]
+              font-semibold
+
+              text-white
+
+              transition
+
+              hover:bg-white/[0.07]
+            "
+          >
+            <span>Explore campaigns</span>
+
+            <ArrowRight
+              className="
+                size-3.5
+
+                text-white/50
+
+                transition-transform
+
+                group-hover:translate-x-0.5
+              "
+            />
+          </Link>
+        </div>
+      </aside>
+    </>
   );
 }
