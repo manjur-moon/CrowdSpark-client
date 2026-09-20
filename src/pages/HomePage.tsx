@@ -3,11 +3,15 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   BadgeCheck,
+  CalendarDays,
+  ChevronDown,
   Coins,
+  CreditCard,
   HeartHandshake,
   Search,
   ShieldCheck,
-  Sparkles
+  Sparkles,
+  UserRound
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Autoplay, Pagination } from "swiper/modules";
@@ -84,6 +88,69 @@ const trustItems = [
   }
 ];
 
+const faqItems = [
+  {
+    question: "How do CrowdSpark credits work?",
+    answer:
+      "Supporters purchase credits and use them to submit contributions. Creator withdrawals follow the platform conversion and approval rules.",
+    icon: CreditCard
+  },
+  {
+    question: "When does a campaign become public?",
+    answer:
+      "A new campaign remains pending until an Admin reviews and approves it.",
+    icon: CalendarDays
+  },
+  {
+    question: "What happens when a contribution is rejected?",
+    answer:
+      "The contribution status changes to rejected and the Supporter's credits are restored through a transaction-safe workflow.",
+    icon: ShieldCheck
+  },
+  {
+    question: "Can anyone register as an Admin?",
+    answer:
+      "No. Public registration supports only Supporter and Creator roles. Admin access is managed securely by existing Admins.",
+    icon: UserRound
+  }
+];
+
+const successStories = [
+  {
+    title: "Community water access",
+    text: "A local Creator documented each installation milestone and kept Supporters informed through campaign updates."
+  },
+  {
+    title: "Learning devices for students",
+    text: "Supporters pooled credits to help a classroom gain reliable access to digital learning resources."
+  },
+  {
+    title: "A safer neighbourhood clinic",
+    text: "Transparent goals and Admin moderation helped a health campaign earn community trust."
+  }
+];
+
+const testimonials = [
+  {
+    name: "Ayesha Rahman",
+    role: "Supporter",
+    quote:
+      "The credit history and campaign updates make it easy to understand where my support is going."
+  },
+  {
+    name: "Daniel Karim",
+    role: "Creator",
+    quote:
+      "The review process helped me create a clearer campaign and communicate progress professionally."
+  },
+  {
+    name: "Nadia Islam",
+    role: "Supporter",
+    quote:
+      "I can discover local initiatives, contribute quickly and receive updates in one dashboard."
+  }
+];
+
 export default function HomePage() {
   const topCampaigns = useQuery({
     queryKey: ["home-campaigns", "top"],
@@ -126,7 +193,11 @@ export default function HomePage() {
       ).data.data
   });
 
-  const campaignGrid = (items: Campaign[] | undefined, loading: boolean) => {
+  const campaignGrid = (
+    items: Campaign[] | undefined,
+    loading: boolean,
+    error: boolean
+  ) => {
     if (loading) {
       return (
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
@@ -161,6 +232,82 @@ export default function HomePage() {
       );
     }
 
+    if (error) {
+      return (
+        <div
+          className="
+            mt-10
+            flex
+            min-h-[220px]
+            items-center
+            justify-center
+            rounded-[28px]
+            border
+            border-[#77877f]/25
+            bg-white/30
+            px-6
+            py-10
+            text-center
+            backdrop-blur-sm
+            dark:border-[#496057]/30
+            dark:bg-white/[0.03]
+          "
+        >
+          <div className="max-w-md">
+            <p className="editorial-label">Unable to load campaigns</p>
+
+            <h3
+              className="
+                display-heading
+                mt-3
+                text-3xl
+                leading-none
+                text-[var(--editorial-text)]
+              "
+            >
+              Something went wrong.
+            </h3>
+
+            <p
+              className="
+                mt-3
+                text-sm
+                leading-6
+                text-[var(--editorial-muted)]
+              "
+            >
+              Campaign data could not be retrieved. Please check your connection
+              and try again.
+            </p>
+
+            <Link
+              to="/campaigns"
+              className="
+                mt-6
+                inline-flex
+                items-center
+                gap-2
+                rounded-full
+                bg-[#173329]
+                px-5
+                py-3
+                text-sm
+                font-semibold
+                text-white
+                transition
+                hover:bg-[#23483a]
+                dark:bg-[#d6e3dd]
+                dark:text-[#10261f]
+              "
+            >
+              Explore campaigns
+              <ArrowRight className="size-4" />
+            </Link>
+          </div>
+        </div>
+      );
+    }
+
     if (!items || items.length === 0) {
       return (
         <div
@@ -178,30 +325,18 @@ export default function HomePage() {
             dark:bg-white/5
           "
         >
-          <p
-            className="
-              text-[11px]
-              font-semibold
-              uppercase
-              tracking-[0.22em]
-              text-[#5a6c64]
-              dark:text-[#93a79e]
-            "
-          >
-            No featured data yet
-          </p>
+          <p className="editorial-label">No featured data yet</p>
 
           <h3
             className="
+              display-heading
               mt-4
-              text-2xl
-              font-semibold
-              tracking-[-0.03em]
-              text-[#18231f]
-              dark:text-[#edf4f0]
+              text-3xl
+              leading-none
+              text-[var(--editorial-text)]
             "
           >
-            Top campaigns will appear here
+            Top campaigns will appear here.
           </h3>
 
           <p
@@ -211,12 +346,11 @@ export default function HomePage() {
               max-w-2xl
               text-sm
               leading-7
-              text-[#31423b]
-              dark:text-[#bccbc4]
+              text-[var(--editorial-muted)]
             "
           >
-            Once campaign data is available from the API, this section will automatically show the
-            strongest-performing campaigns.
+            Once campaign data is available from the API, this section will
+            automatically show the strongest-performing campaigns.
           </p>
 
           <Link
@@ -248,15 +382,34 @@ export default function HomePage() {
     return (
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {items.map((campaign) => (
-          <CampaignCard key={campaign.id || campaign._id} campaign={campaign} />
+          <CampaignCard
+            key={campaign.id || campaign._id}
+            campaign={campaign}
+          />
         ))}
       </div>
     );
   };
 
+  const heroStats = [
+    {
+      label: "Campaigns",
+      value: stats.data?.campaigns,
+      suffix: "+"
+    },
+    {
+      label: "Supporters",
+      value: stats.data?.supporters
+    },
+    {
+      label: "Credits raised",
+      value: stats.data?.creditsRaised
+    }
+  ];
+
   return (
     <main>
-      {/* Premium cinematic hero */}
+      {/* HERO */}
       <section
         className="
           crowdspark-hero
@@ -325,13 +478,12 @@ export default function HomePage() {
                     flex-col
                     items-center
                     px-4
-                    pb-[340px]
-                    pt-36
+                    pb-[300px]
+                    pt-28
                     text-center
-                    sm:pb-[280px]
-                    sm:pt-40
+                    sm:pb-[270px]
+                    sm:pt-36
                     lg:pb-64
-                    lg:pt-36
                   "
                 >
                   <motion.div
@@ -354,13 +506,13 @@ export default function HomePage() {
                       flex-col
                       items-center
                       justify-start
-                      pt-[5vh]
-                      sm:pt-[7vh]
+                      pt-[4vh]
+                      sm:pt-[6vh]
                     "
                   >
                     <span
                       className="
-                        mb-6
+                        mb-5
                         inline-flex
                         items-center
                         gap-2
@@ -370,12 +522,13 @@ export default function HomePage() {
                         bg-[#15372c]/65
                         px-4
                         py-2
-                        text-[11px]
+                        text-[10px]
                         font-semibold
                         uppercase
-                        tracking-[0.22em]
+                        tracking-[0.2em]
                         text-[#dce8e2]
                         backdrop-blur-xl
+                        sm:mb-6
                         sm:text-xs
                       "
                     >
@@ -387,7 +540,7 @@ export default function HomePage() {
                       className="
                         display-heading
                         max-w-[1050px]
-                        text-[clamp(3.6rem,8vw,8rem)]
+                        text-[clamp(3rem,10vw,8rem)]
                         font-normal
                         uppercase
                         leading-[0.88]
@@ -401,121 +554,129 @@ export default function HomePage() {
                   </motion.div>
                 </div>
 
+                {/* Bottom content */}
                 <div className="absolute bottom-0 left-0 right-0 z-20">
-                  <div className="container-app pb-8 sm:pb-10">
+                  <div className="container-app pb-7 sm:pb-10">
                     <div
                       className="
                         grid
                         items-end
-                        gap-6
+                        gap-4
                         lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,.65fr)]
+                        lg:gap-6
                       "
                     >
+                      {/* Hero stats */}
                       <div
                         className="
                           grid
+                          grid-cols-3
                           overflow-hidden
-                          rounded-lg
+                          rounded-xl
                           border
                           border-white/15
                           bg-[#d9e2df]/80
                           shadow-2xl
                           shadow-black/20
                           backdrop-blur-xl
-                          sm:grid-cols-3
                         "
                       >
-                        {[
-                          ["Campaigns", stats.data?.campaigns ?? 0],
-                          ["Supporters", stats.data?.supporters ?? 0],
-                          ["Credits raised", stats.data?.creditsRaised ?? 0]
-                        ].map(([label, value], index) => (
+                        {heroStats.map((item, index) => (
                           <div
-                            key={String(label)}
+                            key={item.label}
                             className={`
-                              px-6
-                              py-5
+                              min-w-0
+                              px-2.5
+                              py-3.5
                               text-left
                               text-[#183329]
-                              sm:px-7
-                              sm:py-6
+                              sm:px-6
+                              sm:py-5
+                              lg:px-7
+                              lg:py-6
 
                               ${
                                 index !== 0
-                                  ? "border-t border-[#17332a]/15 sm:border-l sm:border-t-0"
+                                  ? "border-l border-[#17332a]/15"
                                   : ""
                               }
                             `}
                           >
                             <p
                               className="
-                                text-3xl
+                                truncate
+                                text-xl
                                 font-light
                                 tracking-[-0.05em]
-                                sm:text-4xl
+                                sm:text-3xl
+                                lg:text-4xl
                               "
                             >
-                              {Number(value).toLocaleString()}
-                              {label === "Campaigns" ? "+" : ""}
+                              {stats.isError
+                                ? "—"
+                                : Number(item.value ?? 0).toLocaleString()}
+
+                              {!stats.isError ? item.suffix : ""}
                             </p>
 
                             <p
                               className="
-                                mt-2
-                                text-[10px]
+                                mt-1.5
+                                truncate
+                                text-[7px]
                                 font-semibold
                                 uppercase
-                                tracking-[0.14em]
+                                tracking-[0.08em]
                                 text-[#355248]
+                                sm:mt-2
+                                sm:text-[10px]
+                                sm:tracking-[0.14em]
                               "
+                              title={item.label}
                             >
-                              {String(label)}
+                              {item.label}
                             </p>
                           </div>
                         ))}
                       </div>
 
-                      <div
-                        className="
-                          flex
-                          flex-col
-                          items-start
-                          gap-5
-                          lg:items-end
-                        "
-                      >
+                      {/* Hero supporting copy */}
+                      <div className="flex flex-col items-start gap-4 lg:items-end lg:gap-5">
                         <p
                           className="
                             max-w-[420px]
                             text-left
-                            text-sm
+                            text-xs
                             font-medium
                             uppercase
-                            leading-6
+                            leading-5
                             tracking-[0.025em]
                             text-white/85
+                            sm:text-sm
+                            sm:leading-6
                             lg:text-right
                           "
                         >
                           {slide.text}
                         </p>
 
-                        <div className="flex flex-wrap gap-3 lg:justify-end">
+                        <div className="flex flex-wrap gap-2.5 lg:justify-end">
                           <Link
                             to="/campaigns"
                             className="
                               inline-flex
+                              min-h-11
                               items-center
                               gap-2
                               rounded-full
                               bg-[#9db5a9]
                               px-5
-                              py-3
                               text-sm
                               font-semibold
                               text-[#10261f]
                               transition
                               duration-200
+                              hover:-translate-y-0.5
                               hover:bg-[#b2c6bc]
                             "
                           >
@@ -527,19 +688,20 @@ export default function HomePage() {
                             to="/register?role=creator"
                             className="
                               inline-flex
+                              min-h-11
                               items-center
                               rounded-full
                               border
                               border-white/25
                               bg-black/15
                               px-5
-                              py-3
                               text-sm
                               font-semibold
                               text-white
                               backdrop-blur-md
                               transition
                               duration-200
+                              hover:-translate-y-0.5
                               hover:bg-white/10
                             "
                           >
@@ -586,15 +748,16 @@ export default function HomePage() {
         </Swiper>
       </section>
 
-      {/* Impact editorial section */}
+      {/* IMPORTANT: DO NOT MODIFY */}
       <ImpactEditorialSection />
 
-      {/* Top campaigns */}
+      {/* TOP CAMPAIGNS */}
       <section
         className="
           bg-[var(--editorial-bg)]
-          py-24
+          py-20
           text-[var(--editorial-text)]
+          sm:py-24
         "
       >
         <div className="container-app">
@@ -644,20 +807,46 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {campaignGrid(topCampaigns.data, topCampaigns.isLoading)}
+          {campaignGrid(
+            topCampaigns.data,
+            topCampaigns.isLoading,
+            topCampaigns.isError
+          )}
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="bg-white py-20">
+      {/* CATEGORIES */}
+      <section className="bg-white py-20 dark:bg-[#111716]">
         <div className="container-app">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="font-bold text-emerald-700">Explore by category</p>
+            <p
+              className="
+                text-[10px]
+                font-bold
+                uppercase
+                tracking-[0.22em]
+                text-[#315b4a]
+                dark:text-[#91aa9d]
+              "
+            >
+              Explore by category
+            </p>
 
-            <h2 className="mt-2 text-3xl font-black">Support the causes closest to you</h2>
+            <h2
+              className="
+                display-heading
+                mt-3
+                text-4xl
+                leading-none
+                text-[var(--editorial-text)]
+                sm:text-5xl
+              "
+            >
+              Support the causes closest to you.
+            </h2>
           </div>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {categories.map(([category, image]) => (
               <Link
                 key={category}
@@ -667,52 +856,109 @@ export default function HomePage() {
                   relative
                   min-h-56
                   overflow-hidden
-                  rounded-2xl
+                  rounded-[24px]
+                  border
+                  border-white/10
                 "
               >
                 <img
                   src={image}
-                  alt=""
+                  alt={`${category} campaigns`}
                   className="
                     absolute
                     inset-0
                     size-full
                     object-cover
                     transition
-                    duration-500
+                    duration-700
                     group-hover:scale-105
                   "
                 />
 
-                <div className="absolute inset-0 bg-slate-950/55" />
+                <div
+                  className="
+                    absolute
+                    inset-0
+                    bg-gradient-to-t
+                    from-[#06140f]/85
+                    via-[#06140f]/20
+                    to-transparent
+                  "
+                />
 
                 <span
                   className="
                     absolute
                     bottom-5
                     left-5
-                    text-xl
-                    font-black
+                    text-lg
+                    font-semibold
                     text-white
                   "
                 >
                   {category}
                 </span>
+
+                <ArrowRight
+                  className="
+                    absolute
+                    bottom-5
+                    right-5
+                    size-4
+                    -translate-x-1
+                    text-white
+                    opacity-0
+                    transition-all
+                    group-hover:translate-x-0
+                    group-hover:opacity-100
+                  "
+                />
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How it works */}
-      <section id="how-it-works" className="container-app py-20">
+      {/* HOW IT WORKS */}
+      <section
+        id="how-it-works"
+        className="
+          container-app
+          scroll-mt-24
+          py-20
+          sm:py-24
+          xl:scroll-mt-28
+        "
+      >
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-bold text-emerald-700">How it works</p>
+          <p
+            className="
+              text-[10px]
+              font-bold
+              uppercase
+              tracking-[0.22em]
+              text-[#315b4a]
+              dark:text-[#91aa9d]
+            "
+          >
+            How it works
+          </p>
 
-          <h2 className="mt-2 text-3xl font-black">From discovery to real-world impact</h2>
+          <h2
+            className="
+              display-heading
+              mt-3
+              text-4xl
+              leading-none
+              text-[var(--editorial-text)]
+              sm:text-5xl
+            "
+          >
+            From discovery to real-world impact.
+          </h2>
         </div>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-5 md:grid-cols-3">
           {[
             [
               Search,
@@ -729,42 +975,148 @@ export default function HomePage() {
               "Track impact",
               "Receive notifications and follow every campaign milestone."
             ]
-          ].map(([Icon, title, text]) => {
+          ].map(([Icon, title, text], index) => {
             const I = Icon as typeof Search;
 
             return (
-              <article key={String(title)} className="card p-7">
-                <I className="size-9 text-emerald-600" />
+              <motion.article
+                key={String(title)}
+                initial={{
+                  opacity: 0,
+                  y: 20
+                }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0
+                }}
+                viewport={{
+                  once: true,
+                  amount: 0.25
+                }}
+                transition={{
+                  delay: index * 0.08,
+                  duration: 0.55
+                }}
+                whileHover={{
+                  y: -5
+                }}
+                className="campaign-surface p-6 sm:p-7"
+              >
+                <div
+                  className="
+                    flex
+                    size-11
+                    items-center
+                    justify-center
+                    rounded-2xl
+                    bg-[#d6e3dd]
+                    text-[#173329]
+                    dark:bg-[#254137]
+                    dark:text-[#b5d7c7]
+                  "
+                >
+                  <I className="size-5" />
+                </div>
 
-                <h3 className="mt-5 text-xl font-bold">{String(title)}</h3>
+                <p
+                  className="
+                    mt-8
+                    text-[9px]
+                    font-bold
+                    uppercase
+                    tracking-[0.2em]
+                    text-[var(--editorial-muted)]
+                  "
+                >
+                  0{index + 1}
+                </p>
 
-                <p className="mt-3 leading-7 text-slate-600">{String(text)}</p>
-              </article>
+                <h3
+                  className="
+                    display-heading
+                    mt-2
+                    text-3xl
+                    leading-none
+                    text-[var(--editorial-text)]
+                  "
+                >
+                  {String(title)}
+                </h3>
+
+                <p
+                  className="
+                    mt-4
+                    text-sm
+                    leading-7
+                    text-[var(--editorial-muted)]
+                  "
+                >
+                  {String(text)}
+                </p>
+              </motion.article>
             );
           })}
         </div>
       </section>
 
-      {/* Featured campaigns */}
-      <section className="bg-slate-100 py-20">
+      {/* FEATURED CAMPAIGNS */}
+      <section className="bg-slate-100 py-20 dark:bg-[#121b18] sm:py-24">
         <div className="container-app">
-          <div className="flex items-end justify-between gap-4">
+          <div className="flex items-end justify-between gap-6">
             <div>
-              <p className="font-bold text-emerald-700">Featured campaigns</p>
+              <p
+                className="
+                  text-[10px]
+                  font-bold
+                  uppercase
+                  tracking-[0.22em]
+                  text-[#315b4a]
+                  dark:text-[#91aa9d]
+                "
+              >
+                Featured campaigns
+              </p>
 
-              <h2 className="mt-2 text-3xl font-black">Fresh opportunities to create impact</h2>
+              <h2
+                className="
+                  display-heading
+                  mt-3
+                  text-4xl
+                  leading-none
+                  text-[var(--editorial-text)]
+                  sm:text-5xl
+                "
+              >
+                Fresh opportunities to create impact.
+              </h2>
             </div>
 
-            <Link to="/campaigns?sort=newest" className="font-bold text-emerald-700">
-              Browse newest
+            <Link
+              to="/campaigns?sort=newest"
+              className="
+                hidden
+                text-sm
+                font-semibold
+                text-[#315b4a]
+                transition
+                hover:opacity-60
+                sm:inline-flex
+                dark:text-[#91aa9d]
+              "
+            >
+              Browse newest →
             </Link>
           </div>
 
-          {campaignGrid(featuredCampaigns.data, featuredCampaigns.isLoading)}
+          {campaignGrid(
+            featuredCampaigns.data,
+            featuredCampaigns.isLoading,
+            featuredCampaigns.isError
+          )}
         </div>
       </section>
 
-      {/* Trust */}
+      {/* TRUST */}
       <section
         className="
           relative
@@ -777,7 +1129,6 @@ export default function HomePage() {
           lg:py-20
         "
       >
-        {/* Background atmosphere */}
         <div
           aria-hidden="true"
           className="
@@ -847,32 +1198,6 @@ export default function HomePage() {
               [background-size:72px_72px]
             "
           />
-
-          <div
-            className="
-              absolute
-              inset-x-0
-              top-0
-              h-px
-              bg-gradient-to-r
-              from-transparent
-              via-[#91aa9d]/35
-              to-transparent
-            "
-          />
-
-          <div
-            className="
-              absolute
-              inset-x-0
-              bottom-0
-              h-px
-              bg-gradient-to-r
-              from-transparent
-              via-[#91aa9d]/20
-              to-transparent
-            "
-          />
         </div>
 
         <div className="container-app">
@@ -885,7 +1210,6 @@ export default function HomePage() {
               lg:gap-16
             "
           >
-            {/* Left */}
             <motion.div
               initial={{
                 opacity: 0,
@@ -935,51 +1259,12 @@ export default function HomePage() {
                   border-[#91aa9d]/20
                   bg-[#91aa9d]/10
                   text-[#80e8bf]
-                  shadow-[0_14px_40px_rgba(76,177,137,0.08)]
-                  backdrop-blur-xl
                 "
               >
-                <motion.span
-                  aria-hidden="true"
-                  animate={{
-                    scale: [1, 1.25, 1],
-                    opacity: [0.28, 0, 0.28]
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeOut"
-                  }}
-                  className="
-                    absolute
-                    inset-0
-                    rounded-2xl
-                    border
-                    border-[#80e8bf]/30
-                  "
-                />
-
                 <ShieldCheck className="relative size-6" />
               </motion.div>
 
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  x: -12
-                }}
-                whileInView={{
-                  opacity: 1,
-                  x: 0
-                }}
-                viewport={{
-                  once: true
-                }}
-                transition={{
-                  delay: 0.12,
-                  duration: 0.5
-                }}
-                className="mt-6 flex items-center gap-3"
-              >
+              <div className="mt-6 flex items-center gap-3">
                 <span className="h-px w-8 bg-[#91aa9d]/50" />
 
                 <p
@@ -993,25 +1278,9 @@ export default function HomePage() {
                 >
                   Trust architecture
                 </p>
-              </motion.div>
+              </div>
 
-              <motion.h2
-                initial={{
-                  opacity: 0,
-                  y: 18
-                }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0
-                }}
-                viewport={{
-                  once: true
-                }}
-                transition={{
-                  delay: 0.16,
-                  duration: 0.65,
-                  ease: [0.22, 1, 0.36, 1]
-                }}
+              <h2
                 className="
                   display-heading
                   mt-4
@@ -1023,24 +1292,9 @@ export default function HomePage() {
                 "
               >
                 Designed for trust and accountability.
-              </motion.h2>
+              </h2>
 
-              <motion.p
-                initial={{
-                  opacity: 0,
-                  y: 14
-                }}
-                whileInView={{
-                  opacity: 1,
-                  y: 0
-                }}
-                viewport={{
-                  once: true
-                }}
-                transition={{
-                  delay: 0.22,
-                  duration: 0.55
-                }}
+              <p
                 className="
                   mt-5
                   max-w-[540px]
@@ -1050,33 +1304,12 @@ export default function HomePage() {
                   sm:text-[15px]
                 "
               >
-                Campaign moderation, role-based dashboards, auditable credit transactions and
-                progress updates keep every participant informed.
-              </motion.p>
+                Campaign moderation, role-based dashboards, auditable credit
+                transactions and progress updates keep every participant
+                informed.
+              </p>
 
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  width: 0
-                }}
-                whileInView={{
-                  opacity: 1,
-                  width: "100%"
-                }}
-                viewport={{
-                  once: true
-                }}
-                transition={{
-                  delay: 0.3,
-                  duration: 0.75
-                }}
-                className="
-                  mt-7
-                  max-w-xs
-                  border-t
-                  border-[#91aa9d]/15
-                "
-              >
+              <div className="mt-7 max-w-xs border-t border-[#91aa9d]/15">
                 <div
                   className="
                     flex
@@ -1093,91 +1326,10 @@ export default function HomePage() {
                   <Sparkles className="size-3.5" />
                   Transparent by design
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
 
-            {/* Right cards */}
             <div className="relative">
-              <div
-                aria-hidden="true"
-                className="
-                  pointer-events-none
-                  absolute
-                  left-1/2
-                  top-1/2
-                  hidden
-                  size-48
-                  -translate-x-1/2
-                  -translate-y-1/2
-                  rounded-full
-                  bg-[#91aa9d]/[0.055]
-                  blur-3xl
-                  lg:block
-                "
-              />
-
-              <motion.div
-                aria-hidden="true"
-                initial={{
-                  scaleY: 0
-                }}
-                whileInView={{
-                  scaleY: 1
-                }}
-                viewport={{
-                  once: true
-                }}
-                transition={{
-                  delay: 0.3,
-                  duration: 0.7
-                }}
-                className="
-                  absolute
-                  bottom-[18%]
-                  left-1/2
-                  top-[18%]
-                  hidden
-                  w-px
-                  origin-center
-                  bg-gradient-to-b
-                  from-transparent
-                  via-[#91aa9d]/20
-                  to-transparent
-                  lg:block
-                "
-              />
-
-              <motion.div
-                aria-hidden="true"
-                initial={{
-                  scaleX: 0
-                }}
-                whileInView={{
-                  scaleX: 1
-                }}
-                viewport={{
-                  once: true
-                }}
-                transition={{
-                  delay: 0.36,
-                  duration: 0.7
-                }}
-                className="
-                  absolute
-                  left-[18%]
-                  right-[18%]
-                  top-1/2
-                  hidden
-                  h-px
-                  origin-center
-                  bg-gradient-to-r
-                  from-transparent
-                  via-[#91aa9d]/20
-                  to-transparent
-                  lg:block
-                "
-              />
-
               <div className="relative grid gap-3 sm:grid-cols-2">
                 {trustItems.map((item, index) => (
                   <motion.article
@@ -1217,12 +1369,9 @@ export default function HomePage() {
                       bg-[linear-gradient(145deg,rgba(16,45,35,0.96),rgba(20,55,43,0.90))]
                       p-5
                       shadow-[0_16px_45px_rgba(0,0,0,0.13)]
-                      backdrop-blur-xl
                       transition-all
                       duration-300
                       hover:border-[#91aa9d]/[0.34]
-                      hover:bg-[linear-gradient(145deg,rgba(20,55,43,0.98),rgba(27,68,54,0.94))]
-                      hover:shadow-[0_22px_55px_rgba(0,0,0,0.18)]
                     "
                   >
                     <div
@@ -1262,7 +1411,6 @@ export default function HomePage() {
                             border-[#80e8bf]/[0.15]
                             bg-[#80e8bf]/[0.07]
                             text-[#80e8bf]
-                            shadow-[0_8px_24px_rgba(128,232,191,0.04)]
                           "
                         >
                           <BadgeCheck className="size-[18px]" />
@@ -1288,23 +1436,12 @@ export default function HomePage() {
                             uppercase
                             tracking-[0.18em]
                             text-[#789589]
-                            transition-colors
-                            duration-300
-                            group-hover:text-[#91aa9d]
                           "
                         >
                           {item.eyebrow}
                         </p>
 
-                        <div
-                          className="
-                            mt-1.5
-                            flex
-                            items-end
-                            justify-between
-                            gap-3
-                          "
-                        >
+                        <div className="mt-1.5 flex items-end justify-between gap-3">
                           <h3
                             className="
                               max-w-[230px]
@@ -1340,58 +1477,145 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Success stories */}
-      <section className="container-app py-20">
+      {/* SUCCESS STORIES */}
+      <section className="container-app py-20 sm:py-24">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="font-bold text-emerald-700">Success stories</p>
+          <p
+            className="
+              text-[10px]
+              font-bold
+              uppercase
+              tracking-[0.22em]
+              text-[#315b4a]
+              dark:text-[#91aa9d]
+            "
+          >
+            Success stories
+          </p>
 
-          <h2 className="mt-2 text-3xl font-black">Small contributions, visible outcomes</h2>
+          <h2
+            className="
+              display-heading
+              mt-3
+              text-4xl
+              leading-none
+              text-[var(--editorial-text)]
+              sm:text-5xl
+            "
+          >
+            Small contributions, visible outcomes.
+          </h2>
         </div>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-3">
-          {[
-            [
-              "Community water access",
-              "A local Creator documented each installation milestone and kept Supporters informed through campaign updates."
-            ],
-            [
-              "Learning devices for students",
-              "Supporters pooled credits to help a classroom gain reliable access to digital learning resources."
-            ],
-            [
-              "A safer neighbourhood clinic",
-              "Transparent goals and Admin moderation helped a health campaign earn community trust."
-            ]
-          ].map(([title, text]) => (
-            <article key={title} className="card p-7">
-              <HeartHandshake className="size-9 text-emerald-600" />
+        <div className="mt-10 grid gap-5 lg:grid-cols-3">
+          {successStories.map((story, index) => (
+            <motion.article
+              key={story.title}
+              initial={{
+                opacity: 0,
+                y: 20
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0
+              }}
+              viewport={{
+                once: true,
+                amount: 0.2
+              }}
+              transition={{
+                delay: index * 0.08,
+                duration: 0.55
+              }}
+              whileHover={{
+                y: -5
+              }}
+              className="campaign-surface p-6 sm:p-7"
+            >
+              <div
+                className="
+                  flex
+                  size-11
+                  items-center
+                  justify-center
+                  rounded-2xl
+                  bg-[#d6e3dd]
+                  text-[#173329]
+                  dark:bg-[#254137]
+                  dark:text-[#b5d7c7]
+                "
+              >
+                <HeartHandshake className="size-5" />
+              </div>
 
-              <h3 className="mt-5 text-xl font-bold">{title}</h3>
+              <h3
+                className="
+                  display-heading
+                  mt-7
+                  text-3xl
+                  leading-none
+                  text-[var(--editorial-text)]
+                "
+              >
+                {story.title}
+              </h3>
 
-              <p className="mt-3 leading-7 text-slate-600">{text}</p>
-            </article>
+              <p
+                className="
+                  mt-4
+                  text-sm
+                  leading-7
+                  text-[var(--editorial-muted)]
+                "
+              >
+                {story.text}
+              </p>
+            </motion.article>
           ))}
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="bg-white py-20">
+      {/* TESTIMONIALS */}
+      <section className="bg-white py-20 dark:bg-[#111716] sm:py-24">
         <div className="container-app">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="font-bold text-emerald-700">Testimonials</p>
+            <p
+              className="
+                text-[10px]
+                font-bold
+                uppercase
+                tracking-[0.22em]
+                text-[#315b4a]
+                dark:text-[#91aa9d]
+              "
+            >
+              Testimonials
+            </p>
 
-            <h2 className="mt-2 text-3xl font-black">Why users choose CrowdSpark</h2>
+            <h2
+              className="
+                display-heading
+                mt-3
+                text-4xl
+                leading-none
+                text-[var(--editorial-text)]
+                sm:text-5xl
+              "
+            >
+              Why users choose CrowdSpark.
+            </h2>
           </div>
 
           <Swiper
             modules={[Autoplay, Pagination]}
             autoplay={{
-              delay: 4500
+              delay: 4500,
+              disableOnInteraction: false
             }}
             pagination={{
               clickable: true
             }}
-            spaceBetween={24}
+            spaceBetween={20}
             breakpoints={{
               768: {
                 slidesPerView: 2
@@ -1402,31 +1626,51 @@ export default function HomePage() {
             }}
             className="mt-10 pb-12"
           >
-            {[
-              [
-                "Ayesha Rahman",
-                "Supporter",
-                "The credit history and campaign updates make it easy to understand where my support is going."
-              ],
-              [
-                "Daniel Karim",
-                "Creator",
-                "The review process helped me create a clearer campaign and communicate progress professionally."
-              ],
-              [
-                "Nadia Islam",
-                "Supporter",
-                "I can discover local initiatives, contribute quickly and receive updates in one dashboard."
-              ]
-            ].map(([name, role, quote]) => (
-              <SwiperSlide key={name}>
-                <article className="card h-full p-7">
-                  <p className="leading-7 text-slate-600">“{quote}”</p>
+            {testimonials.map((item) => (
+              <SwiperSlide key={item.name}>
+                <article className="campaign-surface h-full p-6 sm:p-7">
+                  <p
+                    className="
+                      display-heading
+                      text-2xl
+                      leading-[1.15]
+                      text-[var(--editorial-text)]
+                    "
+                  >
+                    “{item.quote}”
+                  </p>
 
-                  <div className="mt-6">
-                    <p className="font-bold">{name}</p>
+                  <div
+                    className="
+                      mt-7
+                      border-t
+                      border-[var(--editorial-border)]
+                      pt-5
+                    "
+                  >
+                    <p
+                      className="
+                        text-sm
+                        font-semibold
+                        text-[var(--editorial-text)]
+                      "
+                    >
+                      {item.name}
+                    </p>
 
-                    <p className="text-sm text-emerald-700">{role}</p>
+                    <p
+                      className="
+                        mt-1
+                        text-[10px]
+                        font-bold
+                        uppercase
+                        tracking-[0.16em]
+                        text-[#527064]
+                        dark:text-[#91aa9d]
+                      "
+                    >
+                      {item.role}
+                    </p>
                   </div>
                 </article>
               </SwiperSlide>
@@ -1435,7 +1679,324 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* FAQ */}
+      <section
+        className="
+          relative
+          isolate
+          overflow-hidden
+          bg-[var(--editorial-bg)]
+          py-20
+          sm:py-24
+        "
+      >
+        <div
+          aria-hidden="true"
+          className="
+            pointer-events-none
+            absolute
+            inset-0
+            -z-10
+            overflow-hidden
+          "
+        >
+          <div
+            className="
+              absolute
+              -left-48
+              -top-48
+              size-[520px]
+              rounded-full
+              border
+              border-[#91aa9d]/15
+            "
+          />
+
+          <div
+            className="
+              absolute
+              -right-52
+              bottom-[-180px]
+              size-[520px]
+              rounded-full
+              border
+              border-[#91aa9d]/15
+            "
+          />
+
+          <div
+            className="
+              absolute
+              left-1/2
+              top-12
+              size-[520px]
+              -translate-x-1/2
+              rounded-full
+              bg-[#91aa9d]/[0.07]
+              blur-[120px]
+            "
+          />
+
+          <div
+            className="
+              absolute
+              right-[7%]
+              top-[18%]
+              hidden
+              h-36
+              w-36
+              opacity-[0.12]
+              [background-image:radial-gradient(circle,#527064_1.5px,transparent_1.5px)]
+              [background-size:14px_14px]
+              xl:block
+            "
+          />
+        </div>
+
+        <div className="container-app">
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 20
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0
+            }}
+            viewport={{
+              once: true,
+              amount: 0.4
+            }}
+            transition={{
+              duration: 0.7,
+              ease: [0.22, 1, 0.36, 1]
+            }}
+            className="mx-auto max-w-3xl text-center"
+          >
+            <div className="flex items-center justify-center gap-3">
+              <span className="h-px w-10 bg-[#527064]/50" />
+
+              <p
+                className="
+                  text-[10px]
+                  font-bold
+                  uppercase
+                  tracking-[0.24em]
+                  text-[#315b4a]
+                  dark:text-[#91aa9d]
+                "
+              >
+                FAQ
+              </p>
+
+              <span className="h-px w-10 bg-[#527064]/50" />
+            </div>
+
+            <h2
+              className="
+                display-heading
+                mt-4
+                text-[clamp(3rem,5vw,5rem)]
+                leading-[0.9]
+                text-[var(--editorial-text)]
+              "
+            >
+              Common questions.
+            </h2>
+
+            <p
+              className="
+                mx-auto
+                mt-4
+                max-w-xl
+                text-sm
+                leading-6
+                text-[var(--editorial-muted)]
+                sm:text-[15px]
+              "
+            >
+              Everything you need to know about using CrowdSpark. Quick answers
+              to help you get started with confidence.
+            </p>
+          </motion.div>
+
+          <div className="relative mx-auto mt-10 max-w-4xl">
+            <div
+              className="
+                absolute
+                -left-44
+                top-5
+                hidden
+                xl:block
+              "
+            >
+              <p
+                className="
+                  text-[9px]
+                  font-semibold
+                  uppercase
+                  leading-6
+                  tracking-[0.26em]
+                  text-[#71857c]
+                "
+              >
+                People
+                <br />
+                Ideas
+                <br />
+                Brighter
+                <br />
+                Tomorrows
+              </p>
+
+              <span className="mt-4 block h-px w-6 bg-[#789589]/50" />
+            </div>
+
+            <div className="space-y-3">
+              {faqItems.map((item, index) => {
+                const Icon = item.icon;
+
+                return (
+                  <motion.details
+                    key={item.question}
+                    initial={{
+                      opacity: 0,
+                      y: 18
+                    }}
+                    whileInView={{
+                      opacity: 1,
+                      y: 0
+                    }}
+                    viewport={{
+                      once: true,
+                      amount: 0.2
+                    }}
+                    transition={{
+                      delay: index * 0.07,
+                      duration: 0.55,
+                      ease: [0.22, 1, 0.36, 1]
+                    }}
+                    className="
+                      group
+                      overflow-hidden
+                      rounded-[20px]
+                      border
+                      border-[#8fa399]/20
+                      bg-white/45
+                      shadow-[0_10px_35px_rgba(20,45,36,0.05)]
+                      backdrop-blur-xl
+                      transition-all
+                      duration-300
+                      open:border-[#527064]/35
+                      open:bg-white/60
+                      open:shadow-[0_18px_45px_rgba(20,45,36,0.08)]
+                      hover:border-[#527064]/30
+                      dark:border-[#91aa9d]/15
+                      dark:bg-white/[0.025]
+                      dark:open:bg-white/[0.045]
+                    "
+                  >
+                    <summary
+                      className="
+                        flex
+                        cursor-pointer
+                        list-none
+                        items-center
+                        gap-4
+                        px-4
+                        py-4
+                        sm:px-5
+                        [&::-webkit-details-marker]:hidden
+                      "
+                    >
+                      <span
+                        className="
+                          flex
+                          size-10
+                          shrink-0
+                          items-center
+                          justify-center
+                          rounded-full
+                          bg-[#d6e3dd]
+                          text-[#173329]
+                          transition-transform
+                          duration-300
+                          group-open:scale-105
+                          dark:bg-[#254137]
+                          dark:text-[#b5d7c7]
+                        "
+                      >
+                        <Icon className="size-[17px]" />
+                      </span>
+
+                      <span
+                        className="
+                          min-w-0
+                          flex-1
+                          text-left
+                          text-sm
+                          font-semibold
+                          text-[var(--editorial-text)]
+                          sm:text-[15px]
+                        "
+                      >
+                        {item.question}
+                      </span>
+
+                      <span
+                        className="
+                          flex
+                          size-9
+                          shrink-0
+                          items-center
+                          justify-center
+                          rounded-full
+                          border
+                          border-[var(--editorial-border)]
+                          text-[var(--editorial-muted)]
+                          transition-all
+                          duration-300
+                          group-open:rotate-180
+                          group-open:bg-[#173329]
+                          group-open:text-white
+                          dark:group-open:bg-[#d6e3dd]
+                          dark:group-open:text-[#10261f]
+                        "
+                      >
+                        <ChevronDown className="size-4" />
+                      </span>
+                    </summary>
+
+                    <div
+                      className="
+                        border-t
+                        border-[var(--editorial-border)]
+                        px-4
+                        pb-5
+                        pt-4
+                        sm:pl-[76px]
+                        sm:pr-16
+                      "
+                    >
+                      <p
+                        className="
+                          text-sm
+                          leading-7
+                          text-[var(--editorial-muted)]
+                        "
+                      >
+                        {item.answer}
+                      </p>
+                    </div>
+                  </motion.details>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
       <section className="container-app pb-10 pt-4">
         <motion.div
           initial={{
@@ -1458,7 +2019,7 @@ export default function HomePage() {
             group
             relative
             isolate
-            min-h-[360px]
+            min-h-[350px]
             overflow-hidden
             rounded-[30px]
             border
@@ -1469,7 +2030,6 @@ export default function HomePage() {
             sm:rounded-[36px]
           "
         >
-          {/* Background image */}
           <img
             src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1800&q=85"
             alt=""
@@ -1487,14 +2047,13 @@ export default function HomePage() {
             "
           />
 
-          {/* Forest overlays */}
           <div
             aria-hidden="true"
             className="
               absolute
               inset-0
               -z-20
-              bg-[linear-gradient(90deg,rgba(5,24,18,0.98)_0%,rgba(7,31,23,0.94)_38%,rgba(8,32,24,0.72)_66%,rgba(5,23,18,0.55)_100%)]
+              bg-[linear-gradient(90deg,rgba(5,24,18,0.99)_0%,rgba(7,31,23,0.96)_38%,rgba(8,32,24,0.76)_66%,rgba(5,23,18,0.58)_100%)]
             "
           />
 
@@ -1508,17 +2067,6 @@ export default function HomePage() {
             "
           />
 
-          <div
-            aria-hidden="true"
-            className="
-              absolute
-              inset-0
-              -z-20
-              bg-[radial-gradient(circle_at_70%_45%,rgba(145,170,157,0.09),transparent_34%)]
-            "
-          />
-
-          {/* Atmospheric glow */}
           <motion.div
             aria-hidden="true"
             animate={{
@@ -1543,7 +2091,6 @@ export default function HomePage() {
             "
           />
 
-          {/* Decorative arc */}
           <div
             aria-hidden="true"
             className="
@@ -1560,28 +2107,12 @@ export default function HomePage() {
             "
           />
 
-          {/* Top highlight */}
-          <div
-            aria-hidden="true"
-            className="
-              absolute
-              inset-x-14
-              top-0
-              h-px
-              bg-gradient-to-r
-              from-transparent
-              via-[#b9d0c4]/40
-              to-transparent
-            "
-          />
-
-          {/* Content */}
           <div
             className="
               relative
               z-10
               flex
-              min-h-[360px]
+              min-h-[350px]
               items-center
               px-6
               py-10
@@ -1654,7 +2185,9 @@ export default function HomePage() {
                 "
               >
                 Ready to turn one spark into{" "}
-                <span className="italic text-[#a9c7b8]">lasting impact?</span>
+                <span className="italic text-[#a9c7b8]">
+                  lasting impact?
+                </span>
               </motion.h2>
 
               <motion.p
@@ -1730,10 +2263,10 @@ export default function HomePage() {
                     duration-300
                     hover:-translate-y-1
                     hover:bg-white
-                    hover:shadow-[0_16px_42px_rgba(0,0,0,0.2)]
                   "
                 >
                   Create account
+
                   <ArrowRight
                     className="
                       size-4
@@ -1769,6 +2302,7 @@ export default function HomePage() {
                   "
                 >
                   Browse campaigns
+
                   <ArrowRight
                     className="
                       size-4
@@ -1819,8 +2353,6 @@ export default function HomePage() {
           </div>
         </motion.div>
       </section>
-
-      {/* THIS CLOSING TAG MUST EXIST */}
     </main>
   );
 }
