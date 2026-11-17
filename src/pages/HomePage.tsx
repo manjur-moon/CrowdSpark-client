@@ -97,8 +97,7 @@ const faqItems = [
   },
   {
     question: "When does a campaign become public?",
-    answer:
-      "A new campaign remains pending until an Admin reviews and approves it.",
+    answer: "A new campaign remains pending until an Admin reviews and approves it.",
     icon: CalendarDays
   },
   {
@@ -193,11 +192,7 @@ export default function HomePage() {
       ).data.data
   });
 
-  const campaignGrid = (
-    items: Campaign[] | undefined,
-    loading: boolean,
-    error: boolean
-  ) => {
+  const campaignGrid = (items: Campaign[] | undefined, loading: boolean, error: boolean) => {
     if (loading) {
       return (
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
@@ -276,8 +271,7 @@ export default function HomePage() {
                 text-[var(--editorial-muted)]
               "
             >
-              Campaign data could not be retrieved. Please check your connection
-              and try again.
+              Campaign data could not be retrieved. Please check your connection and try again.
             </p>
 
             <Link
@@ -349,8 +343,8 @@ export default function HomePage() {
               text-[var(--editorial-muted)]
             "
           >
-            Once campaign data is available from the API, this section will
-            automatically show the strongest-performing campaigns.
+            Once campaign data is available from the API, this section will automatically show the
+            strongest-performing campaigns.
           </p>
 
           <Link
@@ -382,10 +376,7 @@ export default function HomePage() {
     return (
       <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {items.map((campaign) => (
-          <CampaignCard
-            key={campaign.id || campaign._id}
-            campaign={campaign}
-          />
+          <CampaignCard key={campaign.id || campaign._id} campaign={campaign} />
         ))}
       </div>
     );
@@ -595,11 +586,7 @@ export default function HomePage() {
                               lg:px-7
                               lg:py-6
 
-                              ${
-                                index !== 0
-                                  ? "border-l border-[#17332a]/15"
-                                  : ""
-                              }
+                              ${index !== 0 ? "border-l border-[#17332a]/15" : ""}
                             `}
                           >
                             <p
@@ -612,9 +599,7 @@ export default function HomePage() {
                                 lg:text-4xl
                               "
                             >
-                              {stats.isError
-                                ? "—"
-                                : Number(item.value ?? 0).toLocaleString()}
+                              {stats.isError ? "—" : Number(item.value ?? 0).toLocaleString()}
 
                               {!stats.isError ? item.suffix : ""}
                             </p>
@@ -807,11 +792,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {campaignGrid(
-            topCampaigns.data,
-            topCampaigns.isLoading,
-            topCampaigns.isError
-          )}
+          {campaignGrid(topCampaigns.data, topCampaigns.isLoading, topCampaigns.isError)}
         </div>
       </section>
 
@@ -1304,9 +1285,8 @@ export default function HomePage() {
                   sm:text-[15px]
                 "
               >
-                Campaign moderation, role-based dashboards, auditable credit
-                transactions and progress updates keep every participant
-                informed.
+                Campaign moderation, role-based dashboards, auditable credit transactions and
+                progress updates keep every participant informed.
               </p>
 
               <div className="mt-7 max-w-xs border-t border-[#91aa9d]/15">
@@ -1815,8 +1795,8 @@ export default function HomePage() {
                 sm:text-[15px]
               "
             >
-              Everything you need to know about using CrowdSpark. Quick answers
-              to help you get started with confidence.
+              Everything you need to know about using CrowdSpark. Quick answers to help you get
+              started with confidence.
             </p>
           </motion.div>
 
@@ -2185,9 +2165,7 @@ export default function HomePage() {
                 "
               >
                 Ready to turn one spark into{" "}
-                <span className="italic text-[#a9c7b8]">
-                  lasting impact?
-                </span>
+                <span className="italic text-[#a9c7b8]">lasting impact?</span>
               </motion.h2>
 
               <motion.p
@@ -2266,7 +2244,6 @@ export default function HomePage() {
                   "
                 >
                   Create account
-
                   <ArrowRight
                     className="
                       size-4
@@ -2302,7 +2279,6 @@ export default function HomePage() {
                   "
                 >
                   Browse campaigns
-
                   <ArrowRight
                     className="
                       size-4

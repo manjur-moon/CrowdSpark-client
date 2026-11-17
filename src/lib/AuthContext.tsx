@@ -115,10 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Fetch the profile afresh even if the query has not mounted yet.
     await queryClient.fetchQuery({
       queryKey: ["current-user", latestUser.id],
-      queryFn: async () =>
-        (
-          await api.get<{ data: CurrentUserResponse }>("/users/me")
-        ).data.data,
+      queryFn: async () => (await api.get<{ data: CurrentUserResponse }>("/users/me")).data.data,
       staleTime: 0
     });
   };

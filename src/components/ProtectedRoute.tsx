@@ -35,7 +35,9 @@ export function ProtectedRoute({ roles }: ProtectedRouteProps) {
           disabled={retrying}
           onClick={() => {
             setRetrying(true);
-            void refresh().catch(() => {}).finally(() => setRetrying(false));
+            void refresh()
+              .catch(() => {})
+              .finally(() => setRetrying(false));
           }}
           className="mt-5 rounded-lg bg-emerald-800 px-5 py-2 text-white disabled:opacity-50"
         >

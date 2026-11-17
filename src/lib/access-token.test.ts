@@ -58,7 +58,10 @@ describe("access-token storage", () => {
     const newToken = createToken(Math.floor(Date.now() / 1000) + 1200);
     sessionStorage.setItem("crowdspark.access-token", oldToken);
     sessionStorage.setItem("crowdspark.access-token-owner", "former-user");
-    vi.mocked(authClient.token).mockResolvedValue({ data: { token: newToken }, error: null } as never);
+    vi.mocked(authClient.token).mockResolvedValue({
+      data: { token: newToken },
+      error: null
+    } as never);
 
     await expect(ensureAccessToken(false, "new-user")).resolves.toBe(newToken);
     expect(authClient.token).toHaveBeenCalledTimes(1);

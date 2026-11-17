@@ -8,7 +8,8 @@ import { api } from "./api";
 import { clearAccessToken } from "./access-token";
 
 const expiredToken = () => {
-  const encode = (value: object) => btoa(JSON.stringify(value)).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+  const encode = (value: object) =>
+    btoa(JSON.stringify(value)).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
   return `${encode({ alg: "none" })}.${encode({ exp: 10 })}.signature`;
 };
 
@@ -51,16 +52,22 @@ describe("API auth cookie fallback", () => {
       adapter: async (config) => {
         count++;
         if (count === 1) {
-          throw new axios.AxiosError(
-            "Unauthenticated",
-            "ERR_BAD_REQUEST",
-            config,
-            undefined,
-            { data: { error: { code: "AUTHENTICATION_REQUIRED" } }, status: 401, statusText: "Unauthorized", headers: new AxiosHeaders(), config }
-          );
+          throw new axios.AxiosError("Unauthenticated", "ERR_BAD_REQUEST", config, undefined, {
+            data: { error: { code: "AUTHENTICATION_REQUIRED" } },
+            status: 401,
+            statusText: "Unauthorized",
+            headers: new AxiosHeaders(),
+            config
+          });
         }
         expect(AxiosHeaders.from(config.headers).has("Authorization")).toBe(false);
-        return { data: { ok: true }, status: 200, statusText: "OK", headers: new AxiosHeaders(), config };
+        return {
+          data: { ok: true },
+          status: 200,
+          statusText: "OK",
+          headers: new AxiosHeaders(),
+          config
+        };
       }
     });
 

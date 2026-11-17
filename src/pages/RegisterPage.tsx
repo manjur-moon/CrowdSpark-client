@@ -254,7 +254,9 @@ export default function RegisterPage() {
             }
           }
         } catch (error) {
-          toast.error(apiErrorMessage(error, "Account created, but the profile image upload failed"));
+          toast.error(
+            apiErrorMessage(error, "Account created, but the profile image upload failed")
+          );
         } finally {
           setUploadProgress(0);
         }
