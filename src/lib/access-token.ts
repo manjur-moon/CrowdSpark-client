@@ -135,10 +135,18 @@ export async function refreshAccessToken(ownerId?: string): Promise<string | nul
         return null;
       }
 
-      if (result.error || !result.data?.token) {
+      if (result.error) {
         clearStoredAccessToken();
 
-        return null;
+        throw new Error(
+          result.error.message ||
+            `JWT request failed (${result.error.status || "unknown status"}). Check the authentication session and server logs.`
+        );
+      }
+
+      if (!result.data?.token) {
+        clearStoredAccessToken();
+        throw new Error("The authentication server returned no access token.");
       }
 
       const token = result.data.token;
@@ -169,12 +177,12 @@ export async function refreshAccessToken(ownerId?: string): Promise<string | nul
       }
 
       return token;
-    } catch {
+    } catch (error) {
       if (generationAtStart === tokenGeneration) {
         clearStoredAccessToken();
       }
 
-      return null;
+      throw error;
     }
   })();
 

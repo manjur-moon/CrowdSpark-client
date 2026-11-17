@@ -1,4 +1,5 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 import { dashboardPath, useAuth } from "../lib/AuthContext";
 
@@ -9,7 +10,8 @@ type ProtectedRouteProps = {
 };
 
 export function ProtectedRoute({ roles }: ProtectedRouteProps) {
-  const { loading, sessionUser, current } = useAuth();
+  const { loading, sessionUser, current, authError, refresh } = useAuth();
+  const [retrying, setRetrying] = useState(false);
 
   const location = useLocation();
 
@@ -21,6 +23,26 @@ export function ProtectedRoute({ roles }: ProtectedRouteProps) {
     const requestedPath = `${location.pathname}${location.search}${location.hash}`;
 
     return <Navigate to={`/login?redirect=${encodeURIComponent(requestedPath)}`} replace />;
+  }
+
+  if (authError) {
+    return (
+      <div role="alert" className="mx-auto max-w-lg p-8 text-center">
+        <h1 className="text-xl font-semibold">Unable to verify account access</h1>
+        <p className="mt-3">{authError}</p>
+        <button
+          type="button"
+          disabled={retrying}
+          onClick={() => {
+            setRetrying(true);
+            void refresh().catch(() => {}).finally(() => setRetrying(false));
+          }}
+          className="mt-5 rounded-lg bg-emerald-800 px-5 py-2 text-white disabled:opacity-50"
+        >
+          {retrying ? "Retrying..." : "Retry"}
+        </button>
+      </div>
+    );
   }
 
   if (!current?.profile) {

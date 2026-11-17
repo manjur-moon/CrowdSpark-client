@@ -279,7 +279,7 @@ export function Navbar() {
               xl:-translate-x-1/2
             "
           >
-            <Logo light />
+            <Logo light={useCinematicNavbar} />
           </div>
 
           {/* DESKTOP RIGHT */}

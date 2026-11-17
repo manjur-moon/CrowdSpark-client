@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, type ReactNode, useContext, useEffect } from "react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -31,101 +31,32 @@ interface AuthValue {
 
 const AuthContext = createContext<AuthValue | null>(null);
 
-function unknownErrorMessage(error: unknown, fallback: string) {
-  if (error instanceof Error && error.message) {
-    return error.message;
-  }
-
-  return fallback;
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const session = authClient.useSession();
 
   const queryClient = useQueryClient();
 
-  /*
-   * Stores the user ID for which an API access
-   * token has successfully been prepared.
-   *
-   * This is safer than a plain boolean because
-   * it prevents an old user's "ready" state from
-   * being reused when the session changes.
-   */
-  const [tokenUserId, setTokenUserId] = useState<string | null>(null);
-
-  const [tokenLoading, setTokenLoading] = useState(false);
-
-  const [tokenError, setTokenError] = useState<string | null>(null);
-
   const sessionUserId = session.data?.user?.id ?? null;
 
   useEffect(() => {
-    let cancelled = false;
+    if (session.isPending) return;
 
-    if (session.isPending) {
-      return;
-    }
-
-    /*
-     * No Better Auth session:
-     * remove any API authentication state.
-     */
     if (!sessionUserId) {
       clearAccessToken();
-
-      setTokenUserId(null);
-      setTokenLoading(false);
-      setTokenError(null);
-
-      queryClient.removeQueries({
-        queryKey: ["current-user"]
-      });
-
+      queryClient.removeQueries({ queryKey: ["current-user"] });
       return;
     }
 
-    /*
-     * A session exists, but we must first
-     * establish the API access token before
-     * requesting /users/me.
-     */
-    setTokenUserId(null);
-    setTokenLoading(true);
-    setTokenError(null);
-
-    void ensureAccessToken()
-      .then(() => {
-        if (cancelled) {
-          return;
-        }
-
-        setTokenUserId(sessionUserId);
-      })
-      .catch((error: unknown) => {
-        if (cancelled) {
-          return;
-        }
-
-        clearAccessToken();
-
-        setTokenError(unknownErrorMessage(error, "Unable to establish a secure API session."));
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setTokenLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
+    // Prepare an optional short-lived JWT. Protected endpoints also accept
+    // Better Auth's authenticated session cookie, so a failed JWT request
+    // must not make the whole login unusable.
+    void ensureAccessToken(false, sessionUserId).catch(() => {
+      clearAccessToken();
+    });
   }, [sessionUserId, session.isPending, queryClient]);
 
-  const tokenReady = Boolean(sessionUserId) && tokenUserId === sessionUserId && !tokenError;
-
   const me = useQuery({
-    queryKey: ["current-user"],
+    queryKey: ["current-user", sessionUserId],
 
     queryFn: async () =>
       (
@@ -134,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }>("/users/me")
       ).data.data,
 
-    enabled: tokenReady,
+    enabled: Boolean(sessionUserId),
 
     /*
      * Authentication/profile errors
@@ -150,70 +81,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const currentUserError = me.isError ? apiErrorMessage(me.error) : null;
 
-  const authError = sessionError ?? tokenError ?? currentUserError;
+  const authError = sessionError ?? currentUserError;
 
   const hasSessionUser = Boolean(session.data?.user);
 
-  const loading =
-    session.isPending ||
-    (hasSessionUser && !authError && (tokenLoading || !tokenReady || me.isPending));
+  const loading = session.isPending || (hasSessionUser && !authError && me.isPending);
 
   const refresh = async () => {
-    /*
-     * getSession() gives us an explicit,
-     * current Better Auth response instead
-     * of relying on the old closure value
-     * from session.data.
-     */
     const latestSession = await authClient.getSession();
 
     if (latestSession.error) {
       throw new Error(latestSession.error.message || "Unable to refresh session");
     }
 
-    /*
-     * Also update useSession's reactive
-     * state for the rest of the app.
-     */
     await session.refetch();
-
     const latestUser = latestSession.data?.user;
 
     if (!latestUser) {
       clearAccessToken();
-
-      setTokenUserId(null);
-      setTokenLoading(false);
-      setTokenError(null);
-
-      queryClient.removeQueries({
-        queryKey: ["current-user"]
-      });
-
+      queryClient.removeQueries({ queryKey: ["current-user"] });
       return;
     }
 
-    setTokenUserId(null);
-    setTokenLoading(true);
-    setTokenError(null);
-
+    // Never reuse a JWT with stale profile claims after role onboarding.
+    clearAccessToken();
     try {
-      await ensureAccessToken(true);
-
-      setTokenUserId(latestUser.id);
-
-      await queryClient.invalidateQueries({
-        queryKey: ["current-user"]
-      });
-    } catch (error) {
+      await ensureAccessToken(true, latestUser.id);
+    } catch {
+      // Continue using the authenticated cookie session instead.
       clearAccessToken();
-
-      setTokenError(unknownErrorMessage(error, "Unable to refresh the secure API session."));
-
-      throw error;
-    } finally {
-      setTokenLoading(false);
     }
+
+    // Fetch the profile afresh even if the query has not mounted yet.
+    await queryClient.fetchQuery({
+      queryKey: ["current-user", latestUser.id],
+      queryFn: async () =>
+        (
+          await api.get<{ data: CurrentUserResponse }>("/users/me")
+        ).data.data,
+      staleTime: 0
+    });
   };
 
   const signOut = async () => {
@@ -230,10 +137,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     clearAccessToken();
-
-    setTokenUserId(null);
-    setTokenLoading(false);
-    setTokenError(null);
 
     queryClient.clear();
   };

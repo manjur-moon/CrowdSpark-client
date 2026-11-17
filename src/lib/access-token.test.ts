@@ -43,6 +43,28 @@ describe("access-token storage", () => {
     expect(authClient.token).not.toHaveBeenCalled();
   });
 
+  it("reports the actual Better Auth token error", async () => {
+    vi.mocked(authClient.token).mockResolvedValue({
+      data: null,
+      error: { message: "Session cookie not found", status: 401 }
+    } as never);
+
+    await expect(refreshAccessToken()).rejects.toThrow("Session cookie not found");
+    expect(getAccessToken()).toBeNull();
+  });
+
+  it("does not reuse a cached token belonging to another user", async () => {
+    const oldToken = createToken(Math.floor(Date.now() / 1000) + 900);
+    const newToken = createToken(Math.floor(Date.now() / 1000) + 1200);
+    sessionStorage.setItem("crowdspark.access-token", oldToken);
+    sessionStorage.setItem("crowdspark.access-token-owner", "former-user");
+    vi.mocked(authClient.token).mockResolvedValue({ data: { token: newToken }, error: null } as never);
+
+    await expect(ensureAccessToken(false, "new-user")).resolves.toBe(newToken);
+    expect(authClient.token).toHaveBeenCalledTimes(1);
+    expect(sessionStorage.getItem("crowdspark.access-token-owner")).toBe("new-user");
+  });
+
   it("clears a token from session storage", () => {
     sessionStorage.setItem("crowdspark.access-token", "token");
     clearAccessToken();

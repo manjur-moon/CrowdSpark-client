@@ -13,8 +13,8 @@ import { z } from "zod";
 
 import { Logo } from "../components/Logo";
 
-import { refreshAccessToken } from "../lib/access-token";
 import { api, apiErrorMessage } from "../lib/api";
+import { clearAccessToken } from "../lib/access-token";
 import { authClient } from "../lib/auth-client";
 import { dashboardPath, useAuth } from "../lib/AuthContext";
 
@@ -130,12 +130,10 @@ export default function LoginPage() {
         return;
       }
 
-      const token = await refreshAccessToken();
-
-      if (!token) {
-        throw new Error("Access token could not be created");
-      }
-
+      // The server verifies the Better Auth cookie when no JWT is present.
+      // JWT issuance is optional and handled by AuthProvider.
+      // Discard any stale bearer token before validating the new cookie.
+      clearAccessToken();
       const response = await api.get<{
         data: CurrentUserResponse;
       }>("/users/me");
@@ -174,11 +172,14 @@ export default function LoginPage() {
 
   const google = async () => {
     try {
-      await authClient.signIn.social({
+      const result = await authClient.signIn.social({
         provider: "google",
-
         callbackURL: `${window.location.origin}/onboarding`
       });
+
+      if (result.error) {
+        toast.error(result.error.message || "Google login could not be started");
+      }
     } catch (error) {
       toast.error(apiErrorMessage(error, "Google login is not configured"));
     }

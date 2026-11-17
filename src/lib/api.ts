@@ -49,11 +49,18 @@ api.interceptors.request.use(
       return config;
     }
 
-    const token = await ensureAccessToken();
+    try {
+      const token = await ensureAccessToken();
 
-    if (token) {
-      config.headers.set("Authorization", `Bearer ${token}`);
-    } else {
+      if (token) {
+        config.headers.set("Authorization", `Bearer ${token}`);
+      } else {
+        config.headers.delete("Authorization");
+      }
+    } catch {
+      // Better Auth's normal session cookie is sufficient for our Express API.
+      // A JWT failure must not prevent an authenticated cookie request.
+      clearAccessToken();
       config.headers.delete("Authorization");
     }
 
@@ -100,16 +107,19 @@ api.interceptors.response.use(
     if (status === 401 && original && !original._accessTokenRetry) {
       original._accessTokenRetry = true;
 
-      const token = await ensureAccessToken(true);
+      try {
+        const token = await ensureAccessToken(true);
 
-      if (!token) {
-        clearAccessToken();
-
-        return Promise.reject(error);
+        if (token) {
+          original.headers.set("Authorization", `Bearer ${token}`);
+          return api(original);
+        }
+      } catch {
+        // Fall back to Better Auth session cookies if JWT issuance fails.
       }
 
-      original.headers.set("Authorization", `Bearer ${token}`);
-
+      clearAccessToken();
+      original.headers.delete("Authorization");
       return api(original);
     }
 

@@ -25,8 +25,8 @@ import { z } from "zod";
 
 import { Logo } from "../components/Logo";
 
-import { refreshAccessToken } from "../lib/access-token";
 import { api, apiErrorMessage } from "../lib/api";
+import { clearAccessToken } from "../lib/access-token";
 import { authClient } from "../lib/auth-client";
 import { dashboardPath, useAuth } from "../lib/AuthContext";
 
@@ -216,59 +216,61 @@ export default function RegisterPage() {
   };
 
   const submit = async (values: Values) => {
-    const result = await authClient.signUp.email({
-      name: values.name.trim(),
+    try {
+      const result = await authClient.signUp.email({
+        name: values.name.trim(),
 
-      email: values.email.trim().toLowerCase(),
+        email: values.email.trim().toLowerCase(),
 
-      password: values.password
-    });
+        password: values.password
+      });
 
-    if (result.error) {
-      toast.error(result.error.message || "Registration failed");
+      if (result.error) {
+        toast.error(result.error.message || "Registration failed");
 
-      return;
-    }
-
-    const profile = (
-      await api.post<{
-        data: Profile;
-      }>("/users/onboarding", {
-        role: values.role
-      })
-    ).data.data;
-
-    await refreshAccessToken();
-
-    if (profileFile) {
-      try {
-        const imageUrl = await uploadProfileImage();
-
-        if (imageUrl) {
-          const updateResult = await authClient.updateUser({
-            image: imageUrl
-          });
-
-          if (updateResult.error) {
-            throw new Error(updateResult.error.message || "Profile image could not be saved");
-          }
-        }
-      } catch (error) {
-        toast.error(apiErrorMessage(error, "Account created, but the profile image upload failed"));
-      } finally {
-        setUploadProgress(0);
+        return;
       }
+
+      clearAccessToken();
+      const profile = (
+        await api.post<{
+          data: Profile;
+        }>("/users/onboarding", {
+          role: values.role
+        })
+      ).data.data;
+
+      if (profileFile) {
+        try {
+          const imageUrl = await uploadProfileImage();
+
+          if (imageUrl) {
+            const updateResult = await authClient.updateUser({
+              image: imageUrl
+            });
+
+            if (updateResult.error) {
+              throw new Error(updateResult.error.message || "Profile image could not be saved");
+            }
+          }
+        } catch (error) {
+          toast.error(apiErrorMessage(error, "Account created, but the profile image upload failed"));
+        } finally {
+          setUploadProgress(0);
+        }
+      }
+
+      await refresh();
+
+      toast.success(`${values.role === "supporter" ? 50 : 20} registration credits added`);
+
+      navigate(dashboardPath(profile.role), {
+        replace: true
+      });
+    } catch (error) {
+      console.error("CrowdSpark registration failed:", error);
+      toast.error(apiErrorMessage(error, "Registration failed. Check your session and try again."));
     }
-
-    await refreshAccessToken();
-
-    await refresh();
-
-    toast.success(`${values.role === "supporter" ? 50 : 20} registration credits added`);
-
-    navigate(dashboardPath(profile.role), {
-      replace: true
-    });
   };
 
   const google = async () => {
@@ -285,11 +287,15 @@ export default function RegisterPage() {
     setGooglePending(true);
 
     try {
-      await authClient.signIn.social({
+      const result = await authClient.signIn.social({
         provider: "google",
-
         callbackURL: `${window.location.origin}/onboarding`
       });
+
+      if (result.error) {
+        setGooglePending(false);
+        toast.error(result.error.message || "Google registration could not be started");
+      }
     } catch (error) {
       setGooglePending(false);
 
