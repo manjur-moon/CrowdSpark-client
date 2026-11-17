@@ -14,7 +14,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { Logo } from "../components/Logo";
-import { refreshAccessToken } from "../lib/access-token";
 import { api, apiErrorMessage } from "../lib/api";
 import { dashboardPath, useAuth } from "../lib/AuthContext";
 
@@ -45,7 +44,7 @@ const roleOptions = {
 >;
 
 export default function OnboardingPage() {
-  const { sessionUser, current, loading, refresh } = useAuth();
+  const { sessionUser, current, loading, authError, refresh } = useAuth();
 
   const navigate = useNavigate();
 
@@ -97,7 +96,6 @@ export default function OnboardingPage() {
 
       sessionStorage.removeItem("crowdspark.pendingRole");
 
-      await refreshAccessToken();
       await refresh();
 
       toast.success(`${role === "supporter" ? 50 : 20} registration credits added`);
@@ -111,6 +109,22 @@ export default function OnboardingPage() {
       setPending(false);
     }
   };
+
+  if (authError && sessionUser) {
+    return (
+      <main role="alert" className="mx-auto max-w-lg px-6 py-20 text-center">
+        <h1 className="text-xl font-bold">Could not verify your account</h1>
+        <p className="mt-3">{authError}</p>
+        <button
+          type="button"
+          className="mt-6 rounded-full bg-emerald-800 px-5 py-3 font-semibold text-white"
+          onClick={() => void refresh().catch((error) => toast.error(apiErrorMessage(error)))}
+        >
+          Retry verification
+        </button>
+      </main>
+    );
+  }
 
   if (loading || !sessionUser || profileRole) {
     return <OnboardingLoader />;
